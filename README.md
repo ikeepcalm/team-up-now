@@ -11,6 +11,6 @@ indicating their favorite games, their age group, a short description, maybe eve
 after which the bot builds a list of people with similar interests over time, after which they can look through each other's profiles, 
 and finally, if both people are satisfied with the allies they have found, 
 they can write to each other to arrange to play together. If not, it doesn't matter, 
-there are countless people in the world, someone will find someone!
+there are countless people in the world!
 # Want to try it out?
 Don't doubt, come check it out -> https://t.me/teamupnow_bot
