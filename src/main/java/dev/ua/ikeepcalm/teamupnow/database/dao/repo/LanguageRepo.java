@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface LanguageRepo extends CrudRepository<Language, Long>{
-    public Optional<Language> findLanguageByCredentialsId(Long credentialsId);
+    public Optional<Language> findLanguageByCredentialsId(long credentialsId);
 }

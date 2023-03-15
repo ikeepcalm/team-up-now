@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface CredentialsRepo extends CrudRepository<Credentials, Long> {
-    public Optional<Credentials> getCredentialsByAccountId(Long accountId);
+    public Optional<Credentials> findCredentialsByAccountId(Long accountId);
 }
