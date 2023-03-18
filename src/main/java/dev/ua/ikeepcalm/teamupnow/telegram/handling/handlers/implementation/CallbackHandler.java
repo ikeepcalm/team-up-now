@@ -1,9 +1,10 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.handling.handlers.implementation;
 
 import dev.ua.ikeepcalm.teamupnow.telegram.handling.handlers.Handler;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-
+@Component
 public class CallbackHandler implements Handler {
 
     @Override

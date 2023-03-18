@@ -13,13 +13,8 @@ import java.util.Optional;
 @Service
 public class CredentialsService implements DatabaseService<Credentials> {
 
-
-    CredentialsRepo credentialsRepo;
-
     @Autowired
-    public void setCredentialsRepo(CredentialsRepo credentialsRepo) {
-        this.credentialsRepo = credentialsRepo;
-    }
+    CredentialsRepo credentialsRepo;
 
     @Override
     public Credentials findByAccountId(long accountId) {

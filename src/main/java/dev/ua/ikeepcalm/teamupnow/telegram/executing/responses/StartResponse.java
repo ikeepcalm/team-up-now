@@ -1,5 +1,6 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.responses;
 
+import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Progress;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
@@ -17,8 +18,9 @@ import java.util.List;
 
 @Component
 public class StartResponse {
-//    @Autowired
-//    private CredentialsService credentialsService;
+
+    @Autowired
+    private CredentialsService credentialsService;
     @Autowired
     private TelegramService telegramService;
 
@@ -50,7 +52,7 @@ public class StartResponse {
         credentials.setUsername(update.getMessage().getFrom().getUserName());
         credentials.setUiLanguage(determineLanguageCode(update));
         credentials.setProgress(progress);
-//        credentialsService.save(credentials);
+        credentialsService.save(credentials);
     }
 
     private LanguageENUM determineLanguageCode(Update update){
