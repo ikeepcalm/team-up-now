@@ -1,10 +1,15 @@
 package dev.ua.ikeepcalm.teamupnow.database.entities;
 
 
+import dev.ua.ikeepcalm.teamupnow.database.entities.source.GameENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "credentials")
@@ -23,11 +28,8 @@ public class Credentials {
     @Column(name = "ui_language", nullable = false)
     private LanguageENUM uiLanguage;
 
-    @OneToOne(mappedBy = "credentialsId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Language language;
-
     @OneToMany(mappedBy = "credentialsId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Game> games;
+    private Set<Game> games;
 
     @OneToOne(mappedBy = "credentialsId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Demographic demographic;
@@ -37,10 +39,6 @@ public class Credentials {
 
     @OneToOne(mappedBy = "credentialsId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Progress progress;
-
-    public Long getId() {
-        return id;
-    }
 
     public String getUsername() {
         return username;
@@ -66,20 +64,10 @@ public class Credentials {
         this.uiLanguage = uiLanguage;
     }
 
-    public Language getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(Language language) {
-        this.language = language;
-    }
-
-    public List<Game> getGames() {
-        return games;
-    }
-
-    public void setGames(List<Game> games) {
-        this.games = games;
+    public Set<Game> getGames() {
+        if (this.games == null){
+            this.games = new HashSet<>();
+        } return this.games;
     }
 
     public Demographic getDemographic() {
@@ -104,5 +92,9 @@ public class Credentials {
 
     public void setProgress(Progress progress) {
         this.progress = progress;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

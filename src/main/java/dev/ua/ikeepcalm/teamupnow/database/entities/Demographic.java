@@ -30,11 +30,7 @@ public class Demographic {
         this.age = age;
     }
 
-    public Credentials getCredentialsId() {
-        return credentialsId;
-    }
-
-    public void setCredentialsId(Credentials userInfo) {
-        this.credentialsId = userInfo;
+    public void setCredentialsId(Credentials credentials) {
+        this.credentialsId = credentials;
     }
 }

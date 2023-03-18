@@ -30,11 +30,7 @@ public class Game {
         this.name = name;
     }
 
-    public Credentials getCredentialsId() {
-        return credentialsId;
-    }
-
-    public void setCredentialsId(Credentials userInfo) {
-        this.credentialsId = userInfo;
+    public void setCredentials(Credentials credentials) {
+        this.credentialsId = credentials;
     }
 }
