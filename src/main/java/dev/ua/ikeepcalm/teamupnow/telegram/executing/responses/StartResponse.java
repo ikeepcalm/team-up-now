@@ -1,10 +1,12 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.responses;
 
+import dev.ua.ikeepcalm.teamupnow.aop.annotations.Start;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Progress;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
+import dev.ua.ikeepcalm.teamupnow.database.exceptions.DAOException;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.services.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.proxies.Callback;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ public class StartResponse {
     @Autowired
     private TelegramService telegramService;
 
+    @Start
     public void execute(Update update) {
         createObjectForNewUser(update);
         Callback callback = new Callback();
@@ -37,7 +40,7 @@ public class StartResponse {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
-        row.add("/profile");
+        row.add("/games");
         keyboardRows.add(row);
         replyKeyboardMarkup.setKeyboard(keyboardRows);
         callback.setReplyKeyboard(replyKeyboardMarkup);
@@ -45,14 +48,19 @@ public class StartResponse {
     }
 
     private void createObjectForNewUser(Update update){
-        Progress progress = new Progress();
-        progress.setProgressENUM(ProgressENUM.GAMES);
-        Credentials credentials = new Credentials();
-        credentials.setAccountId(update.getMessage().getFrom().getId());
-        credentials.setUsername(update.getMessage().getFrom().getUserName());
-        credentials.setUiLanguage(determineLanguageCode(update));
-        credentials.setProgress(progress);
-        credentialsService.save(credentials);
+        try {
+            credentialsService.findByAccountId(update.getMessage().getFrom().getId());
+            //Already exists
+        } catch (DAOException e){
+            Progress progress = new Progress();
+            progress.setProgressENUM(ProgressENUM.GAMES);
+            Credentials credentials = new Credentials();
+            credentials.setAccountId(update.getMessage().getFrom().getId());
+            credentials.setUsername(update.getMessage().getFrom().getUserName());
+            credentials.setUiLanguage(determineLanguageCode(update));
+            credentials.setProgress(progress);
+            credentialsService.save(credentials);
+        }
     }
 
     private LanguageENUM determineLanguageCode(Update update){

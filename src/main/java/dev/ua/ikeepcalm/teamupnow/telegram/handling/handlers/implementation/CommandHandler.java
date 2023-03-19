@@ -21,13 +21,13 @@ public class CommandHandler implements Handler {
         String command = update.getMessage().getText();
         if (command.equals("/start")) {
             startResponse.execute(update);
-        } else if(command.equals("/profile")){
+        } else if(command.equals("/games")){
             gamesResponse.execute(update);
         }
     }
 
     @Override
     public boolean supports(Update update) {
-        return update.getMessage().getText().startsWith("/");
+        return update.getMessage() != null;
     }
 }

@@ -27,12 +27,16 @@ public class CredentialsService implements DatabaseService<Credentials> {
     }
 
     public void save(Credentials credentials){
-        Credentials dbCredentials = new Credentials();
-        dbCredentials.setAccountId(credentials.getAccountId());
-        dbCredentials.setUsername(credentials.getUsername());
-        dbCredentials.setUiLanguage(credentials.getUiLanguage());
-        credentialsRepo.save(dbCredentials);
-        dbCredentials = findByAccountId(credentials.getAccountId());
+        try {
+            findByAccountId(credentials.getAccountId());
+        } catch (DAOException e){
+            Credentials dbCredentials = new Credentials();
+            dbCredentials.setAccountId(credentials.getAccountId());
+            dbCredentials.setUsername(credentials.getUsername());
+            dbCredentials.setUiLanguage(credentials.getUiLanguage());
+            credentialsRepo.save(dbCredentials);
+        }
+        Credentials dbCredentials = findByAccountId(credentials.getAccountId());
         if (credentials.getDemographic() != null) {
             credentials.getDemographic().setCredentialsId(dbCredentials);
             dbCredentials.setDemographic(credentials.getDemographic());

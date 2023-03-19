@@ -1,8 +1,8 @@
 //package dev.ua.ikeepcalm.teamupnow.telegram.handling.subhandlers;
 //
-//import dev.ua.ikeepcalm.teamupnow.telegram.commands.ProfileCommand;
-//import dev.ua.ikeepcalm.teamupnow.telegram.models.ToDelete;
-//import dev.ua.ikeepcalm.teamupnow.telegram.services.TelegramService;
+//
+//import dev.ua.ikeepcalm.teamupnow.telegram.executing.services.TelegramService;
+//import dev.ua.ikeepcalm.teamupnow.telegram.proxies.ToDelete;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Component;
 //import org.telegram.telegrambots.meta.api.objects.Update;
@@ -10,14 +10,8 @@
 //@Component
 //public class AgeSubHandler implements SubHandler {
 //
-//    private final TelegramService telegramService;
-//    private final ProfileCommand profileCommand;
-//
 //    @Autowired
-//    public AgeSubHandler(TelegramService telegramService, ProfileCommand profileCommand) {
-//        this.telegramService = telegramService;
-//        this.profileCommand = profileCommand;
-//    }
+//    private TelegramService telegramService;
 //
 //    @Override
 //    public void manage(Update update) {
