@@ -22,12 +22,12 @@ public class TelegramServiceExecutor extends DefaultAbsSender implements Telegra
     }
 
     @Override
-    public void sendMessage(Message message) {
+    public org.telegram.telegrambots.meta.api.objects.Message sendMessage(Message message) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText(message.getText());
         sendMessage.setChatId(message.getChatId());
         try {
-            execute(sendMessage);
+             return execute(sendMessage);
         } catch (TelegramApiException e) {
             throw new RuntimeException("Failed to execute message: " + message.toString(), e);
         }
@@ -47,13 +47,13 @@ public class TelegramServiceExecutor extends DefaultAbsSender implements Telegra
     }
 
     @Override
-    public void sendCallback(Callback callback) {
+    public org.telegram.telegrambots.meta.api.objects.Message sendCallback(Callback callback) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText(callback.getText());
         sendMessage.setChatId(callback.getChatId());
         sendMessage.setReplyMarkup(callback.getReplyKeyboard());
         try {
-            execute(sendMessage);
+            return execute(sendMessage);
         } catch (TelegramApiException e) {
             throw new RuntimeException("Failed to execute callback: " + callback.toString(), e);
         }

@@ -1,5 +1,6 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.handling.handlers.implementation;
 
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.responses.AgeResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.responses.GamesResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.responses.StartResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.handling.handlers.Handler;
@@ -16,13 +17,16 @@ public class CommandHandler implements Handler {
     @Autowired
     private GamesResponse gamesResponse;
 
+    @Autowired
+    private AgeResponse ageResponse;
+
     @Override
     public void manage(Update update) {
         String command = update.getMessage().getText();
-        if (command.equals("/start")) {
-            startResponse.execute(update);
-        } else if(command.equals("/games")){
-            gamesResponse.execute(update);
+        switch (command) {
+            case "/start" -> startResponse.execute(update);
+            case "/games" -> gamesResponse.execute(update);
+            case "/age" -> ageResponse.execute(update);
         }
     }
 

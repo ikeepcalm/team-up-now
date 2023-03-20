@@ -1,9 +1,12 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.handling.subhandlers.implementation;
 
+import dev.ua.ikeepcalm.teamupnow.aop.annotations.Progressable;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
+import dev.ua.ikeepcalm.teamupnow.database.entities.Progress;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.GameENUM;
+import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.services.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.handling.subhandlers.SubHandler;
 import dev.ua.ikeepcalm.teamupnow.telegram.proxies.Callback;
@@ -98,6 +101,7 @@ public class GamesSubHandler implements SubHandler {
                     }
                 }
             }
+            credentials.getProgress().setProgressENUM(ProgressENUM.AGE);
             credentialsService.save(credentials);
             Callback callback = new Callback();
             callback.setText("""

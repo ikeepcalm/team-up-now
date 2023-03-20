@@ -7,8 +7,8 @@ import dev.ua.ikeepcalm.teamupnow.telegram.proxies.Message;
 import dev.ua.ikeepcalm.teamupnow.telegram.proxies.ToDelete;
 
 public interface TelegramService{
-    void sendMessage(Message message);
+    org.telegram.telegrambots.meta.api.objects.Message sendMessage(Message message);
     void sendEditMessage(EditMessage editMessage);
-    void sendCallback(Callback callback);
+    org.telegram.telegrambots.meta.api.objects.Message sendCallback(Callback callback);
     void deleteCallback(ToDelete toDelete);
 }
