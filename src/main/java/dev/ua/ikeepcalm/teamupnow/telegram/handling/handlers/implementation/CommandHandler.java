@@ -1,5 +1,6 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.handling.handlers.implementation;
 
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.responses.AboutResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.responses.AgeResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.responses.GamesResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.responses.StartResponse;
@@ -19,6 +20,8 @@ public class CommandHandler implements Handler {
 
     @Autowired
     private AgeResponse ageResponse;
+    @Autowired
+    private AboutResponse aboutResponse;
 
     @Override
     public void manage(Update update) {
@@ -27,11 +30,20 @@ public class CommandHandler implements Handler {
             case "/start" -> startResponse.execute(update);
             case "/games" -> gamesResponse.execute(update);
             case "/age" -> ageResponse.execute(update);
+            case "/about" -> aboutResponse.execute(update);
         }
     }
 
     @Override
     public boolean supports(Update update) {
-        return update.getMessage() != null;
+        if (update.getMessage() != null){
+            if (update.getMessage().getText().startsWith("/")){
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }

@@ -55,6 +55,7 @@ public class AgeSubHandler implements SubHandler {
                 }
             }
         } finally {
+            credentials.getProgress().setProgressENUM(ProgressENUM.ABOUT);
             credentialsService.save(credentials);
             telegramService.deleteCallback(new ToDelete(messageId,chatId));
             Callback callback = new Callback();

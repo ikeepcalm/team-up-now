@@ -22,8 +22,9 @@ public class ProgressionAspect {
         ProgressENUM expectedProgress = progressable.value();
         ProgressENUM currentProgress = credentialsService.findByAccountId(update.getMessage().getFrom().getId()).getProgress().getProgressENUM();
         if (!expectedProgress.equals(currentProgress)) {
-            System.out.println("Warning: progress is behind schedule");
-        } // continue with the execution of the method
-        return joinPoint.proceed();
+            return new Object();
+        } else {
+            return joinPoint.proceed();
+        }
     }
 }
