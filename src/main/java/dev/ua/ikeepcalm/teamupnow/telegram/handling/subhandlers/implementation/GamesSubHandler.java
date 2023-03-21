@@ -1,17 +1,15 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.handling.subhandlers.implementation;
 
-import dev.ua.ikeepcalm.teamupnow.aop.annotations.Progressable;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
-import dev.ua.ikeepcalm.teamupnow.database.entities.Progress;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.GameENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.services.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.handling.subhandlers.SubHandler;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.Callback;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.EditMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.ToDelete;
+import dev.ua.ikeepcalm.teamupnow.telegram.proxies.MultiMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.proxies.AlterMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.proxies.PurgeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,11 +50,11 @@ public class GamesSubHandler implements SubHandler {
                     updateButton("profile-games-destiny2", markup, "Destiny 2");
                 }
             } finally {
-                EditMessage editMessage = new EditMessage();
-                editMessage.setMessageId(origin.getMessageId());
-                editMessage.setChatId(origin.getChatId());
-                editMessage.setReplyKeyboard(markup);
-                telegramService.sendEditMessage(editMessage);
+                AlterMessage alterMessage = new AlterMessage();
+                alterMessage.setMessageId(origin.getMessageId());
+                alterMessage.setChatId(origin.getChatId());
+                alterMessage.setReplyKeyboard(markup);
+                telegramService.sendEditMessage(alterMessage);
             }
         } else {
 
@@ -65,7 +63,7 @@ public class GamesSubHandler implements SubHandler {
             as a green flag; if yes -> adds it to the list of games to be updated in database for user
                              if no -> ignores it
              */
-            telegramService.deleteCallback(new ToDelete(update.getCallbackQuery().getMessage().getMessageId(), chatId));
+            telegramService.deleteMessage(new PurgeMessage(update.getCallbackQuery().getMessage().getMessageId(), chatId));
             List<String> chosenGames = new ArrayList<>();
             List<List<InlineKeyboardButton>> keyboards = markup.getKeyboard();
             for (List<InlineKeyboardButton> keyboard : keyboards) {
@@ -103,21 +101,21 @@ public class GamesSubHandler implements SubHandler {
             }
             credentials.getProgress().setProgressENUM(ProgressENUM.AGE);
             credentialsService.save(credentials);
-            Callback callback = new Callback();
-            callback.setText("""
+            MultiMessage multiMessage = new MultiMessage();
+            multiMessage.setText("""
                     Okay, I've saved everything.
                     
                     You would be able to change that later but for now, let's move on to the next step.
                     """);
-            callback.setChatId(update.getCallbackQuery().getMessage().getChatId());
+            multiMessage.setChatId(update.getCallbackQuery().getMessage().getChatId());
             ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
             List<KeyboardRow> keyboardRows = new ArrayList<>();
             KeyboardRow row = new KeyboardRow();
             row.add("/age");
             keyboardRows.add(row);
             replyKeyboardMarkup.setKeyboard(keyboardRows);
-            callback.setReplyKeyboard(replyKeyboardMarkup);
-            telegramService.sendCallback(callback);
+            multiMessage.setReplyKeyboard(replyKeyboardMarkup);
+            telegramService.sendMultiMessage(multiMessage);
         }
     }
 

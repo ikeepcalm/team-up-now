@@ -3,6 +3,7 @@ package dev.ua.ikeepcalm.teamupnow.telegram.executing.responses;
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.Progressable;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.services.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.proxies.MediaMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.proxies.MultiMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.proxies.PurgeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,46 +18,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class AgeResponse {
+public class MenuResponse {
 
     @Autowired
     private TelegramService telegramService;
 
-    @Progressable(ProgressENUM.AGE)
+    @Progressable(ProgressENUM.DONE)
     public void execute(Update update) {
+        long chatId = update.getMessage().getChatId();
         {
             MultiMessage multiMessage = new MultiMessage();
-            multiMessage.setText("Easter-egg hint: you can click on the field below the text entry" +
-                    "area in order to move forward faster, than manually typing commands");
-            multiMessage.setChatId(update.getMessage().getChatId());
+            multiMessage.setText("Easter-egg fact: there are 108 cards in the Uno game");
+            multiMessage.setChatId(chatId);
             ReplyKeyboardRemove remove = new ReplyKeyboardRemove();
             remove.setRemoveKeyboard(true);
             multiMessage.setReplyKeyboard(remove);
-            Message message =  telegramService.sendMultiMessage(multiMessage);
+            Message message = telegramService.sendMultiMessage(multiMessage);
             PurgeMessage purgeMessage = new PurgeMessage(message.getMessageId(), message.getChatId());
             telegramService.deleteMessage(purgeMessage);
         }
-        MultiMessage multiMessage = new MultiMessage();
-        multiMessage.setText("Now, please, choose your age category (the system will try to match you with allies of similar age):");
-        multiMessage.setChatId(update.getMessage().getChatId());
+        MediaMessage message = new MediaMessage();
+        message.setFilePath("src/main/resources/menu.png");
+        message.setChatId(chatId);
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
-        InlineKeyboardButton youngCategory = new InlineKeyboardButton();
-        youngCategory.setText("14-18");
-        youngCategory.setCallbackData("profile-age-category-young");
-        InlineKeyboardButton youndAdultCategory = new InlineKeyboardButton();
-        youndAdultCategory.setText("18-26");
-        youndAdultCategory.setCallbackData("profile-age-category-young-adult");
-        InlineKeyboardButton adultCategory = new InlineKeyboardButton();
-        adultCategory.setText("27-35");
-        adultCategory.setCallbackData("profile-age-category-adult");
-        firstRow.add(youngCategory);
-        firstRow.add(youndAdultCategory);
-        firstRow.add(adultCategory);
+        List<InlineKeyboardButton> secondRow = new ArrayList<>();
+        InlineKeyboardButton profile = new InlineKeyboardButton();
+        profile.setText("Profile \uD83D\uDC64");
+        profile.setCallbackData("menu-profile");
+        InlineKeyboardButton discover = new InlineKeyboardButton();
+        discover.setText("Discover \uD83D\uDD0D");
+        discover.setCallbackData("menu-discover");
+        InlineKeyboardButton settings = new InlineKeyboardButton();
+        settings.setText("Settings ⚙️");
+        settings.setCallbackData("menu-settings");
+        InlineKeyboardButton more = new InlineKeyboardButton();
+        more.setText("More \uD83D\uDCC8");
+        more.setCallbackData("menu-more");
+        firstRow.add(profile);
+        firstRow.add(discover);
+        secondRow.add(settings);
+        secondRow.add(more);
         keyboard.add(firstRow);
+        keyboard.add(secondRow);
         inlineKeyboardMarkup.setKeyboard(keyboard);
-        multiMessage.setReplyKeyboard(inlineKeyboardMarkup);
-        telegramService.sendMultiMessage(multiMessage);
+        message.setReplyKeyboard(inlineKeyboardMarkup);
+        telegramService.sendMediaMessage(message);
     }
 }

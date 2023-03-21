@@ -8,7 +8,7 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.database.exceptions.DAOException;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.services.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.Callback;
+import dev.ua.ikeepcalm.teamupnow.telegram.proxies.MultiMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -29,22 +29,22 @@ public class StartResponse {
     @Start
     public void execute(Update update) {
         createObjectForNewUser(update);
-        Callback callback = new Callback();
-        callback.setText("""
+        MultiMessage multiMessage = new MultiMessage();
+        multiMessage.setText("""
                 Nice to meet you here!
 
                 It's time to get acquainted so I know what kind of friends to find for you!
 
                 To start, click the button that appears below the text entry field.""");
-        callback.setChatId(update.getMessage().getChatId());
+        multiMessage.setChatId(update.getMessage().getChatId());
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
         row.add("/games");
         keyboardRows.add(row);
         replyKeyboardMarkup.setKeyboard(keyboardRows);
-        callback.setReplyKeyboard(replyKeyboardMarkup);
-        telegramService.sendCallback(callback);
+        multiMessage.setReplyKeyboard(replyKeyboardMarkup);
+        telegramService.sendMultiMessage(multiMessage);
     }
 
     private void createObjectForNewUser(Update update){

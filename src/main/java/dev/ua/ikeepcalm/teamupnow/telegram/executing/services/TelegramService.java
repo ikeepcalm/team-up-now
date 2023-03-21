@@ -1,14 +1,15 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.services;
 
 
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.Callback;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.EditMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.Message;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.ToDelete;
+import dev.ua.ikeepcalm.teamupnow.telegram.proxies.MediaMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.proxies.MultiMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.proxies.AlterMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.proxies.PurgeMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
 public interface TelegramService{
-    org.telegram.telegrambots.meta.api.objects.Message sendMessage(Message message);
-    void sendEditMessage(EditMessage editMessage);
-    org.telegram.telegrambots.meta.api.objects.Message sendCallback(Callback callback);
-    void deleteCallback(ToDelete toDelete);
+    void sendEditMessage(AlterMessage alterMessage);
+    Message sendMultiMessage(MultiMessage multiMessage);
+    void deleteMessage(PurgeMessage purgeMessage);
+    void sendMediaMessage(MediaMessage message);
 }

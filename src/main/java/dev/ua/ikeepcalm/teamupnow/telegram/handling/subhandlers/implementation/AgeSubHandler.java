@@ -1,15 +1,14 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.handling.subhandlers;
 
 
-import dev.ua.ikeepcalm.teamupnow.aop.annotations.Progressable;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Demographic;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.AgeENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.services.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.Callback;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.ToDelete;
+import dev.ua.ikeepcalm.teamupnow.telegram.proxies.MultiMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.proxies.PurgeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,22 +56,22 @@ public class AgeSubHandler implements SubHandler {
         } finally {
             credentials.getProgress().setProgressENUM(ProgressENUM.ABOUT);
             credentialsService.save(credentials);
-            telegramService.deleteCallback(new ToDelete(messageId,chatId));
-            Callback callback = new Callback();
-            callback.setText("""
+            telegramService.deleteMessage(new PurgeMessage(messageId,chatId));
+            MultiMessage multiMessage = new MultiMessage();
+            multiMessage.setText("""
                     Got it.
                     
                     Let's not waste time, hop on the the next step.
                     """);
-            callback.setChatId(update.getCallbackQuery().getMessage().getChatId());
+            multiMessage.setChatId(update.getCallbackQuery().getMessage().getChatId());
             ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
             List<KeyboardRow> keyboardRows = new ArrayList<>();
             KeyboardRow row = new KeyboardRow();
             row.add("/about");
             keyboardRows.add(row);
             replyKeyboardMarkup.setKeyboard(keyboardRows);
-            callback.setReplyKeyboard(replyKeyboardMarkup);
-            telegramService.sendCallback(callback);
+            multiMessage.setReplyKeyboard(replyKeyboardMarkup);
+            telegramService.sendMultiMessage(multiMessage);
         }
     }
 }
