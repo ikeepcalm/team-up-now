@@ -1,4 +1,4 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.handling.subhandlers;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks;
 
 
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
@@ -6,13 +6,14 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Demographic;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.AgeENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.services.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.MultiMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.PurgeMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class AgeSubHandler implements SubHandler {
+public class AgeResponse implements Executable {
 
     @Autowired
     private TelegramService telegramService;
@@ -28,15 +29,11 @@ public class AgeSubHandler implements SubHandler {
     @Autowired
     private CredentialsService credentialsService;
 
-    @Override
     @Transactional
-    public void manage(Update update) {
-        String currentCallback = update.getCallbackQuery().getData();
-        Long chatId = update.getCallbackQuery().getMessage().getChatId();
-        int messageId = update.getCallbackQuery().getMessage().getMessageId();
-        Credentials credentials = credentialsService.findByAccountId(update.getCallbackQuery().getFrom().getId());
+    public void manage(String receivedCallback, Message origin) {
+        Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
         try {
-            switch (currentCallback) {
+            switch (receivedCallback) {
                 case "profile-age-category-young" -> {
                     Demographic demographic = new Demographic();
                     demographic.setAge(AgeENUM.YOUNG);
@@ -56,14 +53,14 @@ public class AgeSubHandler implements SubHandler {
         } finally {
             credentials.getProgress().setProgressENUM(ProgressENUM.ABOUT);
             credentialsService.save(credentials);
-            telegramService.deleteMessage(new PurgeMessage(messageId,chatId));
+            telegramService.deleteMessage(new PurgeMessage(origin.getMessageId(), origin.getChatId()));
             MultiMessage multiMessage = new MultiMessage();
             multiMessage.setText("""
                     Got it.
                     
                     Let's not waste time, hop on the the next step.
                     """);
-            multiMessage.setChatId(update.getCallbackQuery().getMessage().getChatId());
+            multiMessage.setChatId(origin.getChatId());
             ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
             List<KeyboardRow> keyboardRows = new ArrayList<>();
             KeyboardRow row = new KeyboardRow();

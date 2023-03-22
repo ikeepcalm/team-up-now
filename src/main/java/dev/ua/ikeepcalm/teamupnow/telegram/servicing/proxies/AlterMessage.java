@@ -1,24 +1,22 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.proxies;
+package dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 @Getter
 @Setter
-public class MediaMessage {
+public class AlterMessage {
 
-    private String text;
+    @NotNull
+    private int messageId;
 
     @NotNull
     private Long chatId;
 
     private InlineKeyboardMarkup replyKeyboard;
 
-    private String filePath;
-
-    public MediaMessage() {
+    public AlterMessage() {
     }
 }

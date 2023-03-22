@@ -1,11 +1,12 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.executing.responses;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.commands;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.Progressable;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.services.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.MediaMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.MultiMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.PurgeMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MediaMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -18,18 +19,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class MenuResponse {
+public class MenuCommand implements Executable {
 
     @Autowired
     private TelegramService telegramService;
 
+    @Override
     @Progressable(ProgressENUM.DONE)
-    public void execute(Update update) {
-        long chatId = update.getMessage().getChatId();
+    public void execute(Message origin) {
         {
             MultiMessage multiMessage = new MultiMessage();
             multiMessage.setText("Easter-egg fact: there are 108 cards in the Uno game");
-            multiMessage.setChatId(chatId);
+            multiMessage.setChatId(origin.getChatId());
             ReplyKeyboardRemove remove = new ReplyKeyboardRemove();
             remove.setRemoveKeyboard(true);
             multiMessage.setReplyKeyboard(remove);
@@ -39,7 +40,7 @@ public class MenuResponse {
         }
         MediaMessage message = new MediaMessage();
         message.setFilePath("src/main/resources/menu.png");
-        message.setChatId(chatId);
+        message.setChatId(origin.getChatId());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstRow = new ArrayList<>();

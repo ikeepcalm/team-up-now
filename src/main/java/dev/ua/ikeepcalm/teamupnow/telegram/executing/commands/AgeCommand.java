@@ -1,10 +1,11 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.executing.responses;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.commands;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.Progressable;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.services.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.MultiMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.PurgeMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -17,18 +18,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class AgeResponse {
+public class AgeCommand implements Executable {
 
     @Autowired
     private TelegramService telegramService;
 
+    @Override
     @Progressable(ProgressENUM.AGE)
-    public void execute(Update update) {
+    public void execute(Message origin) {
         {
             MultiMessage multiMessage = new MultiMessage();
             multiMessage.setText("Easter-egg hint: you can click on the field below the text entry" +
                     "area in order to move forward faster, than manually typing commands");
-            multiMessage.setChatId(update.getMessage().getChatId());
+            multiMessage.setChatId(origin.getChatId());
             ReplyKeyboardRemove remove = new ReplyKeyboardRemove();
             remove.setRemoveKeyboard(true);
             multiMessage.setReplyKeyboard(remove);
@@ -38,7 +40,7 @@ public class AgeResponse {
         }
         MultiMessage multiMessage = new MultiMessage();
         multiMessage.setText("Now, please, choose your age category (the system will try to match you with allies of similar age):");
-        multiMessage.setChatId(update.getMessage().getChatId());
+        multiMessage.setChatId(origin.getChatId());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstRow = new ArrayList<>();

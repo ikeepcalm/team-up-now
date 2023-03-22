@@ -1,15 +1,15 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.handling.subhandlers.implementation;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks;
 
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.GameENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.services.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.handling.subhandlers.SubHandler;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.MultiMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.AlterMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.PurgeMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class GamesSubHandler implements SubHandler {
+public class GamesResponse implements Executable {
 
     @Autowired
     private TelegramService telegramService;
@@ -32,21 +32,17 @@ public class GamesSubHandler implements SubHandler {
     @Autowired
     private CredentialsService credentialsService;
 
-    @Override
     @Transactional
-    public void manage(Update update) {
-        Credentials credentials = credentialsService.findByAccountId(update.getCallbackQuery().getFrom().getId());
-        String currentCallback = update.getCallbackQuery().getData();
-        Long chatId = update.getCallbackQuery().getMessage().getChatId();
-        Message origin = update.getCallbackQuery().getMessage();
+    public void manage(String receivedCallback, Message origin) {
+        Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
         InlineKeyboardMarkup markup = origin.getReplyMarkup();
-        if (!currentCallback.equals("profile-games-ready")) {
+        if (!receivedCallback.equals("profile-games-ready")) {
             try {
-                if (currentCallback.startsWith("profile-games-minecraft")) {
+                if (receivedCallback.startsWith("profile-games-minecraft")) {
                     updateButton("profile-games-minecraft", markup, "Minecraft");
-                } else if (currentCallback.startsWith("profile-games-csgo")) {
+                } else if (receivedCallback.startsWith("profile-games-csgo")) {
                     updateButton("profile-games-csgo", markup, "CS:GO");
-                } else if (currentCallback.startsWith("profile-games-destiny2")) {
+                } else if (receivedCallback.startsWith("profile-games-destiny2")) {
                     updateButton("profile-games-destiny2", markup, "Destiny 2");
                 }
             } finally {
@@ -63,14 +59,14 @@ public class GamesSubHandler implements SubHandler {
             as a green flag; if yes -> adds it to the list of games to be updated in database for user
                              if no -> ignores it
              */
-            telegramService.deleteMessage(new PurgeMessage(update.getCallbackQuery().getMessage().getMessageId(), chatId));
+            telegramService.deleteMessage(new PurgeMessage(origin.getMessageId(), origin.getChatId()));
             List<String> chosenGames = new ArrayList<>();
             List<List<InlineKeyboardButton>> keyboards = markup.getKeyboard();
             for (List<InlineKeyboardButton> keyboard : keyboards) {
                 for (InlineKeyboardButton button : keyboard) {
-                    String callbackData = button.getCallbackData();
-                    if (callbackData.endsWith("-chosen")) {
-                        String game = callbackData.substring(0, callbackData.indexOf("-chosen"));
+                    String buttonCallback = button.getCallbackData();
+                    if (buttonCallback.endsWith("-chosen")) {
+                        String game = buttonCallback.substring(0, buttonCallback.indexOf("-chosen"));
                         chosenGames.add(game);
                     }
                 }
@@ -107,7 +103,7 @@ public class GamesSubHandler implements SubHandler {
                     
                     You would be able to change that later but for now, let's move on to the next step.
                     """);
-            multiMessage.setChatId(update.getCallbackQuery().getMessage().getChatId());
+            multiMessage.setChatId(origin.getChatId());
             ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
             List<KeyboardRow> keyboardRows = new ArrayList<>();
             KeyboardRow row = new KeyboardRow();
@@ -119,11 +115,6 @@ public class GamesSubHandler implements SubHandler {
         }
     }
 
-    /*
-    Iterates through the list of buttons, determines if the current one ends with "-chosen"
-    as a green flag; if yes -> deletes it
-                     if no -> adds it
-    */
     private void updateButton(String callbackData, InlineKeyboardMarkup markup, String buttonText) {
         for (List<InlineKeyboardButton> row : markup.getKeyboard()) {
             for (InlineKeyboardButton button : row) {

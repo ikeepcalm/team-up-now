@@ -1,11 +1,13 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.executing.responses;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.commands;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.Progressable;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.services.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.MultiMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
@@ -15,17 +17,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class GamesResponse {
+public class GamesCommand implements Executable {
 
     @Autowired
     private TelegramService telegramService;
 
+    @Override
     @Progressable(ProgressENUM.GAMES)
-    public void execute(Update update) {
+    public void execute(Message origin) {
         {
             MultiMessage multiMessage = new MultiMessage();
             multiMessage.setText("This is how you will interact with me in most cases. And now for the actual encounter:");
-            multiMessage.setChatId(update.getMessage().getChatId());
+            multiMessage.setChatId(origin.getChatId());
             ReplyKeyboardRemove remove = new ReplyKeyboardRemove();
             remove.setRemoveKeyboard(true);
             multiMessage.setReplyKeyboard(remove);
@@ -34,7 +37,7 @@ public class GamesResponse {
         MultiMessage multiMessage = new MultiMessage();
         multiMessage.setText("Select the games you play (you can choose more than one)." +
                 " When you're done, click the green check mark to continue.");
-        multiMessage.setChatId(update.getMessage().getChatId());
+        multiMessage.setChatId(origin.getChatId());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstRow = new ArrayList<>();

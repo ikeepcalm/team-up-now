@@ -1,6 +1,6 @@
 package dev.ua.ikeepcalm.teamupnow.telegram;
 
-import dev.ua.ikeepcalm.teamupnow.telegram.handling.handlers.Handler;
+import dev.ua.ikeepcalm.teamupnow.telegram.handling.Handleable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -12,11 +12,11 @@ import java.util.List;
 public class BotInstance extends TelegramLongPollingBot {
 
     @Autowired
-    private List<Handler> handlerList;
+    private List<Handleable> handleableList;
 
     @Override
     public void onUpdateReceived(Update update) {
-        for (Handler h : handlerList) {
+        for (Handleable h : handleableList) {
             if (h.supports(update)){
                 h.manage(update);
             }

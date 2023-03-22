@@ -1,10 +1,10 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.executing.services.implementations;
+package dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations;
 
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.services.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.MediaMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.MultiMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.AlterMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.PurgeMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MediaMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.springframework.stereotype.Service;
@@ -17,8 +17,6 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageRe
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 @Service
 public class TelegramServiceExecutor extends DefaultAbsSender implements TelegramService {

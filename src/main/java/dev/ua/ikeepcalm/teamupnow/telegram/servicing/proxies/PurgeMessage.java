@@ -1,4 +1,4 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.proxies;
+package dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

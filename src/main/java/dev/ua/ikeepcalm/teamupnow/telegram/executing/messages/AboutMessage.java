@@ -1,17 +1,17 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.handling.subhandlers.implementation;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.messages;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.Progressable;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Description;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.services.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.handling.subhandlers.SubHandler;
-import dev.ua.ikeepcalm.teamupnow.telegram.proxies.MultiMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class AboutSubHandler implements SubHandler {
+public class AboutMessage implements Executable {
 
 
     @Autowired
@@ -31,12 +31,10 @@ public class AboutSubHandler implements SubHandler {
     @Override
     @Progressable(ProgressENUM.ABOUT)
     @Transactional
-    public void manage(Update update) {
-        String text = update.getMessage().getText();
-        long accountId = update.getMessage().getFrom().getId();
-        Credentials credentials = credentialsService.findByAccountId(accountId);
+    public void execute(Message origin){
+        Credentials credentials = credentialsService.findByAccountId(origin.getFrom().getId());
         Description description = new Description();
-        description.setDescription(text);
+        description.setDescription(origin.getText());
         credentials.setDescription(description);
         credentials.getProgress().setProgressENUM(ProgressENUM.DONE);
         credentialsService.save(credentials);
@@ -46,7 +44,7 @@ public class AboutSubHandler implements SubHandler {
                 just a little bit more and you will have access to the full functionality of the bot.
                 To open the main menu, click on the button below the text input field one last time!
                                     """);
-        multiMessage.setChatId(update.getMessage().getChatId());
+        multiMessage.setChatId(origin.getChatId());
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
