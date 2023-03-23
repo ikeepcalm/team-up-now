@@ -76,42 +76,56 @@ public class GamesResponse implements Executable {
             Iterates through the list of games to be updated in database for user
             creates new Object for every compatible string and sets it for the Credentials object
              */
-            for (String gameInList : chosenGames) {
-                switch (gameInList) {
-                    case "profile-games-destiny2" -> {
-                        Game game = new Game();
-                        game.setName(GameENUM.DESTINY);
-                        credentials.getGames().add(game);
-                    }
-                    case "profile-games-csgo" -> {
-                        Game game = new Game();
-                        game.setName(GameENUM.CSGO);
-                        credentials.getGames().add(game);
-                    }
-                    case "profile-games-minecraft" -> {
-                        Game game = new Game();
-                        game.setName(GameENUM.MINECRAFT);
-                        credentials.getGames().add(game);
+            if (chosenGames.isEmpty()){
+                MultiMessage multiMessage = new MultiMessage();
+                multiMessage.setChatId(origin.getChatId());
+                multiMessage.setText("(!) You can't help but pick at least one game! First of all, that's what I'm for, why do you want to offend me? Let's try it again ↓");
+                ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+                List<KeyboardRow> keyboardRows = new ArrayList<>();
+                KeyboardRow row = new KeyboardRow();
+                row.add("/games");
+                keyboardRows.add(row);
+                replyKeyboardMarkup.setKeyboard(keyboardRows);
+                multiMessage.setReplyKeyboard(replyKeyboardMarkup);
+                telegramService.sendMultiMessage(multiMessage);
+            } else {
+                for (String gameInList : chosenGames) {
+                    switch (gameInList) {
+                        case "profile-games-destiny2" -> {
+                            Game game = new Game();
+                            game.setName(GameENUM.DESTINY);
+                            credentials.getGames().add(game);
+                        }
+                        case "profile-games-csgo" -> {
+                            Game game = new Game();
+                            game.setName(GameENUM.CSGO);
+                            credentials.getGames().add(game);
+                        }
+                        case "profile-games-minecraft" -> {
+                            Game game = new Game();
+                            game.setName(GameENUM.MINECRAFT);
+                            credentials.getGames().add(game);
+                        }
                     }
                 }
-            }
-            credentials.getProgress().setProgressENUM(ProgressENUM.AGE);
-            credentialsService.save(credentials);
-            MultiMessage multiMessage = new MultiMessage();
-            multiMessage.setText("""
+                credentials.getProgress().setProgressENUM(ProgressENUM.AGE);
+                credentialsService.save(credentials);
+                MultiMessage multiMessage = new MultiMessage();
+                multiMessage.setText("""
                     Okay, I've saved everything.
                     
                     You would be able to change that later but for now, let's move on to the next step.
                     """);
-            multiMessage.setChatId(origin.getChatId());
-            ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-            List<KeyboardRow> keyboardRows = new ArrayList<>();
-            KeyboardRow row = new KeyboardRow();
-            row.add("/age");
-            keyboardRows.add(row);
-            replyKeyboardMarkup.setKeyboard(keyboardRows);
-            multiMessage.setReplyKeyboard(replyKeyboardMarkup);
-            telegramService.sendMultiMessage(multiMessage);
+                multiMessage.setChatId(origin.getChatId());
+                ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+                List<KeyboardRow> keyboardRows = new ArrayList<>();
+                KeyboardRow row = new KeyboardRow();
+                row.add("/age");
+                keyboardRows.add(row);
+                replyKeyboardMarkup.setKeyboard(keyboardRows);
+                multiMessage.setReplyKeyboard(replyKeyboardMarkup);
+                telegramService.sendMultiMessage(multiMessage);
+            }
         }
     }
 

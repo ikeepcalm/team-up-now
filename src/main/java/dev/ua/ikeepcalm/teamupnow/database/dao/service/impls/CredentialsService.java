@@ -26,6 +26,12 @@ public class CredentialsService implements DatabaseService<Credentials> {
         }
     }
 
+    @Override
+    public void deleteCredentials(long accountId) {
+        credentialsRepo.delete(findByAccountId(accountId));
+    }
+
+
     public void save(Credentials credentials){
         try {
             findByAccountId(credentials.getAccountId());

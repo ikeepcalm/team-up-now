@@ -1,10 +1,7 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.handling.handlers;
 
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.BackResponse;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.GamesResponse;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.*;
 import dev.ua.ikeepcalm.teamupnow.telegram.handling.Handleable;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.AgeResponse;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.ProfileResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -21,6 +18,8 @@ public class CallbackHandleable implements Handleable {
     private ProfileResponse profileResponse;
     @Autowired
     private BackResponse backResponse;
+    @Autowired
+    private EditProfileResponse editProfileResponse;
 
     @Override
     public void manage(Update update) {
@@ -37,6 +36,8 @@ public class CallbackHandleable implements Handleable {
                 profileResponse.manage(callback, origin);
             } else if (callback.equals("menu-back")){
                 backResponse.manage(callback, origin);
+            } else if (callback.equals("menu-profile-edit")){
+                editProfileResponse.manage(callback, origin);
             }
         }
     }
