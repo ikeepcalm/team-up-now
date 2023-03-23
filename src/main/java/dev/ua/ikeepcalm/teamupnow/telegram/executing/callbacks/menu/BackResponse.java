@@ -1,5 +1,6 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu;
 
+import dev.ua.ikeepcalm.teamupnow.aop.annotations.Sequenced;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.MenuCommand;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
@@ -17,10 +18,7 @@ public class BackResponse implements Executable {
     private MenuCommand menuCommand;
 
     @Override
-    public void manage(String receivedCallback, Message origin) {
-        {
-            PurgeMessage purgeMessage = new PurgeMessage(origin.getMessageId(), origin.getChatId());
-            telegramService.deleteMessage(purgeMessage);
-        } menuCommand.execute(origin);
+    @Sequenced
+    public void manage(String receivedCallback, Message origin) {menuCommand.execute(origin);
     }
 }

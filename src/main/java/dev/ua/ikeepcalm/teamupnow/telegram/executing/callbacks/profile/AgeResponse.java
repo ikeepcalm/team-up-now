@@ -1,4 +1,4 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile;
 
 
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;

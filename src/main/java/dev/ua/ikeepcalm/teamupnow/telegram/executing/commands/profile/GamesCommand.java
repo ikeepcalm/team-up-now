@@ -1,5 +1,6 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.executing.commands;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.profile;
 
+import dev.ua.ikeepcalm.teamupnow.aop.annotations.ClearKeyboard;
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.Progressable;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
@@ -23,17 +24,9 @@ public class GamesCommand implements Executable {
     private TelegramService telegramService;
 
     @Override
+    @ClearKeyboard
     @Progressable(ProgressENUM.GAMES)
     public void execute(Message origin) {
-        {
-            MultiMessage multiMessage = new MultiMessage();
-            multiMessage.setText("This is how you will interact with me in most cases. And now for the actual encounter:");
-            multiMessage.setChatId(origin.getChatId());
-            ReplyKeyboardRemove remove = new ReplyKeyboardRemove();
-            remove.setRemoveKeyboard(true);
-            multiMessage.setReplyKeyboard(remove);
-            telegramService.sendMultiMessage(multiMessage);
-        }
         MultiMessage multiMessage = new MultiMessage();
         multiMessage.setText("Select the games you play (you can choose more than one)." +
                 " When you're done, click the green check mark to continue.");

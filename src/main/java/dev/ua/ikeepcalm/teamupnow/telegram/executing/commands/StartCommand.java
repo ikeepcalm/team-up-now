@@ -1,6 +1,6 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.commands;
 
-import dev.ua.ikeepcalm.teamupnow.aop.annotations.Start;
+import dev.ua.ikeepcalm.teamupnow.aop.annotations.EntryPoint;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Progress;
@@ -13,7 +13,6 @@ import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
@@ -28,7 +27,7 @@ public class StartCommand implements Executable {
     @Autowired
     private TelegramService telegramService;
 
-    @Start
+    @EntryPoint
     @Override
     public void execute(Message origin) {
         createObjectForNewUser(origin.getChatId(), origin.getFrom().getUserName(), origin.getFrom().getLanguageCode());

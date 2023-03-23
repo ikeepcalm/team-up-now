@@ -1,5 +1,6 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.commands;
 
+import dev.ua.ikeepcalm.teamupnow.aop.annotations.ClearKeyboard;
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.Progressable;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
@@ -25,19 +26,9 @@ public class MenuCommand implements Executable {
     private TelegramService telegramService;
 
     @Override
+    @ClearKeyboard
     @Progressable(ProgressENUM.DONE)
     public void execute(Message origin) {
-        {
-            MultiMessage multiMessage = new MultiMessage();
-            multiMessage.setText("Easter-egg fact: there are 108 cards in the Uno game");
-            multiMessage.setChatId(origin.getChatId());
-            ReplyKeyboardRemove remove = new ReplyKeyboardRemove();
-            remove.setRemoveKeyboard(true);
-            multiMessage.setReplyKeyboard(remove);
-            Message message = telegramService.sendMultiMessage(multiMessage);
-            PurgeMessage purgeMessage = new PurgeMessage(message.getMessageId(), message.getChatId());
-            telegramService.deleteMessage(purgeMessage);
-        }
         MediaMessage message = new MediaMessage();
         message.setFilePath("src/main/resources/menu.png");
         message.setChatId(origin.getChatId());

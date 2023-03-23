@@ -1,5 +1,6 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu;
 
+import dev.ua.ikeepcalm.teamupnow.aop.annotations.Sequenced;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
@@ -28,12 +29,9 @@ public class ProfileResponse implements Executable {
     private CredentialsService credentialsService;
 
     @Override
+    @Sequenced
     @Transactional
     public void manage(String receivedCallback, Message origin) {
-        {
-            PurgeMessage purgeMessage = new PurgeMessage(origin.getMessageId(), origin.getChatId());
-            telegramService.deleteMessage(purgeMessage);
-        }
         Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
         MediaMessage message = new MediaMessage();
         message.setFilePath("src/main/resources/profile.png");
@@ -55,14 +53,14 @@ public class ProfileResponse implements Executable {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
-        InlineKeyboardButton profile = new InlineKeyboardButton();
-        profile.setText("Edit Profile \uD83D\uDDD1️");
-        profile.setCallbackData("menu-profile-edit");
-        InlineKeyboardButton discover = new InlineKeyboardButton();
-        discover.setText("Back ↩️");
-        discover.setCallbackData("menu-back");
-        firstRow.add(profile);
-        firstRow.add(discover);
+        InlineKeyboardButton editProfile = new InlineKeyboardButton();
+        editProfile.setText("Edit Profile \uD83D\uDDD1️");
+        editProfile.setCallbackData("menu-profile-edit");
+        InlineKeyboardButton back = new InlineKeyboardButton();
+        back.setText("Back ↩️");
+        back.setCallbackData("menu-back");
+        firstRow.add(editProfile);
+        firstRow.add(back);
         keyboard.add(firstRow);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         message.setReplyKeyboard(inlineKeyboardMarkup);

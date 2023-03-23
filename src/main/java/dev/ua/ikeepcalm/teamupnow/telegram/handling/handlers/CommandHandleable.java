@@ -1,8 +1,8 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.handling.handlers;
 
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.AboutCommand;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.AgeCommand;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.GamesCommand;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.profile.AboutCommand;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.profile.AgeCommand;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.profile.GamesCommand;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.MenuCommand;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.StartCommand;
 import dev.ua.ikeepcalm.teamupnow.telegram.handling.Handleable;

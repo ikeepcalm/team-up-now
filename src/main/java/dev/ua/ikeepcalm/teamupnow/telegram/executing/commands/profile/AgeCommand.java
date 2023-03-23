@@ -1,5 +1,6 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.executing.commands;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.profile;
 
+import dev.ua.ikeepcalm.teamupnow.aop.annotations.ClearKeyboard;
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.Progressable;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
@@ -24,20 +25,9 @@ public class AgeCommand implements Executable {
     private TelegramService telegramService;
 
     @Override
+    @ClearKeyboard
     @Progressable(ProgressENUM.AGE)
     public void execute(Message origin) {
-        {
-            MultiMessage multiMessage = new MultiMessage();
-            multiMessage.setText("Easter-egg hint: you can click on the field below the text entry" +
-                    "area in order to move forward faster, than manually typing commands");
-            multiMessage.setChatId(origin.getChatId());
-            ReplyKeyboardRemove remove = new ReplyKeyboardRemove();
-            remove.setRemoveKeyboard(true);
-            multiMessage.setReplyKeyboard(remove);
-            Message message =  telegramService.sendMultiMessage(multiMessage);
-            PurgeMessage purgeMessage = new PurgeMessage(message.getMessageId(), message.getChatId());
-            telegramService.deleteMessage(purgeMessage);
-        }
         MultiMessage multiMessage = new MultiMessage();
         multiMessage.setText("Now, please, choose your age category (the system will try to match you with allies of similar age):");
         multiMessage.setChatId(origin.getChatId());

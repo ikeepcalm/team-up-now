@@ -1,5 +1,6 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu;
 
+import dev.ua.ikeepcalm.teamupnow.aop.annotations.Sequenced;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
@@ -27,12 +28,9 @@ public class EditProfileResponse implements Executable {
     private CredentialsService credentialsService;
 
     @Override
-    @Transactional
+    @Sequenced
     public void manage(String receivedCallback, Message origin) {
-        {
-            PurgeMessage purgeMessage = new PurgeMessage(origin.getMessageId(), origin.getChatId());
-            telegramService.deleteMessage(purgeMessage);
-        } credentialsService.deleteCredentials(origin.getChatId());
+        credentialsService.deleteCredentials(origin.getChatId());
         MultiMessage multiMessage = new MultiMessage();
         multiMessage.setText("""
                     Let's get to know each other again
