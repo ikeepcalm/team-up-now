@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Component
-public class CommandHandleable implements Handleable {
+public class CommandHandler implements Handleable {
 
     @Autowired
     private StartCommand startCommand;

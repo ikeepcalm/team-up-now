@@ -1,12 +1,12 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations;
 
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MediaMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
-import org.telegram.telegrambots.meta.api.objects.Message;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -14,16 +14,19 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.File;
 
 @Service
+@PropertySource("classpath:credentials.properties")
 public class TelegramServiceExecutor extends DefaultAbsSender implements TelegramService {
 
     //TODO: Use Docker ENV variable here
-    public TelegramServiceExecutor() {
-        super(new DefaultBotOptions(), "6286513115:AAEEJSBflwdRuGTq7FpR4olumTEszh2AIa4");
+    public TelegramServiceExecutor(@Value("${telegram.bot.token}") String botToken) {
+        super(new DefaultBotOptions(), botToken);
     }
 
     @Override

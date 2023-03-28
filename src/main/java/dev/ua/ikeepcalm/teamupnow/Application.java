@@ -12,6 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
         "org.telegram.telegrambots"
 })
 public class Application {
+    //TODO: Make bot edit messages, not delete the old one and send new
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }

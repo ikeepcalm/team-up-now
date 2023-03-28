@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Component
-public class CallbackHandleable implements Handleable {
+public class CallbackHandler implements Handleable {
 
     @Autowired
     private GamesResponse gamesResponse;

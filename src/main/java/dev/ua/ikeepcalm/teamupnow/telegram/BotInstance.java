@@ -2,6 +2,8 @@ package dev.ua.ikeepcalm.teamupnow.telegram;
 
 import dev.ua.ikeepcalm.teamupnow.telegram.handling.Handleable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -9,7 +11,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.List;
 
 @Component
+@PropertySource("classpath:credentials.properties")
 public class BotInstance extends TelegramLongPollingBot {
+    @Value("${telegram.bot.username}")
+    private String botUsername;
 
     @Autowired
     private List<Handleable> handleableList;
@@ -17,20 +22,18 @@ public class BotInstance extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         for (Handleable h : handleableList) {
-            if (h.supports(update)){
+            if (h.supports(update)) {
                 h.manage(update);
             }
         }
     }
 
-    //TODO: Integrate this value with Docker ENV
-    public BotInstance() {
-        super("6286513115:AAEEJSBflwdRuGTq7FpR4olumTEszh2AIa4");
+    public BotInstance(@Value("${telegram.bot.token}") String botToken) {
+        super(botToken);
     }
 
-    //TODO: Integrate this value with Docker ENV
     @Override
     public String getBotUsername() {
-        return "teamupnow_bot";
+        return botUsername;
     }
 }

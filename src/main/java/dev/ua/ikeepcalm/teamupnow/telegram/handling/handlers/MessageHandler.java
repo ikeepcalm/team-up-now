@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Component
-public class MessageHandleable implements Handleable {
+public class MessageHandler implements Handleable {
 
     @Autowired
     private AboutMessage aboutMessage;
