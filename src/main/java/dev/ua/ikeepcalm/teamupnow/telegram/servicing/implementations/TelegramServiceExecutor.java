@@ -13,9 +13,13 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageCaption;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageMedia;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.File;
@@ -30,11 +34,30 @@ public class TelegramServiceExecutor extends DefaultAbsSender implements Telegra
     }
 
     @Override
-    public void sendEditMessage(AlterMessage alterMessage) {
+    public void sendAlterMessage(AlterMessage alterMessage) {
+        try {
+            EditMessageCaption editMessageCaption = new EditMessageCaption();
+            editMessageCaption.setMessageId(alterMessage.getMessageId());
+            editMessageCaption.setCaption(alterMessage.getText());
+            editMessageCaption.setReplyMarkup(alterMessage.getReplyKeyboard());
+            editMessageCaption.setChatId(alterMessage.getChatId());
+            EditMessageMedia editMessageMedia = new EditMessageMedia();
+            editMessageMedia.setMessageId(alterMessage.getMessageId());
+            editMessageMedia.setChatId(alterMessage.getChatId());
+            editMessageMedia.setMedia(new InputMediaPhoto(alterMessage.getFileURL()));
+            execute(editMessageMedia);
+            execute(editMessageCaption);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void sendAlterMessage(MultiMessage multiMessage){
         EditMessageReplyMarkup editMessageReplyMarkup = new EditMessageReplyMarkup();
-        editMessageReplyMarkup.setMessageId(alterMessage.getMessageId());
-        editMessageReplyMarkup.setChatId(alterMessage.getChatId());
-        editMessageReplyMarkup.setReplyMarkup(alterMessage.getReplyKeyboard());
+        editMessageReplyMarkup.setMessageId(multiMessage.getMessageId());
+        editMessageReplyMarkup.setChatId(multiMessage.getChatId());
+        editMessageReplyMarkup.setReplyMarkup((InlineKeyboardMarkup) multiMessage.getReplyKeyboard());
         try {
             execute(editMessageReplyMarkup);
         } catch (TelegramApiException e) {
@@ -74,9 +97,11 @@ public class TelegramServiceExecutor extends DefaultAbsSender implements Telegra
         sendPhoto.setPhoto(new InputFile(new File(message.getFilePath())));
         if (message.getText() != null) {
             sendPhoto.setCaption(message.getText());
-        } if (message.getReplyKeyboard() != null){
+        }
+        if (message.getReplyKeyboard() != null) {
             sendPhoto.setReplyMarkup(message.getReplyKeyboard());
-        } try {
+        }
+        try {
             execute(sendPhoto);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);

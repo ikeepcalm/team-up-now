@@ -6,6 +6,7 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MediaMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +30,13 @@ public class ProfileResponse implements Executable {
     private CredentialsService credentialsService;
 
     @Override
-    @Sequenced
     @Transactional
     public void manage(String receivedCallback, Message origin) {
         Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
-        MediaMessage message = new MediaMessage();
-        message.setFilePath("src/main/resources/profile.png");
-        message.setChatId(origin.getChatId());
+        AlterMessage alterMessage = new AlterMessage();
+        alterMessage.setMessageId(origin.getMessageId());
+        alterMessage.setChatId(origin.getChatId());
+        alterMessage.setFileURL("https://static.vecteezy.com/system/resources/previews/005/544/718/original/profile-icon-design-free-vector.jpg");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Username: @").append(credentials.getUsername()).append("\n");
         stringBuilder.append("Language: ").append(credentials.getUiLanguage()).append("\n");
@@ -49,7 +50,7 @@ public class ProfileResponse implements Executable {
                 stringBuilder.append(", ");
             }
         }
-        message.setText(stringBuilder.toString());
+        alterMessage.setText(stringBuilder.toString());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
@@ -63,7 +64,7 @@ public class ProfileResponse implements Executable {
         firstRow.add(back);
         keyboard.add(firstRow);
         inlineKeyboardMarkup.setKeyboard(keyboard);
-        message.setReplyKeyboard(inlineKeyboardMarkup);
-        telegramService.sendMediaMessage(message);
+        alterMessage.setReplyKeyboard(inlineKeyboardMarkup);
+        telegramService.sendAlterMessage(alterMessage);
     }
 }

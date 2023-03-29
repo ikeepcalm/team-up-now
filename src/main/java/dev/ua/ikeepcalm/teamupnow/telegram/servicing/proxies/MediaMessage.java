@@ -5,20 +5,16 @@ import lombok.Getter;
 import lombok.Setter;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
 @Getter
 @Setter
 public class MediaMessage {
-
     private String text;
-
     @NotNull
     private Long chatId;
-
-    private InlineKeyboardMarkup replyKeyboard;
-
+    private ReplyKeyboard replyKeyboard;
     private String filePath;
-
     public MediaMessage() {
     }
 }

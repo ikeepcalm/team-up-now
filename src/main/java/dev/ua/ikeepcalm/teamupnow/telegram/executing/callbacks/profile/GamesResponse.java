@@ -46,11 +46,11 @@ public class GamesResponse implements Executable {
                     updateButton("profile-games-destiny2", markup, "Destiny 2");
                 }
             } finally {
-                AlterMessage alterMessage = new AlterMessage();
+                MultiMessage alterMessage = new MultiMessage();
                 alterMessage.setMessageId(origin.getMessageId());
                 alterMessage.setChatId(origin.getChatId());
                 alterMessage.setReplyKeyboard(markup);
-                telegramService.sendEditMessage(alterMessage);
+                telegramService.sendAlterMessage(alterMessage);
             }
         } else {
 

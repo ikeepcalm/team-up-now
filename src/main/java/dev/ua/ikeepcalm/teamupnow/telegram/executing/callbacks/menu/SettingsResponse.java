@@ -6,6 +6,7 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MediaMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,12 +27,12 @@ public class SettingsResponse implements Executable {
     private CredentialsService credentialsService;
 
     @Override
-    @Sequenced
     public void manage(String receivedCallback, Message origin) {
         Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
-        MediaMessage message = new MediaMessage();
-        message.setFilePath("src/main/resources/settings.png");
-        message.setChatId(origin.getChatId());
+        AlterMessage alterMessage = new AlterMessage();
+        alterMessage.setFileURL("https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Ic_settings_48px.svg/2048px-Ic_settings_48px.svg.png");
+        alterMessage.setMessageId(origin.getMessageId());
+        alterMessage.setChatId(origin.getChatId());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
@@ -58,7 +59,7 @@ public class SettingsResponse implements Executable {
         keyboard.add(firstRow);
         keyboard.add(secondRow);
         inlineKeyboardMarkup.setKeyboard(keyboard);
-        message.setReplyKeyboard(inlineKeyboardMarkup);
-        telegramService.sendMediaMessage(message);
+        alterMessage.setReplyKeyboard(inlineKeyboardMarkup);
+        telegramService.sendAlterMessage(alterMessage);
     }
 }

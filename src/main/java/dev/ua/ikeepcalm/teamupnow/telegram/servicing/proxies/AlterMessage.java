@@ -11,12 +11,11 @@ public class AlterMessage {
 
     @NotNull
     private int messageId;
-
     @NotNull
     private Long chatId;
-
+    private String text;
     private InlineKeyboardMarkup replyKeyboard;
-
+    private String fileURL;
     public AlterMessage() {
     }
 }

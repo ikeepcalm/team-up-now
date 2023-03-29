@@ -46,7 +46,5 @@ public class EditProfileResponse implements Executable {
         replyKeyboardMarkup.setKeyboard(keyboardRows);
         multiMessage.setReplyKeyboard(replyKeyboardMarkup);
         telegramService.sendMultiMessage(multiMessage);
-
     }
-
 }
