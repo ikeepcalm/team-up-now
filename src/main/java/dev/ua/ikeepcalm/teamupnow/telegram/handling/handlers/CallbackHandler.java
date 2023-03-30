@@ -1,9 +1,6 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.handling.handlers;
 
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu.BackResponse;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu.EditProfileResponse;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu.ProfileResponse;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu.SettingsResponse;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu.*;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile.AgeResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile.GamesResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.handling.Handleable;
@@ -25,29 +22,27 @@ public class CallbackHandler implements Handleable {
     private BackResponse backResponse;
     @Autowired
     private EditProfileResponse editProfileResponse;
-
     @Autowired
     private SettingsResponse settingsResponse;
+    @Autowired
+    private MoreResponse moreResponse;
 
     @Override
     public void manage(Update update) {
         String callback = update.getCallbackQuery().getData();
         Message origin = update.getCallbackQuery().getMessage();
         if (callback.startsWith("profile")) {
-            if (callback.startsWith("profile-games")) {
-                gamesResponse.manage(callback, origin);
-            } else if (callback.startsWith("profile-age")) {
-                ageResponse.manage(callback, origin);
+            switch (callback){
+                case "profile-games" -> gamesResponse.manage(callback, origin);
+                case "profile-age" -> ageResponse.manage(callback,origin);
             }
         } else if (callback.startsWith("menu")) {
-            if (callback.equals("menu-profile")){
-                profileResponse.manage(callback, origin);
-            } else if (callback.equals("menu-back")){
-                backResponse.manage(callback, origin);
-            } else if (callback.equals("menu-profile-edit")){
-                editProfileResponse.manage(callback, origin);
-            } else if (callback.equals("menu-settings")){
-                settingsResponse.manage(callback, origin);
+            switch (callback) {
+                case "menu-profile" -> profileResponse.manage(callback, origin);
+                case "menu-profile-edit" -> editProfileResponse.manage(callback, origin);
+                case "menu-settings" -> settingsResponse.manage(callback, origin);
+                case "menu-more" -> moreResponse.manage(callback, origin);
+                case "menu-back" -> backResponse.manage(callback, origin);
             }
         }
     }
