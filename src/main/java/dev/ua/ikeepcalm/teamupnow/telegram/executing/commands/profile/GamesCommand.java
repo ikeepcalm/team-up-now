@@ -1,10 +1,12 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.profile;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.ClearKeyboard;
+import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.Progressable;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,14 +24,15 @@ public class GamesCommand implements Executable {
 
     @Autowired
     private TelegramService telegramService;
+    private LocaleTool locale;
 
+    @I18N
     @Override
     @ClearKeyboard
     @Progressable(ProgressENUM.GAMES)
     public void execute(Message origin) {
         MultiMessage multiMessage = new MultiMessage();
-        multiMessage.setText("Select the games you play (you can choose more than one)." +
-                " When you're done, click the green check mark to continue.");
+        multiMessage.setText(locale.getMessage("profile-games"));
         multiMessage.setChatId(origin.getChatId());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
@@ -45,7 +48,7 @@ public class GamesCommand implements Executable {
         destiny2.setText("Destiny 2");
         destiny2.setCallbackData("profile-games-destiny2");
         InlineKeyboardButton ready = new InlineKeyboardButton();
-        ready.setText("Ready ✅");
+        ready.setText(locale.getMessage("profile-ready"));
         ready.setCallbackData("profile-games-ready");
         firstRow.add(minecraft);
         firstRow.add(csgo);

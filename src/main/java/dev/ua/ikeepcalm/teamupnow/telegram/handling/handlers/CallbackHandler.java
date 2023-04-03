@@ -32,9 +32,10 @@ public class CallbackHandler implements Handleable {
         String callback = update.getCallbackQuery().getData();
         Message origin = update.getCallbackQuery().getMessage();
         if (callback.startsWith("profile")) {
-            switch (callback){
-                case "profile-games" -> gamesResponse.manage(callback, origin);
-                case "profile-age" -> ageResponse.manage(callback,origin);
+            if (callback.startsWith("profile-games")){
+                gamesResponse.manage(callback, origin);
+            } else if (callback.startsWith("profile-age")){
+                ageResponse.manage(callback,origin);
             }
         } else if (callback.startsWith("menu")) {
             switch (callback) {

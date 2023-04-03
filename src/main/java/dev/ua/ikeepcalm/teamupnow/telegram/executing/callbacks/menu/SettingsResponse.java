@@ -1,11 +1,13 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu;
 
+import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.Sequenced;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MediaMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +24,11 @@ public class SettingsResponse implements Executable {
 
     @Autowired
     private TelegramService telegramService;
-
     @Autowired
     private CredentialsService credentialsService;
+    private LocaleTool locale;
 
+    @I18N
     @Override
     public void manage(String receivedCallback, Message origin) {
         Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
@@ -39,7 +42,7 @@ public class SettingsResponse implements Executable {
         List<InlineKeyboardButton> secondRow = new ArrayList<>();
         InlineKeyboardButton language = new InlineKeyboardButton();
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Language ");
+        stringBuilder.append(locale.getMessage("profile-language-property"));
         if (credentials.getUiLanguage().equals(LanguageENUM.UKRAINIAN)){
             stringBuilder.append("\uD83C\uDDFA\uD83C\uDDE6");
         } else {
@@ -48,10 +51,10 @@ public class SettingsResponse implements Executable {
         language.setText(stringBuilder.toString());
         language.setCallbackData("menu-settings-lang");
         InlineKeyboardButton deletion = new InlineKeyboardButton();
-        deletion.setText("Delete account️ ❌");
+        deletion.setText(locale.getMessage("delete-account"));
         deletion.setCallbackData("menu-settings-delete-account");
         InlineKeyboardButton back = new InlineKeyboardButton();
-        back.setText("Back ↩️");
+        back.setText(locale.getMessage("menu-back"));
         back.setCallbackData("menu-back");
         firstRow.add(language);
         firstRow.add(deletion);

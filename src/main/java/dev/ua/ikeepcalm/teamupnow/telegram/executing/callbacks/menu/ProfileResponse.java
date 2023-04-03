@@ -1,11 +1,13 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu;
 
+import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.Sequenced;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MediaMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
@@ -25,10 +27,11 @@ public class ProfileResponse implements Executable {
 
     @Autowired
     private TelegramService telegramService;
-
     @Autowired
     private CredentialsService credentialsService;
+    private LocaleTool locale;
 
+    @I18N
     @Override
     @Transactional
     public void manage(String receivedCallback, Message origin) {
@@ -38,11 +41,11 @@ public class ProfileResponse implements Executable {
         alterMessage.setChatId(origin.getChatId());
         alterMessage.setFileURL("https://static.vecteezy.com/system/resources/previews/005/544/718/original/profile-icon-design-free-vector.jpg");
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Username: @").append(credentials.getUsername()).append("\n");
-        stringBuilder.append("Language: ").append(credentials.getUiLanguage()).append("\n");
-        stringBuilder.append("Age category: ").append(credentials.getDemographic().getAge()).append("\n");
-        stringBuilder.append("Description: ").append(credentials.getDescription().getDescription()).append("\n");
-        stringBuilder.append("Games: " );
+        stringBuilder.append(locale.getMessage("profile-username-property")).append(credentials.getUsername()).append("\n");
+        stringBuilder.append(locale.getMessage("profile-language-property")).append(credentials.getUiLanguage()).append("\n");
+        stringBuilder.append(locale.getMessage("profile-age-property")).append(credentials.getDemographic().getAge()).append("\n");
+        stringBuilder.append(locale.getMessage("profile-description-property")).append(credentials.getDescription().getDescription()).append("\n");
+        stringBuilder.append(locale.getMessage("profile-games-property"));
         int size = credentials.getGames().size(); int i = 0;
         for (Game game : credentials.getGames()){
             stringBuilder.append(game.getName());
@@ -55,10 +58,10 @@ public class ProfileResponse implements Executable {
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
         InlineKeyboardButton editProfile = new InlineKeyboardButton();
-        editProfile.setText("Edit Profile \uD83D\uDDD1️");
+        editProfile.setText(locale.getMessage("edit-profile"));
         editProfile.setCallbackData("menu-profile-edit");
         InlineKeyboardButton back = new InlineKeyboardButton();
-        back.setText("Back ↩️");
+        back.setText(locale.getMessage("menu-back"));
         back.setCallbackData("menu-back");
         firstRow.add(editProfile);
         firstRow.add(back);

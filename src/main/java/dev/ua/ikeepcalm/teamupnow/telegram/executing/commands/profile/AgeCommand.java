@@ -1,10 +1,12 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.profile;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.ClearKeyboard;
+import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.Progressable;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +25,14 @@ public class AgeCommand implements Executable {
 
     @Autowired
     private TelegramService telegramService;
-
+    private LocaleTool locale;
+    @I18N
     @Override
     @ClearKeyboard
     @Progressable(ProgressENUM.AGE)
     public void execute(Message origin) {
         MultiMessage multiMessage = new MultiMessage();
-        multiMessage.setText("Now, please, choose your age category (the system will try to match you with allies of similar age):");
+        multiMessage.setText(locale.getMessage("profile-age"));
         multiMessage.setChatId(origin.getChatId());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();

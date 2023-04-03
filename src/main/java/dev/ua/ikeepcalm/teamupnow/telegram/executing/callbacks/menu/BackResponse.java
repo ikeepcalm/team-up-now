@@ -1,9 +1,11 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu;
 
+import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.Sequenced;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.MenuCommand;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MediaMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
@@ -20,11 +22,13 @@ import java.util.List;
 public class BackResponse implements Executable {
     @Autowired
     private TelegramService telegramService;
+    private LocaleTool locale;
 
+    @I18N
     @Override
     public void manage(String receivedCallback, Message origin) {
         AlterMessage alterMessage = new AlterMessage();
-        alterMessage.setFileURL("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMFVdwJb2gEr8_RX_mBlUVgyxsSjKEm6DKJCD6g1egTXo-aCyjF6GIPPQy2Bnilg34JYU&usqp=CAU");
+        alterMessage.setFileURL("https://images.squarespace-cdn.com/content/v1/54602f96e4b0efbe942e86fa/1415650984671-F9HUEE5KU7VW4Z33AMZU/Menu.png");
         alterMessage.setMessageId(origin.getMessageId());
         alterMessage.setChatId(origin.getChatId());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
@@ -32,16 +36,16 @@ public class BackResponse implements Executable {
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
         List<InlineKeyboardButton> secondRow = new ArrayList<>();
         InlineKeyboardButton profile = new InlineKeyboardButton();
-        profile.setText("Profile \uD83D\uDC64");
+        profile.setText(locale.getMessage("menu-profile"));
         profile.setCallbackData("menu-profile");
         InlineKeyboardButton discover = new InlineKeyboardButton();
-        discover.setText("Discover \uD83D\uDD0D");
+        discover.setText(locale.getMessage("menu-discover"));
         discover.setCallbackData("menu-discover");
         InlineKeyboardButton settings = new InlineKeyboardButton();
-        settings.setText("Settings ⚙️");
+        settings.setText(locale.getMessage("menu-settings"));
         settings.setCallbackData("menu-settings");
         InlineKeyboardButton more = new InlineKeyboardButton();
-        more.setText("More \uD83D\uDCC8");
+        more.setText(locale.getMessage("menu-more"));
         more.setCallbackData("menu-more");
         firstRow.add(profile);
         firstRow.add(discover);

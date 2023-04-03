@@ -4,13 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication(scanBasePackages = "dev.ua.ikeepcalm.teamupnow")
-@ComponentScan(basePackages = {
-        "dev.ua.ikeepcalm.teamupnow.telegram",
-        "dev.ua.ikeepcalm.teamupnow.database",
-        "dev.ua.ikeepcalm.teamupnow.aop",
-        "org.telegram.telegrambots"
-})
+@SpringBootApplication
+@ComponentScan(basePackages = {"dev.ua.ikeepcalm.teamupnow", "org.telegram.telegrambots"})
 public class Application {
 
     //TODO: Make all uploaded photos the same width and length

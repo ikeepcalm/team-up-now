@@ -1,5 +1,6 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile;
 
+import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
@@ -7,6 +8,7 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.source.GameENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
@@ -28,10 +30,11 @@ public class GamesResponse implements Executable {
 
     @Autowired
     private TelegramService telegramService;
-
     @Autowired
     private CredentialsService credentialsService;
+    private LocaleTool locale;
 
+    @I18N
     @Transactional
     public void manage(String receivedCallback, Message origin) {
         Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
@@ -79,7 +82,7 @@ public class GamesResponse implements Executable {
             if (chosenGames.isEmpty()){
                 MultiMessage multiMessage = new MultiMessage();
                 multiMessage.setChatId(origin.getChatId());
-                multiMessage.setText("(!) You can't help but pick at least one game! First of all, that's what I'm for, why do you want to offend me? Let's try it again ↓");
+                multiMessage.setText(locale.getMessage("games-error-response"));
                 ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
                 List<KeyboardRow> keyboardRows = new ArrayList<>();
                 KeyboardRow row = new KeyboardRow();
@@ -111,11 +114,7 @@ public class GamesResponse implements Executable {
                 credentials.getProgress().setProgressENUM(ProgressENUM.AGE);
                 credentialsService.save(credentials);
                 MultiMessage multiMessage = new MultiMessage();
-                multiMessage.setText("""
-                    Okay, I've saved everything.
-                    
-                    You would be able to change that later but for now, let's move on to the next step.
-                    """);
+                multiMessage.setText(locale.getMessage("games-success-response"));
                 multiMessage.setChatId(origin.getChatId());
                 ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
                 List<KeyboardRow> keyboardRows = new ArrayList<>();
