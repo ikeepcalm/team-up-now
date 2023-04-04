@@ -29,7 +29,7 @@ public class ClearKeyboardAspect {
             multiMessage.setReplyKeyboard(remove);
             org.telegram.telegrambots.meta.api.objects.Message message =  telegramService.sendMultiMessage(multiMessage);
             PurgeMessage purgeMessage = new PurgeMessage(message.getMessageId(), message.getChatId());
-            telegramService.deleteMessage(purgeMessage);
+            telegramService.sendPurgeMessage(purgeMessage);
         } finally {
             joinPoint.proceed();
         }

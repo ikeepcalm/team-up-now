@@ -1,7 +1,6 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.commands;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.EntryPoint;
-import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Progress;
@@ -10,10 +9,8 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.database.exceptions.DAOException;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -30,8 +27,8 @@ public class StartCommand implements Executable {
     @Autowired
     private TelegramService telegramService;
 
-    @EntryPoint
     @Override
+    @EntryPoint
     public void execute(Message origin) {
         createObjectForNewUser(origin.getChatId(), origin.getFrom().getUserName(), origin.getFrom().getLanguageCode());
         MultiMessage multiMessage = new MultiMessage();

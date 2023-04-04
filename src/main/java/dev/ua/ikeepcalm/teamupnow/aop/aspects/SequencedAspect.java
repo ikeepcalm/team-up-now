@@ -21,7 +21,7 @@ public class SequencedAspect {
     public void checkEntityCreation(ProceedingJoinPoint joinPoint, String callback, Message origin) throws Throwable {
         try {
             PurgeMessage purgeMessage = new PurgeMessage(origin.getMessageId(), origin.getChatId());
-            telegramService.deleteMessage(purgeMessage);
+            telegramService.sendPurgeMessage(purgeMessage);
         } finally {
             joinPoint.proceed();
         }

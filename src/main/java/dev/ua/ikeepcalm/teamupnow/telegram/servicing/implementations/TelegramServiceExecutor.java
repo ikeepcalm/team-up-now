@@ -79,7 +79,7 @@ public class TelegramServiceExecutor extends DefaultAbsSender implements Telegra
     }
 
     @Override
-    public void deleteMessage(PurgeMessage purgeMessage) {
+    public void sendPurgeMessage(PurgeMessage purgeMessage) {
         DeleteMessage deleteMessage = new DeleteMessage();
         deleteMessage.setChatId(purgeMessage.getChatId());
         deleteMessage.setMessageId(purgeMessage.getMessageId());

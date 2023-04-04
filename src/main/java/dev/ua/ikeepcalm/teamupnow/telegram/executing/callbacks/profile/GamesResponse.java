@@ -62,7 +62,7 @@ public class GamesResponse implements Executable {
             as a green flag; if yes -> adds it to the list of games to be updated in database for user
                              if no -> ignores it
              */
-            telegramService.deleteMessage(new PurgeMessage(origin.getMessageId(), origin.getChatId()));
+            telegramService.sendPurgeMessage(new PurgeMessage(origin.getMessageId(), origin.getChatId()));
             List<String> chosenGames = new ArrayList<>();
             List<List<InlineKeyboardButton>> keyboards = markup.getKeyboard();
             for (List<InlineKeyboardButton> keyboard : keyboards) {

@@ -56,7 +56,7 @@ public class AgeResponse implements Executable {
         } finally {
             credentials.getProgress().setProgressENUM(ProgressENUM.ABOUT);
             credentialsService.save(credentials);
-            telegramService.deleteMessage(new PurgeMessage(origin.getMessageId(), origin.getChatId()));
+            telegramService.sendPurgeMessage(new PurgeMessage(origin.getMessageId(), origin.getChatId()));
             MultiMessage multiMessage = new MultiMessage();
             multiMessage.setText(locale.getMessage("age-response"));
             multiMessage.setChatId(origin.getChatId());

@@ -13,6 +13,6 @@ public interface TelegramService{
     void sendAlterMessage(MultiMessage multiMessage);
 
     Message sendMultiMessage(MultiMessage multiMessage);
-    void deleteMessage(PurgeMessage purgeMessage);
+    void sendPurgeMessage(PurgeMessage purgeMessage);
     void sendMediaMessage(MediaMessage message);
 }

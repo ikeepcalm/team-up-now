@@ -26,6 +26,10 @@ public class CallbackHandler implements Handleable {
     private SettingsResponse settingsResponse;
     @Autowired
     private MoreResponse moreResponse;
+    @Autowired
+    private SettingsLangResponse settingsLangResponse;
+    @Autowired
+    private SettingsDeleteResponse settingsDeleteResponse;
 
     @Override
     public void manage(Update update) {
@@ -42,6 +46,8 @@ public class CallbackHandler implements Handleable {
                 case "menu-profile" -> profileResponse.manage(callback, origin);
                 case "menu-profile-edit" -> editProfileResponse.manage(callback, origin);
                 case "menu-settings" -> settingsResponse.manage(callback, origin);
+                case "menu-settings-lang" -> settingsLangResponse.manage(callback, origin);
+                case "menu-settings-delete-account" -> settingsDeleteResponse.manage(callback, origin);
                 case "menu-more" -> moreResponse.manage(callback, origin);
                 case "menu-back" -> backResponse.manage(callback, origin);
             }
