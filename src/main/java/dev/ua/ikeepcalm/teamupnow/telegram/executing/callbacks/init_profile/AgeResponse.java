@@ -1,4 +1,4 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.init_profile;
 
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;

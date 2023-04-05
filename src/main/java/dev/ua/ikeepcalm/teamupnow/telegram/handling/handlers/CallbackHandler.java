@@ -1,8 +1,12 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.handling.handlers;
 
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu.*;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile.AgeResponse;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile.GamesResponse;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.init_profile.AgeResponse;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.init_profile.GamesResponse;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile.EditProfileResponse;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu.ProfileResponse;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.settings.SettingsDeleteResponse;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.settings.SettingsLangResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.handling.Handleable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,6 +34,8 @@ public class CallbackHandler implements Handleable {
     private SettingsLangResponse settingsLangResponse;
     @Autowired
     private SettingsDeleteResponse settingsDeleteResponse;
+    @Autowired
+    private DiscoverResponse discoverResponse;
 
     @Override
     public void manage(Update update) {
@@ -50,6 +56,7 @@ public class CallbackHandler implements Handleable {
                 case "menu-settings-delete-account" -> settingsDeleteResponse.manage(callback, origin);
                 case "menu-more" -> moreResponse.manage(callback, origin);
                 case "menu-back" -> backResponse.manage(callback, origin);
+                case "menu-discover" -> discoverResponse.manage(callback, origin);
             }
         }
     }

@@ -1,4 +1,4 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.init_profile;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
@@ -9,14 +9,12 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class MoreResponse implements Executable {
+public class DiscoverResponse implements Executable {
     @Autowired
     private TelegramService telegramService;
     private LocaleTool locale;
@@ -24,18 +24,28 @@ public class MoreResponse implements Executable {
     @Override
     public void manage(String receivedCallback, Message origin) {
         AlterMessage alterMessage = new AlterMessage();
-        alterMessage.setFileURL("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Infobox_info_icon.svg/1200px-Infobox_info_icon.svg.png");
+        alterMessage.setFileURL("https://1000logos.net/wp-content/uploads/2021/05/Discover-logo.png");
         alterMessage.setMessageId(origin.getMessageId());
         alterMessage.setChatId(origin.getChatId());
-        alterMessage.setText(locale.getMessage("more-response"));
+        alterMessage.setText(locale.getMessage("discover-main"));
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
+        List<InlineKeyboardButton> secondRow = new ArrayList<>();
+        InlineKeyboardButton explore = new InlineKeyboardButton();
+        explore.setText(locale.getMessage("discover-main-explore"));
+        explore.setCallbackData("discover-main-explore");
+        InlineKeyboardButton matches = new InlineKeyboardButton();
+        matches.setText(locale.getMessage("discover-main-matches"));
+        matches.setCallbackData("discover-main-matches");
         InlineKeyboardButton back = new InlineKeyboardButton();
         back.setText(locale.getMessage("menu-back"));
         back.setCallbackData("menu-back");
-        firstRow.add(back);
+        firstRow.add(explore);
+        firstRow.add(matches);
+        secondRow.add(back);
         keyboard.add(firstRow);
+        keyboard.add(secondRow);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         alterMessage.setReplyKeyboard(inlineKeyboardMarkup);
         telegramService.sendAlterMessage(alterMessage);

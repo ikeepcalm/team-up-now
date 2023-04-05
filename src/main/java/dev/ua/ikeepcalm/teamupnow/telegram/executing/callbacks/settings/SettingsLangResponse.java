@@ -1,10 +1,11 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.settings;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu.SettingsResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
