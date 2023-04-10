@@ -5,6 +5,8 @@ import dev.ua.ikeepcalm.teamupnow.aop.annotations.Sequenced;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
+import dev.ua.ikeepcalm.teamupnow.database.entities.source.AgeENUM;
+import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
@@ -42,17 +44,37 @@ public class ProfileResponse implements Executable {
         alterMessage.setFileURL("https://static.vecteezy.com/system/resources/previews/005/544/718/original/profile-icon-design-free-vector.jpg");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(locale.getMessage("profile-username-property")).append(credentials.getUsername()).append("\n");
-        stringBuilder.append(locale.getMessage("profile-language-property")).append(credentials.getUiLanguage()).append("\n");
-        stringBuilder.append(locale.getMessage("profile-age-property")).append(credentials.getDemographic().getAge()).append("\n");
-        stringBuilder.append(locale.getMessage("profile-description-property")).append(credentials.getDescription().getDescription()).append("\n");
-        stringBuilder.append(locale.getMessage("profile-games-property"));
-        int size = credentials.getGames().size(); int i = 0;
-        for (Game game : credentials.getGames()){
-            stringBuilder.append(game.getName());
-            if (i != size - 1) {
-                stringBuilder.append(", ");
+        {
+            stringBuilder.append(locale.getMessage("profile-language-property"));
+            if (credentials.getUiLanguage() == LanguageENUM.ENGLISH) {
+                stringBuilder.append("English \uD83C\uDDEC\uD83C\uDDE7").append("\n");
+            } else if (credentials.getUiLanguage() == LanguageENUM.UKRAINIAN) {
+                stringBuilder.append("Українська \uD83C\uDDFA\uD83C\uDDE6").append("\n");
             }
-        }
+        } //UI Language
+        {
+            stringBuilder.append(locale.getMessage("profile-games-property"));
+            int size = credentials.getGames().size();
+            int i = 0;
+            for (Game game : credentials.getGames()) {
+                stringBuilder.append(game.getName());
+                if (i != size - 1) {
+                    stringBuilder.append(", ");
+                }
+            }
+            stringBuilder.append("\n");
+        } //Games
+        stringBuilder.append(locale.getMessage("profile-description-property")).append(credentials.getDescription().getDescription()).append("\n");
+        {
+            stringBuilder.append(locale.getMessage("profile-age-property"));
+            if (credentials.getDemographic().getAge() == AgeENUM.YOUNG) {
+                stringBuilder.append("14-17").append("\n");
+            } else if (credentials.getDemographic().getAge() == AgeENUM.YOUND_ADULT) {
+                stringBuilder.append("18-26").append("\n");
+            } else if (credentials.getDemographic().getAge() == AgeENUM.ADULT) {
+                stringBuilder.append("27-35").append("\n");
+            }
+        } //Age
         alterMessage.setText(stringBuilder.toString());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();

@@ -40,21 +40,19 @@ public class CredentialsService implements DatabaseService<Credentials> {
             dbCredentials.setAccountId(credentials.getAccountId());
             dbCredentials.setUsername(credentials.getUsername());
             dbCredentials.setUiLanguage(credentials.getUiLanguage());
+            dbCredentials.setConnectionToken(5);
             credentialsRepo.save(dbCredentials);
         }
         Credentials dbCredentials = findByAccountId(credentials.getAccountId());
         if (credentials.getDemographic() != null) {
             credentials.getDemographic().setCredentialsId(dbCredentials);
             dbCredentials.setDemographic(credentials.getDemographic());
-
         } if (credentials.getDescription() != null) {
             credentials.getDescription().setCredentials(dbCredentials);
             dbCredentials.setDescription(credentials.getDescription());
-
         } if (credentials.getProgress() != null) {
             credentials.getProgress().setCredentials(dbCredentials);
             dbCredentials.setProgress(credentials.getProgress());
-
         } if (credentials.getGames() != null) {
             for (Game game : credentials.getGames()) {
                 game.setCredentials(dbCredentials);

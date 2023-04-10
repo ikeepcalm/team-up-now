@@ -25,8 +25,11 @@ public class Credentials {
     private Long accountId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "ui_language", nullable = false)
+    @Column(name = "uiLanguage", nullable = false)
     private LanguageENUM uiLanguage;
+
+    @Column(name = "connectionToken", nullable = false)
+    private int connectionToken;
 
     @OneToMany(mappedBy = "credentialsId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Game> games;
@@ -94,7 +97,11 @@ public class Credentials {
         this.progress = progress;
     }
 
-    public Long getId() {
-        return id;
+    public int getConnectionToken() {
+        return connectionToken;
+    }
+
+    public void setConnectionToken(int connectionToken) {
+        this.connectionToken = connectionToken;
     }
 }

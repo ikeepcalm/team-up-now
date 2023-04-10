@@ -38,7 +38,7 @@ public class AgeCommand implements Executable {
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
         InlineKeyboardButton youngCategory = new InlineKeyboardButton();
-        youngCategory.setText("14-18");
+        youngCategory.setText("14-17");
         youngCategory.setCallbackData("profile-age-category-young");
         InlineKeyboardButton youndAdultCategory = new InlineKeyboardButton();
         youndAdultCategory.setText("18-26");
