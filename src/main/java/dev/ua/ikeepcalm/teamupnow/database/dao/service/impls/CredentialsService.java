@@ -1,17 +1,18 @@
 package dev.ua.ikeepcalm.teamupnow.database.dao.service.impls;
 
 import dev.ua.ikeepcalm.teamupnow.database.dao.repo.CredentialsRepo;
-import dev.ua.ikeepcalm.teamupnow.database.dao.service.DatabaseService;
+import dev.ua.ikeepcalm.teamupnow.database.dao.service.iCredentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
 import dev.ua.ikeepcalm.teamupnow.database.exceptions.DAOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CredentialsService implements DatabaseService<Credentials> {
+public class CredentialsService implements iCredentials<Credentials> {
 
     @Autowired
     CredentialsRepo credentialsRepo;
@@ -31,6 +32,10 @@ public class CredentialsService implements DatabaseService<Credentials> {
         credentialsRepo.delete(findByAccountId(accountId));
     }
 
+    @Override
+    public List<Credentials> findAll(){
+        return (List<Credentials>) credentialsRepo.findAll();
+    }
 
     public void save(Credentials credentials){
         try {

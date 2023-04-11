@@ -15,13 +15,8 @@ public class Game {
     private GameENUM name;
 
     @ManyToOne
-    @JoinColumn(name = "credentials_id")
+    @JoinColumn(name = "credentialsId")
     private Credentials credentialsId;
-
-    public Long getId() {
-        return id;
-    }
-
     public GameENUM getName() {
         return name;
     }

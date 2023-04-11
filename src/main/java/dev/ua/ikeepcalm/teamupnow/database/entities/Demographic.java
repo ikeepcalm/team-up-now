@@ -15,12 +15,8 @@ public class Demographic {
     private AgeENUM age;
 
     @OneToOne
-    @JoinColumn(name = "credentials_id")
+    @JoinColumn(name = "credentialsId")
     private Credentials credentialsId;
-
-    public Long getId() {
-        return id;
-    }
 
     public AgeENUM getAge() {
         return age;

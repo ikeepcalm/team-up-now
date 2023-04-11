@@ -16,12 +16,8 @@ public class Progress {
     private ProgressENUM progressENUM;
 
     @OneToOne
-    @JoinColumn(name = "credentials_id")
+    @JoinColumn(name = "credentialsId")
     private Credentials credentialsId;
-
-    public Long getId() {
-        return id;
-    }
 
     public ProgressENUM getProgressENUM() {
         return progressENUM;
