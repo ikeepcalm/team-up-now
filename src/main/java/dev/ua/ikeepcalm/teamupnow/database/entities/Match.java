@@ -66,5 +66,17 @@ public class Match {
     public void setScore(int score) {
         this.score = score;
     }
+
+    @Override
+    public String toString() {
+        return "Match{" +
+                "id=" + id +
+                ", firstUserId=" + firstUserId +
+                ", secondUserId=" + secondUserId +
+                ", firstUserLiked=" + firstUserLiked +
+                ", secondUserLiked=" + secondUserLiked +
+                ", score=" + score +
+                '}';
+    }
 }
 

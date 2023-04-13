@@ -2,13 +2,17 @@ package dev.ua.ikeepcalm.teamupnow.database.dao.service.impls;
 
 import dev.ua.ikeepcalm.teamupnow.database.dao.repo.MatchRepo;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
+import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Match;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.GameENUM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class MatchService {
@@ -18,42 +22,32 @@ public class MatchService {
     @Autowired
     private CredentialsService credentialsService;
 
-    private void createMatchesForUser(Credentials user){
-        List<Credentials> credentialsList = credentialsService.findAll();
+    public void createMatchesForUser(Credentials user) {
+        List<Credentials> credentialsList = credentialsService.findAllExcept(user.getAccountId());
         for (Credentials foundUser : credentialsList) {
             Match match = new Match();
             match.setFirstUserId(user.getAccountId());
             match.setSecondUserId(foundUser.getAccountId());
             {
-                if (user.getUiLanguage() == foundUser.getUiLanguage()){
+                if (user.getUiLanguage() == foundUser.getUiLanguage()) {
                     match.setScore(40);
+                } else {
+                    match.setScore(0);
                 }
             }//Language
             {
-                GameENUM[] arr1 = user.getGames().toArray(new GameENUM[0]);
-                GameENUM[] arr2 = foundUser.getGames().toArray(new GameENUM[0]);
-                Arrays.sort(arr1);
-                Arrays.sort(arr2);
-
-                int matches = 0;
-                int total = Math.max(arr1.length, arr2.length);
-                for(int i = 0, j = 0; i < arr1.length && j < arr2.length;) {
-                    if(arr1[i].equals(arr2[j])) {
-                        matches++;
-                        i++;
-                        j++;
-                    } else if(arr1[i].compareTo(arr2[j]) < 0) {
-                        i++;
-                    } else {
-                        j++;
-                    }
-                }
-
-                double similarityPercentage = (double) matches / total;
-                match.setScore((int) (match.getScore() + 40 * similarityPercentage));
+                Set<GameENUM> gameEnums1 = user.getGames().stream().map(Game::getName).collect(Collectors.toSet());
+                Set<GameENUM> gameEnums2 = foundUser.getGames().stream().map(Game::getName).collect(Collectors.toSet());
+                Set<GameENUM> intersection = new HashSet<>(gameEnums1);
+                intersection.retainAll(gameEnums2);
+//                Doesn't depend on games amount, just on the similarity
+//                double jaccardIndex = (double) intersection.size() / (Math.max(gameEnums1.size(), gameEnums2.size()));
+                double jaccardIndex = (double) intersection.size() / (gameEnums1.size() + gameEnums2.size() - intersection.size());
+                int similarityScore = (int) Math.round(jaccardIndex * 40);
+                match.setScore((match.getScore() + similarityScore));
             }//Games
             {
-                if (user.getDemographic().getAge() == foundUser.getDemographic().getAge()){
+                if (user.getDemographic().getAge() == foundUser.getDemographic().getAge()) {
                     match.setScore(match.getScore() + 20);
                 }
             }//Age
@@ -65,7 +59,11 @@ public class MatchService {
         }
     }
 
-    private List<Match> findMatchesForUser(Credentials user){
+    public List<Match> findMatchesForUser(Credentials user) {
         return matchRepo.findByFirstUserAndDescScore(user.getAccountId());
+    }
+
+    public List<Match> findAll(){
+        return (List<Match>) matchRepo.findAll();
     }
 }

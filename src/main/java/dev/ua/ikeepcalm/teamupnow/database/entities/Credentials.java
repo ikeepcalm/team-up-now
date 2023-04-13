@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -103,5 +104,18 @@ public class Credentials {
 
     public void setConnectionToken(int connectionToken) {
         this.connectionToken = connectionToken;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Credentials that = (Credentials) o;
+        return connectionToken == that.connectionToken && Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(accountId, that.accountId) && uiLanguage == that.uiLanguage && Objects.equals(games, that.games) && Objects.equals(demographic, that.demographic) && Objects.equals(description, that.description) && Objects.equals(progress, that.progress);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, accountId, uiLanguage, connectionToken, games, demographic, description, progress);
     }
 }

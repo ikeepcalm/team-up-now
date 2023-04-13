@@ -14,10 +14,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
 
+@DataJpaTest
 @RunWith(SpringRunner.class)
 @ComponentScan(basePackages = "dev.ua.ikeepcalm.teamupnow")
-@DataJpaTest
-public class InternalTests {
+public class EntitiesTests {
 
     @Autowired
     private CredentialsService credentialsService;

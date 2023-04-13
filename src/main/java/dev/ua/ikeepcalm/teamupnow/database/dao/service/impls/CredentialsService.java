@@ -37,6 +37,10 @@ public class CredentialsService implements iCredentials<Credentials> {
         return (List<Credentials>) credentialsRepo.findAll();
     }
 
+    public List<Credentials> findAllExcept(Long excludedId){
+        return credentialsRepo.findAllExcept(excludedId);
+    }
+
     public void save(Credentials credentials){
         try {
             findByAccountId(credentials.getAccountId());
