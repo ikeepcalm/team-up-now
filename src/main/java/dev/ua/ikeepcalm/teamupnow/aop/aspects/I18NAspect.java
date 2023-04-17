@@ -22,7 +22,7 @@ public class I18NAspect {
     private CredentialsService credentialsService;
 
     @Around("@annotation(dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N) && args(origin)")
-    public void replaceStringsWithLocalizedValue(ProceedingJoinPoint joinPoint, Message origin) throws Throwable {
+    public void replaceLocaleObjectWithDeterminedSource(ProceedingJoinPoint joinPoint, Message origin) throws Throwable {
         try {
             Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
             Object[] args = joinPoint.getArgs();
@@ -38,7 +38,7 @@ public class I18NAspect {
     }
 
     @Around("@annotation(dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N) && args(receivedCallback, origin)")
-    public void replaceStringsWithLocalizedValue(ProceedingJoinPoint joinPoint, String receivedCallback, Message origin) throws Throwable {
+    public void replaceLocaleObjectWithDeterminedSource(ProceedingJoinPoint joinPoint, String receivedCallback, Message origin) throws Throwable {
         Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
         Object[] args = joinPoint.getArgs();
         Object targetObject = joinPoint.getTarget();

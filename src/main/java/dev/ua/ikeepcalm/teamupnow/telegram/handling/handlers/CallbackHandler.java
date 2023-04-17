@@ -1,17 +1,20 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.handling.handlers;
 
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu.*;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.discover.ExploreResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.init_profile.AgeResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.init_profile.GamesResponse;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu.*;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile.EditProfileResponse;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu.ProfileResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.settings.SettingsDeleteResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.settings.SettingsLangResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.handling.Handleable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class CallbackHandler implements Handleable {
@@ -36,16 +39,31 @@ public class CallbackHandler implements Handleable {
     private SettingsDeleteResponse settingsDeleteResponse;
     @Autowired
     private DiscoverResponse discoverResponse;
+    @Autowired
+    private ConfigurableApplicationContext context;
+    private final ConcurrentHashMap<Long, ExploreResponse> matchServiceMap = new ConcurrentHashMap<>();
 
     @Override
     public void manage(Update update) {
         String callback = update.getCallbackQuery().getData();
         Message origin = update.getCallbackQuery().getMessage();
         if (callback.startsWith("profile")) {
-            if (callback.startsWith("profile-games")){
+            if (callback.startsWith("profile-games")) {
                 gamesResponse.manage(callback, origin);
-            } else if (callback.startsWith("profile-age")){
-                ageResponse.manage(callback,origin);
+            } else if (callback.startsWith("profile-age")) {
+                ageResponse.manage(callback, origin);
+            }
+        } else if (callback.startsWith("explore")) {
+            if (callback.equals("explore-back")) {
+                matchServiceMap.remove(update.getMessage().getFrom().getId());
+            } else {
+                if (matchServiceMap.get(update.getMessage().getFrom().getId()) == null) {
+                    ExploreResponse exploreResponse = context.getBean(ExploreResponse.class);
+                    matchServiceMap.put(update.getMessage().getFrom().getId(), exploreResponse);
+                    exploreResponse.manage(callback, origin);
+                } else {
+                    matchServiceMap.get(update.getMessage().getFrom().getId()).manage(callback, origin);
+                }
             }
         } else if (callback.startsWith("menu")) {
             switch (callback) {
