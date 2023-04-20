@@ -12,6 +12,6 @@ import java.util.Optional;
 @Repository
 public interface MatchRepo extends CrudRepository<Match, Long> {
     Optional<Match> findByFirstUserIdAndSecondUserId(Long firstUser, Long secondUser);
-    @Query("SELECT e FROM Match e WHERE e.firstUserId = :id ORDER BY e.score DESC")
-    List<Match> findByFirstUserAndDescScore(Long id);
+    List<Match> findMatchesByFirstUserOrderByScore(Credentials firstUser);
+    List<Match> findMatchesByFirstUser(Credentials firstUser);
 }

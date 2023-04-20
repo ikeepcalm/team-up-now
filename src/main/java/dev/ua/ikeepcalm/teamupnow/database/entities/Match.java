@@ -10,11 +10,13 @@ public class Match {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "firstUserId")
-    private Long firstUserId;
+    @ManyToOne
+    @JoinColumn(name = "firstUser")
+    private Credentials firstUser;
 
-    @Column(name = "secondUserId")
-    private Long secondUserId;
+    @ManyToOne
+    @JoinColumn(name = "secondUser")
+    private Credentials secondUser;
 
     @Column(name = "firstProfileLiked", nullable = false)
     private boolean firstUserLiked;
@@ -24,24 +26,6 @@ public class Match {
 
     @Column(name = "score", nullable = false)
     private int score;
-
-    public Match() {}
-
-    public Long getFirstUserId() {
-        return firstUserId;
-    }
-
-    public void setFirstUserId(Long firstUserId) {
-        this.firstUserId = firstUserId;
-    }
-
-    public Long getSecondUserId() {
-        return secondUserId;
-    }
-
-    public void setSecondUserId(Long secondUserId) {
-        this.secondUserId = secondUserId;
-    }
 
     public boolean isFirstUserLiked() {
         return firstUserLiked;
@@ -67,16 +51,20 @@ public class Match {
         this.score = score;
     }
 
-    @Override
-    public String toString() {
-        return "Match{" +
-                "id=" + id +
-                ", firstUserId=" + firstUserId +
-                ", secondUserId=" + secondUserId +
-                ", firstUserLiked=" + firstUserLiked +
-                ", secondUserLiked=" + secondUserLiked +
-                ", score=" + score +
-                '}';
+    public Credentials getFirstUser() {
+        return firstUser;
+    }
+
+    public void setFirstUser(Credentials firstUser) {
+        this.firstUser = firstUser;
+    }
+
+    public Credentials getSecondUser() {
+        return secondUser;
+    }
+
+    public void setSecondUser(Credentials secondUser) {
+        this.secondUser = secondUser;
     }
 }
 

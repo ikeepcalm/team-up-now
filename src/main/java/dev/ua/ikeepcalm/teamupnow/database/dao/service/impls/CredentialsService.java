@@ -47,6 +47,7 @@ public class CredentialsService implements iCredentials<Credentials> {
         } catch (DAOException e){
             Credentials dbCredentials = new Credentials();
             dbCredentials.setAccountId(credentials.getAccountId());
+            dbCredentials.setName(credentials.getName());
             dbCredentials.setUsername(credentials.getUsername());
             dbCredentials.setUiLanguage(credentials.getUiLanguage());
             dbCredentials.setConnectionToken(5);

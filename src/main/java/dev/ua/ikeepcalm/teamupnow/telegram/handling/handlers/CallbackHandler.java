@@ -55,7 +55,7 @@ public class CallbackHandler implements Handleable {
             }
         } else if (callback.startsWith("explore")) {
             if (callback.equals("explore-back")) {
-                matchServiceMap.remove(origin.getFrom().getId());
+                matchServiceMap.remove(origin.getChatId());
                 discoverResponse.manage(callback, origin);
             } else {
                 if (matchServiceMap.get(origin.getChatId()) == null) {

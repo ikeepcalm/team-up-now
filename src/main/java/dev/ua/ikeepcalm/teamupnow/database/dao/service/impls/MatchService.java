@@ -32,8 +32,8 @@ public class MatchService {
             Match match = matchRepo.findByFirstUserIdAndSecondUserId(user.getAccountId(), foundUser.getAccountId())
                     .orElse(new Match());
 
-            match.setFirstUserId(user.getAccountId());
-            match.setSecondUserId(foundUser.getAccountId());
+            match.setFirstUser(user);
+            match.setSecondUser(foundUser);
 
             int score = 0;
 
@@ -73,7 +73,7 @@ public class MatchService {
 
 
     public List<Match> findMatchesForUser(Credentials user) {
-        List<Match> foundMatches = matchRepo.findByFirstUserAndDescScore(user.getAccountId());
+        List<Match> foundMatches = matchRepo.findMatchesByFirstUser(user);
         List<Match> matchesToReturn = new ArrayList<>();
         for (Match match : foundMatches){
             if (match.isFirstUserLiked()){
@@ -83,7 +83,7 @@ public class MatchService {
     }
 
     public List<Match> findAllMatchesForUser(Credentials user){
-        return matchRepo.findByFirstUserAndDescScore(user.getAccountId());
+        return (List<Match>) matchRepo.findMatchesByFirstUser(user);
     }
 
     public List<Match> findAll(){

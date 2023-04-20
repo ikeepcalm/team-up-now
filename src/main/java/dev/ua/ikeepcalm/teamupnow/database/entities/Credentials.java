@@ -22,6 +22,9 @@ public class Credentials {
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "accountId", nullable = false, unique = true)
     private Long accountId;
 
@@ -32,7 +35,7 @@ public class Credentials {
     @Column(name = "connectionToken", nullable = false)
     private int connectionToken;
 
-    @OneToMany(mappedBy = "credentialsId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "credentials", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Game> games;
 
     @OneToOne(mappedBy = "credentialsId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -43,6 +46,13 @@ public class Credentials {
 
     @OneToOne(mappedBy = "credentialsId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Progress progress;
+
+    @OneToMany(mappedBy = "firstUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Match> firstMatches;
+
+    @OneToMany(mappedBy = "secondUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Match> secondMatches;
+
 
     public String getUsername() {
         return username;
@@ -102,7 +112,16 @@ public class Credentials {
         return connectionToken;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setConnectionToken(int connectionToken) {
+
         this.connectionToken = connectionToken;
     }
 

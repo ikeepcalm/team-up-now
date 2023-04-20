@@ -40,7 +40,7 @@ public class SettingsResponse implements Executable {
         List<InlineKeyboardButton> secondRow = new ArrayList<>();
         InlineKeyboardButton language = new InlineKeyboardButton();
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(locale.getMessage("profile-language-property"));
+        stringBuilder.append(locale.getMessage("profile-change-language-property"));
         if (credentials.getUiLanguage().equals(LanguageENUM.UKRAINIAN)){
             stringBuilder.append("\uD83C\uDDFA\uD83C\uDDE6");
         } else {

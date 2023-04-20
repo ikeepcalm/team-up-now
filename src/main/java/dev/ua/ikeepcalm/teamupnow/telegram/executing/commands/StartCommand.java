@@ -30,7 +30,7 @@ public class StartCommand implements Executable {
     @Override
     @EntryPoint
     public void execute(Message origin) {
-        createObjectForNewUser(origin.getChatId(), origin.getFrom().getUserName(), origin.getFrom().getLanguageCode());
+        createObjectForNewUser(origin.getChatId(), origin.getFrom().getUserName(), origin.getFrom().getLanguageCode(), origin.getFrom().getFirstName());
         MultiMessage multiMessage = new MultiMessage();
         multiMessage.setText("""
                 Nice to meet you here!
@@ -49,7 +49,7 @@ public class StartCommand implements Executable {
         telegramService.sendMultiMessage(multiMessage);
     }
 
-    private void createObjectForNewUser(long userId, String username, String langCode){
+    private void createObjectForNewUser(long userId, String username, String langCode, String firstName){
         try {
             credentialsService.findByAccountId(userId);
         } catch (DAOException e){
@@ -58,6 +58,7 @@ public class StartCommand implements Executable {
             Credentials credentials = new Credentials();
             credentials.setAccountId(userId);
             credentials.setUsername(username);
+            credentials.setName(firstName);
             credentials.setUiLanguage(determineLanguageCode(langCode));
             credentials.setProgress(progress);
             credentialsService.save(credentials);

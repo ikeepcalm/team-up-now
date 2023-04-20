@@ -16,7 +16,8 @@ public class Game {
 
     @ManyToOne
     @JoinColumn(name = "credentialsId")
-    private Credentials credentialsId;
+    private Credentials credentials;
+
     public GameENUM getName() {
         return name;
     }
@@ -26,6 +27,6 @@ public class Game {
     }
 
     public void setCredentials(Credentials credentials) {
-        this.credentialsId = credentials;
+        this.credentials = credentials;
     }
 }
