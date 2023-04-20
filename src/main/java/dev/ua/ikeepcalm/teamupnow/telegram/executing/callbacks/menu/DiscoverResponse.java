@@ -34,10 +34,10 @@ public class DiscoverResponse implements Executable {
         List<InlineKeyboardButton> secondRow = new ArrayList<>();
         InlineKeyboardButton explore = new InlineKeyboardButton();
         explore.setText(locale.getMessage("discover-main-explore"));
-        explore.setCallbackData("discover-main-explore");
+        explore.setCallbackData("explore");
         InlineKeyboardButton matches = new InlineKeyboardButton();
         matches.setText(locale.getMessage("discover-main-matches"));
-        matches.setCallbackData("discover-main-matches");
+        matches.setCallbackData("matches");
         InlineKeyboardButton back = new InlineKeyboardButton();
         back.setText(locale.getMessage("menu-back"));
         back.setCallbackData("menu-back");

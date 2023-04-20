@@ -55,14 +55,16 @@ public class CallbackHandler implements Handleable {
             }
         } else if (callback.startsWith("explore")) {
             if (callback.equals("explore-back")) {
-                matchServiceMap.remove(update.getMessage().getFrom().getId());
+                matchServiceMap.remove(origin.getFrom().getId());
+                discoverResponse.manage(callback, origin);
             } else {
-                if (matchServiceMap.get(update.getMessage().getFrom().getId()) == null) {
+                if (matchServiceMap.get(origin.getChatId()) == null) {
                     ExploreResponse exploreResponse = context.getBean(ExploreResponse.class);
-                    matchServiceMap.put(update.getMessage().getFrom().getId(), exploreResponse);
                     exploreResponse.manage(callback, origin);
+                    matchServiceMap.put(origin.getChatId(), exploreResponse);
                 } else {
-                    matchServiceMap.get(update.getMessage().getFrom().getId()).manage(callback, origin);
+                    ExploreResponse exploreResponse = matchServiceMap.get((origin.getChatId()));
+                    exploreResponse.manage(callback, origin);
                 }
             }
         } else if (callback.startsWith("menu")) {

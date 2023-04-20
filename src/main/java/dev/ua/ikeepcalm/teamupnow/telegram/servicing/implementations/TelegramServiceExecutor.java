@@ -39,7 +39,7 @@ public class TelegramServiceExecutor extends DefaultAbsSender implements Telegra
             EditMessageCaption editMessageCaption = new EditMessageCaption();
             editMessageCaption.setMessageId(alterMessage.getMessageId());
             editMessageCaption.setCaption(alterMessage.getText());
-            editMessageCaption.setReplyMarkup(alterMessage.getReplyKeyboard());
+            editMessageCaption.setReplyMarkup((InlineKeyboardMarkup) alterMessage.getReplyKeyboard());
             editMessageCaption.setChatId(alterMessage.getChatId());
             EditMessageMedia editMessageMedia = new EditMessageMedia();
             editMessageMedia.setMessageId(alterMessage.getMessageId());

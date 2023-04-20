@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope(value = "prototype")
 public class ExploreResponse implements Executable {
     @Autowired
     private TelegramService telegramService;
@@ -31,23 +32,30 @@ public class ExploreResponse implements Executable {
     private MatchService matchService;
     private List<Match> matches;
     private int currentIndex;
+    private boolean hasBeenUpdated = false;
     private LocaleTool locale;
 
     @I18N
     @Override
+    @Transactional
     public void manage(String receivedCallback, Message origin) {
-        matchService.createMatchesForUser(credentialsService.findByAccountId(origin.getChatId()));
-        if (matches == null) {
-            matches = matchService.findMatchesForUser(credentialsService.findByAccountId(origin.getChatId()));
-        } if (receivedCallback.equals("explore")) {
+        if (!hasBeenUpdated){
+            matchService.createMatchesForUser(credentialsService.findByAccountId(origin.getChatId()));
+            hasBeenUpdated = true;
+        }
+        matches = matchService.findAllMatchesForUser(credentialsService.findByAccountId(origin.getChatId()));
+        int maxIndex = matches.size();
+        int minIndex = 0;
+        if (receivedCallback.equals("explore")) {
             editMessage(origin);
         } else if (receivedCallback.equals("explore-next")) {
-            //next
-            ++currentIndex;
-            editMessage(origin);
+            if (currentIndex + 1 < maxIndex){
+                ++currentIndex;
+            } editMessage(origin);
         } else if (receivedCallback.equals("explore-previous")) {
-            //previous
-            --currentIndex;
+            if (currentIndex - 1 >= 0){
+                --currentIndex;
+            }
             editMessage(origin);
         } else if (receivedCallback.equals("explore-like")) {
             //like
@@ -57,29 +65,30 @@ public class ExploreResponse implements Executable {
     }
 
     private void editMessage(Message origin) {
-        MultiMessage alterMessage = new MultiMessage();
+        AlterMessage alterMessage = new AlterMessage();
         alterMessage.setMessageId(origin.getMessageId());
         alterMessage.setChatId(origin.getChatId());
         alterMessage.setText(matches.get(currentIndex).toString());
+        alterMessage.setFileURL("https://docs.fastlane.tools/img/actions/match.png");
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
         List<InlineKeyboardButton> secondRow = new ArrayList<>();
         List<InlineKeyboardButton> thirdRow = new ArrayList<>();
-        InlineKeyboardButton next = new InlineKeyboardButton();
-        next.setText(locale.getMessage("explore-next"));
-        next.setCallbackData("explore-next");
         InlineKeyboardButton previous = new InlineKeyboardButton();
         previous.setText(locale.getMessage("explore-previous"));
         previous.setCallbackData("explore-previous");
+        InlineKeyboardButton next = new InlineKeyboardButton();
+        next.setText(locale.getMessage("explore-next"));
+        next.setCallbackData("explore-next");
         InlineKeyboardButton like = new InlineKeyboardButton();
         like.setText(locale.getMessage("explore-like"));
         like.setCallbackData("explore-like");
         InlineKeyboardButton back = new InlineKeyboardButton();
         back.setText(locale.getMessage("menu-back"));
         back.setCallbackData("explore-back");
-        firstRow.add(next);
         firstRow.add(previous);
+        firstRow.add(next);
         secondRow.add(like);
         thirdRow.add(back);
         keyboard.add(firstRow);
