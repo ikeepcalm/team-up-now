@@ -6,6 +6,8 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.HashSet;
 import java.util.List;
@@ -128,13 +130,13 @@ public class Credentials {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Credentials)) return false;
         Credentials that = (Credentials) o;
-        return connectionToken == that.connectionToken && Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(accountId, that.accountId) && uiLanguage == that.uiLanguage && Objects.equals(games, that.games) && Objects.equals(demographic, that.demographic) && Objects.equals(description, that.description) && Objects.equals(progress, that.progress);
+        return Objects.equals(accountId, that.accountId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, accountId, uiLanguage, connectionToken, games, demographic, description, progress);
+        return Objects.hash(accountId);
     }
 }

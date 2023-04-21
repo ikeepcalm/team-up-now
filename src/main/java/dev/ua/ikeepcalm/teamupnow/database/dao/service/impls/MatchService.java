@@ -24,69 +24,67 @@ public class MatchService {
     private CredentialsService credentialsService;
 
     public void createMatchesForUser(Credentials user) {
-        List<Credentials> credentialsList = credentialsService.findAllExcept(user.getAccountId());
+        List<Credentials> retreivedCredentials = credentialsService.findAllExcept(user.getAccountId());
+        List<Match> matchesToSave = new ArrayList<>();
 
-        List<Match> matches = new ArrayList<>();
-
-        for (Credentials foundUser : credentialsList) {
-            Match match = matchRepo.findByFirstUserIdAndSecondUserId(user.getAccountId(), foundUser.getAccountId())
-                    .orElse(new Match());
-
-            match.setFirstUser(user);
-            match.setSecondUser(foundUser);
-
-            int score = 0;
-
-            switch (user.getUiLanguage()) {
-                case ENGLISH:
-                    if (user.getUiLanguage() == foundUser.getUiLanguage()) {
-                        score += 40;
-                    }
-                    break;
-                case UKRAINIAN:
-                    if (foundUser.getUiLanguage() == LanguageENUM.UKRAINIAN) {
-                        score += 30;
-                    }
-                    break;
+        for (Credentials retrieved : retreivedCredentials) {
+            if (retrieved.equals(user)) {
+                continue;
             }
 
-            Set<GameENUM> gameEnums1 = user.getGames().stream().map(Game::getName).collect(Collectors.toSet());
-            Set<GameENUM> gameEnums2 = foundUser.getGames().stream().map(Game::getName).collect(Collectors.toSet());
-            Set<GameENUM> intersection = new HashSet<>(gameEnums1);
-            intersection.retainAll(gameEnums2);
-            double jaccardIndex = (double) intersection.size() / (gameEnums1.size() + gameEnums2.size() - intersection.size());
-            int similarityScore = (int) Math.round(jaccardIndex * 40);
-            score += similarityScore;
+            Match inverseMatch = matchRepo.findByFirstUserAndSecondUser(retrieved, user);
+            Match match = matchRepo.findByFirstUserAndSecondUser(user, retrieved);
 
-            if (user.getDemographic().getAge() == foundUser.getDemographic().getAge()) {
-                score += 20;
+            if (match == null && inverseMatch == null) {
+                match = new Match();
+                match.setFirstUser(user);
+                match.setSecondUser(retrieved);
+                match.setFirstUserLiked(false);
+                match.setSecondUserLiked(false);
+            } else {
+                continue;
             }
-
+            int score = calculateScore(user, retrieved);
             match.setScore(score);
-            match.setFirstUserLiked(false);
-            match.setSecondUserLiked(false);
-
-            matches.add(match);
+            matchesToSave.add(match);
         }
-        matchRepo.saveAll(matches);
+        matchRepo.saveAll(matchesToSave);
     }
 
-
-    public List<Match> findMatchesForUser(Credentials user) {
-        List<Match> foundMatches = matchRepo.findMatchesByFirstUser(user);
-        List<Match> matchesToReturn = new ArrayList<>();
-        for (Match match : foundMatches){
-            if (match.isFirstUserLiked()){
-                matchesToReturn.add(match);
-            }
-        } return matchesToReturn;
+    public List<Match> findAllMatchesForUser(Credentials user) {
+        return matchRepo.findAllMatchesByUser(user);
     }
 
-    public List<Match> findAllMatchesForUser(Credentials user){
-        return (List<Match>) matchRepo.findMatchesByFirstUser(user);
-    }
-
-    public List<Match> findAll(){
+    public List<Match> findAll() {
         return (List<Match>) matchRepo.findAll();
+    }
+
+    private int calculateScore(Credentials user, Credentials foundUser) {
+        int score = 0;
+        switch (user.getUiLanguage()) {
+            case ENGLISH:
+                if (user.getUiLanguage() == foundUser.getUiLanguage()) {
+                    score += 40;
+                }
+                break;
+            case UKRAINIAN:
+                if (foundUser.getUiLanguage() == LanguageENUM.UKRAINIAN) {
+                    score += 30;
+                }
+                break;
+        }
+
+        Set<GameENUM> gameEnums1 = user.getGames().stream().map(Game::getName).collect(Collectors.toSet());
+        Set<GameENUM> gameEnums2 = foundUser.getGames().stream().map(Game::getName).collect(Collectors.toSet());
+        Set<GameENUM> intersection = new HashSet<>(gameEnums1);
+        intersection.retainAll(gameEnums2);
+        double jaccardIndex = (double) intersection.size() / (gameEnums1.size() + gameEnums2.size() - intersection.size());
+        int similarityScore = (int) Math.round(jaccardIndex * 40);
+        score += similarityScore;
+
+        if (user.getDemographic().getAge() == foundUser.getDemographic().getAge()) {
+            score += 20;
+        }
+        return score;
     }
 }
