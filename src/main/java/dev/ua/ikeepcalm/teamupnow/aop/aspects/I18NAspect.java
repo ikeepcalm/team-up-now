@@ -50,5 +50,20 @@ public class I18NAspect {
             myField.set(targetObject, new LocaleTool("i18n/messages_en.properties"));
         } joinPoint.proceed();
     }
+
+    @Around("@annotation(dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N) && args(receivedCallback, origin, callbackQueryId)")
+    public void replaceLocaleObjectWithDeterminedSource(ProceedingJoinPoint joinPoint, String receivedCallback, Message origin, String callbackQueryId) throws Throwable {
+        Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
+        Object[] args = joinPoint.getArgs();
+        Object targetObject = joinPoint.getTarget();
+        Field myField = targetObject.getClass().getDeclaredField("locale");
+        myField.setAccessible(true);
+        if (credentials.getUiLanguage() == LanguageENUM.UKRAINIAN){
+            myField.set(targetObject, new LocaleTool("i18n/messages_ua.properties"));
+        } else if (credentials.getUiLanguage() == LanguageENUM.ENGLISH){
+            myField.set(targetObject, new LocaleTool("i18n/messages_en.properties"));
+        } joinPoint.proceed();
+    }
+
 }
 

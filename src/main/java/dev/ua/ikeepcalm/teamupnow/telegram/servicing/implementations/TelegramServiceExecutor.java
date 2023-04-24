@@ -10,6 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
@@ -31,6 +32,19 @@ public class TelegramServiceExecutor extends DefaultAbsSender implements Telegra
     //TODO: Use Docker ENV variable here
     public TelegramServiceExecutor(@Value("${telegram.bot.token}") String botToken) {
         super(new DefaultBotOptions(), botToken);
+    }
+
+    @Override
+    public void sendAnswerCallbackQuery(String text, String callbackQueryId){
+        AnswerCallbackQuery acq = new AnswerCallbackQuery();
+        acq.setText(text);
+        acq.setShowAlert(true);
+        acq.setCallbackQueryId(callbackQueryId);
+        try {
+            execute(acq);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

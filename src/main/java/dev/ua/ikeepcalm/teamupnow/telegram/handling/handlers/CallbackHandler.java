@@ -47,6 +47,7 @@ public class CallbackHandler implements Handleable {
     public void manage(Update update) {
         String callback = update.getCallbackQuery().getData();
         Message origin = update.getCallbackQuery().getMessage();
+        String callbackQueryId = update.getCallbackQuery().getId();
         if (callback.startsWith("profile")) {
             if (callback.startsWith("profile-games")) {
                 gamesResponse.manage(callback, origin);
@@ -60,11 +61,11 @@ public class CallbackHandler implements Handleable {
             } else {
                 if (matchServiceMap.get(origin.getChatId()) == null) {
                     ExploreResponse exploreResponse = context.getBean(ExploreResponse.class);
-                    exploreResponse.manage(callback, origin);
+                    exploreResponse.manage(callback, origin, callbackQueryId);
                     matchServiceMap.put(origin.getChatId(), exploreResponse);
                 } else {
                     ExploreResponse exploreResponse = matchServiceMap.get((origin.getChatId()));
-                    exploreResponse.manage(callback, origin);
+                    exploreResponse.manage(callback, origin, callbackQueryId);
                 }
             }
         } else if (callback.startsWith("menu")) {

@@ -12,10 +12,8 @@ import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -42,29 +40,47 @@ public class ExploreResponse implements Executable {
     @I18N
     @Override
     @Transactional
-    public void manage(String receivedCallback, Message origin) {
-        if (!hasBeenUpdated){
-            matchService.createMatchesForUser(credentialsService.findByAccountId(origin.getChatId()));
-            hasBeenUpdated = true;
-        }
-        matches = matchService.findAllMatchesForUser(credentialsService.findByAccountId(origin.getChatId()));
-        int maxIndex = matches.size();
-        int minIndex = 0;
-        if (receivedCallback.equals("explore")) {
-            editMessage(origin);
-        } else if (receivedCallback.equals("explore-next")) {
-            if (currentIndex + 1 < maxIndex){
-                ++currentIndex;
-            } editMessage(origin);
-        } else if (receivedCallback.equals("explore-previous")) {
-            if (currentIndex - 1 >= 0){
-                --currentIndex;
+    public void manage(String receivedCallback, Message origin, String callbackQueryId) {
+        try {
+            if (!hasBeenUpdated) {
+                matchService.createMatchesForUser(credentialsService.findByAccountId(origin.getChatId()));
+                hasBeenUpdated = true;
             }
-            editMessage(origin);
-        } else if (receivedCallback.equals("explore-like")) {
-            //like
-            //save
-            //remove from matches
+            matches = matchService.findAllMatchesForUser(credentialsService.findByAccountId(origin.getChatId()));
+            int maxIndex = matches.size();
+            int minIndex = 0;
+            if (receivedCallback.equals("explore")) {
+                editMessage(origin);
+            } else if (receivedCallback.equals("explore-next")) {
+                if (currentIndex + 1 < maxIndex) {
+                    ++currentIndex;
+                }
+                editMessage(origin);
+            } else if (receivedCallback.equals("explore-previous")) {
+                if (currentIndex - 1 >= 0) {
+                    --currentIndex;
+                }
+                editMessage(origin);
+            } else if (receivedCallback.equals("explore-like")) {
+                Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
+                Match match = matches.get(currentIndex);
+                if (credentials == match.getFirstUser()) {
+                    match.setFirstUserLiked(true);
+                } else if (credentials == match.getSecondUser()) {
+                    match.setSecondUserLiked(true);
+                }
+                if (matches.size() == 1) {
+                    matchService.save(match);
+                    telegramService.sendAnswerCallbackQuery(locale.getMessage("explore-no-more-results"), callbackQueryId);
+                } else {
+                    telegramService.sendAnswerCallbackQuery(locale.getMessage("explore-liked"), callbackQueryId);
+                    matchService.save(match);
+                    matches.remove(match);
+                    editMessage(origin);
+                }
+            }
+        } catch (IndexOutOfBoundsException exception){
+            telegramService.sendAnswerCallbackQuery(locale.getMessage("explore-no-results"), callbackQueryId);
         }
     }
 
@@ -85,7 +101,8 @@ public class ExploreResponse implements Executable {
                 stringBuilder.append(locale.getMessage("profile-age-property")).append("\n");
             }
         } //Age
-        {stringBuilder.append(locale.getMessage("speaks"));
+        {
+            stringBuilder.append(locale.getMessage("speaks"));
             if (credentials.getUiLanguage() == LanguageENUM.ENGLISH) {
                 stringBuilder.append("English ")
                         .append(locale.getMessage("profile-language-property"))
@@ -93,7 +110,8 @@ public class ExploreResponse implements Executable {
             } else if (credentials.getUiLanguage() == LanguageENUM.UKRAINIAN) {
                 stringBuilder.append("Українська ")
                         .append(locale.getMessage("profile-language-property"))
-                        .append("\n");;
+                        .append("\n");
+                ;
             }
         } //UI Language
         {

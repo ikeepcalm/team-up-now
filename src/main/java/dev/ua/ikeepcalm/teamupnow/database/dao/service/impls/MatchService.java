@@ -52,11 +52,31 @@ public class MatchService {
     }
 
     public List<Match> findAllMatchesForUser(Credentials user) {
-        return matchRepo.findAllMatchesByUser(user);
+        List<Match> matches = matchRepo.findAllMatchesByUser(user);
+        List<Match> matchesToReturn = new ArrayList<>();
+        for (Match match : matches){
+            if (match.getFirstUser() == user){
+                if (match.isFirstUserLiked()){
+                    continue;
+                } else {
+                    matchesToReturn.add(match);
+                }
+            } else if (match.getSecondUser() == user){
+                if (match.isSecondUserLiked()){
+                    continue;
+                } else {
+                    matchesToReturn.add(match);
+                }
+            }
+        } return matchesToReturn;
     }
 
     public List<Match> findAll() {
         return (List<Match>) matchRepo.findAll();
+    }
+
+    public void save(Match match){
+        matchRepo.save(match);
     }
 
     private int calculateScore(Credentials user, Credentials foundUser) {

@@ -8,6 +8,8 @@ import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 public interface TelegramService{
+    void sendAnswerCallbackQuery(String text, String callbackQueryId);
+
     void sendAlterMessage(AlterMessage alterMessage);
 
     void sendAlterMessage(MultiMessage multiMessage);
