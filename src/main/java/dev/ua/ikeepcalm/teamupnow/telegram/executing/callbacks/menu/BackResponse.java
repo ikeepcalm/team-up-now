@@ -1,15 +1,12 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
-import dev.ua.ikeepcalm.teamupnow.aop.annotations.Sequenced;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.MenuCommand;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MediaMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -22,13 +19,17 @@ import java.util.List;
 public class BackResponse implements Executable {
     @Autowired
     private TelegramService telegramService;
+
+    @Value("${img.menu}")
+    String filePath;
+
     private LocaleTool locale;
 
     @I18N
     @Override
     public void manage(String receivedCallback, Message origin) {
         AlterMessage alterMessage = new AlterMessage();
-        alterMessage.setFileURL("https://images.squarespace-cdn.com/content/v1/54602f96e4b0efbe942e86fa/1415650984671-F9HUEE5KU7VW4Z33AMZU/Menu.png");
+        alterMessage.setFilePath(filePath);
         alterMessage.setMessageId(origin.getMessageId());
         alterMessage.setChatId(origin.getChatId());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();

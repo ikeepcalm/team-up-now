@@ -1,6 +1,7 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.handling.handlers;
 
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.discover.ExploreResponse;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.discover.MatchesResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.init_profile.AgeResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.init_profile.GamesResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu.*;
@@ -40,6 +41,9 @@ public class CallbackHandler implements Handleable {
     @Autowired
     private DiscoverResponse discoverResponse;
     @Autowired
+    private MatchesResponse matchesResponse;
+
+    @Autowired
     private ConfigurableApplicationContext context;
     private final ConcurrentHashMap<Long, ExploreResponse> matchServiceMap = new ConcurrentHashMap<>();
 
@@ -67,6 +71,10 @@ public class CallbackHandler implements Handleable {
                     ExploreResponse exploreResponse = matchServiceMap.get((origin.getChatId()));
                     exploreResponse.manage(callback, origin, callbackQueryId);
                 }
+            }
+        } else if (callback.startsWith("matches")){
+            if (callback.equals("matches")){
+                matchesResponse.manage(callback, origin, callbackQueryId);
             }
         } else if (callback.startsWith("menu")) {
             switch (callback) {

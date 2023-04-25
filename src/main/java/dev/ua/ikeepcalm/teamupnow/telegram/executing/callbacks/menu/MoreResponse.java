@@ -6,6 +6,7 @@ import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -16,6 +17,9 @@ import java.util.List;
 
 @Component
 public class MoreResponse implements Executable {
+
+    @Value("${img.info}")
+    String filePath;
     @Autowired
     private TelegramService telegramService;
     private LocaleTool locale;
@@ -24,7 +28,7 @@ public class MoreResponse implements Executable {
     @Override
     public void manage(String receivedCallback, Message origin) {
         AlterMessage alterMessage = new AlterMessage();
-        alterMessage.setFileURL("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Infobox_info_icon.svg/1200px-Infobox_info_icon.svg.png");
+        alterMessage.setFilePath(filePath);
         alterMessage.setMessageId(origin.getMessageId());
         alterMessage.setChatId(origin.getChatId());
         alterMessage.setText(locale.getMessage("more-response"));

@@ -8,7 +8,7 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MediaMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -30,8 +30,8 @@ public class MenuCommand implements Executable {
     @ClearKeyboard
     @Progressable(ProgressENUM.DONE)
     public void execute(Message origin) {
-        MediaMessage message = new MediaMessage();
-        message.setFilePath("src/main/resources/img/menu.png");
+        MultiMessage message = new MultiMessage();
+        message.setFilePath("src/main/resources/img/menu.jpg");
         message.setChatId(origin.getChatId());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
@@ -57,6 +57,6 @@ public class MenuCommand implements Executable {
         keyboard.add(secondRow);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         message.setReplyKeyboard(inlineKeyboardMarkup);
-        telegramService.sendMediaMessage(message);
+        telegramService.sendMultiMessage(message);
     }
 }

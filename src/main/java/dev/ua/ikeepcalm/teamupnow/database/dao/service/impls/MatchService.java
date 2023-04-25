@@ -71,6 +71,17 @@ public class MatchService {
         } return matchesToReturn;
     }
 
+    public List<Match> findConnectedMatchesForUser(Credentials user){
+        List<Match> matches = matchRepo.findAllMatchesByUser(user);
+        List<Match> matchesToReturn = new ArrayList<>();
+        for (Match match : matches){
+            if (match.isSecondUserLiked() && match.isSecondUserLiked()){
+                matchesToReturn.add(match);
+            }
+        } return matchesToReturn;
+    }
+
+
     public List<Match> findAll() {
         return (List<Match>) matchRepo.findAll();
     }

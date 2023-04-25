@@ -11,6 +11,7 @@ import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -22,6 +23,9 @@ import java.util.List;
 
 @Component
 public class ProfileResponse implements Executable {
+
+    @Value("${img.profile}")
+    String filePath;
 
     @Autowired
     private TelegramService telegramService;
@@ -37,7 +41,7 @@ public class ProfileResponse implements Executable {
         AlterMessage alterMessage = new AlterMessage();
         alterMessage.setMessageId(origin.getMessageId());
         alterMessage.setChatId(origin.getChatId());
-        alterMessage.setFileURL("https://static.vecteezy.com/system/resources/previews/005/544/718/original/profile-icon-design-free-vector.jpg");
+        alterMessage.setFilePath(filePath);
         StringBuilder stringBuilder = new StringBuilder();
         {
             if (credentials.getDemographic().getAge() == AgeENUM.YOUNG) {

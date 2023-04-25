@@ -13,6 +13,7 @@ import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,9 @@ import java.util.List;
 @Component
 @Scope(value = "prototype")
 public class ExploreResponse implements Executable {
+    @Value("${img.explore}")
+    String filePath;
+
     @Autowired
     private TelegramService telegramService;
     @Autowired
@@ -86,7 +90,12 @@ public class ExploreResponse implements Executable {
 
     private void editMessage(Message origin) {
         Match match = matches.get(currentIndex);
-        Credentials credentials = credentialsService.findByAccountId(match.getSecondUser().getAccountId());
+        Credentials credentials;
+        if (origin.getChatId().equals(match.getFirstUser().getAccountId())){
+            credentials = credentialsService.findByAccountId(match.getSecondUser().getAccountId());
+        } else {
+            credentials = credentialsService.findByAccountId(match.getFirstUser().getAccountId());
+        }
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(credentials.getName()).append(" - ").append(match.getScore()).append("%\n");
         {
@@ -132,7 +141,7 @@ public class ExploreResponse implements Executable {
         alterMessage.setMessageId(origin.getMessageId());
         alterMessage.setChatId(origin.getChatId());
         alterMessage.setText(stringBuilder.toString());
-        alterMessage.setFileURL("https://docs.fastlane.tools/img/actions/match.png");
+        alterMessage.setFilePath(filePath);
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstRow = new ArrayList<>();

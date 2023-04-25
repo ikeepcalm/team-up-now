@@ -9,6 +9,7 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ public class GamesResponse implements Executable {
                     updateButton("profile-games-destiny2", markup, "Destiny 2");
                 }
             } finally {
-                MultiMessage alterMessage = new MultiMessage();
+                AlterMessage alterMessage = new AlterMessage();
                 alterMessage.setMessageId(origin.getMessageId());
                 alterMessage.setChatId(origin.getChatId());
                 alterMessage.setReplyKeyboard(markup);
