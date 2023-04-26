@@ -1,4 +1,4 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations;
+package dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools;
 
 import java.io.IOException;
 import java.io.InputStream;

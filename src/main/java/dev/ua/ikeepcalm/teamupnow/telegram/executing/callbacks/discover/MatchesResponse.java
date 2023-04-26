@@ -1,15 +1,12 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.discover;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
-import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
-import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.MatchService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Match;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.QueryCallback;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.SimpleCallback;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
-import org.springframework.beans.factory.annotation.Autowired;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,15 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class MatchesResponse implements Executable {
+public class MatchesResponse extends QueryCallback {
     @Value("${img.matches}")
     String filePath;
-    @Autowired
-    private TelegramService telegramService;
-    @Autowired
-    private CredentialsService credentialsService;
-    @Autowired
-    private MatchService matchService;
     private LocaleTool locale;
 
     @I18N

@@ -1,24 +1,16 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.settings;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
-import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.SimpleCallback;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Component
-public class SettingsDeleteResponse implements Executable {
-
-    @Autowired
-    private CredentialsService credentialsService;
-    @Autowired
-    private TelegramService telegramService;
+public class SettingsDeleteResponse extends SimpleCallback {
     private LocaleTool locale;
 
     @I18N

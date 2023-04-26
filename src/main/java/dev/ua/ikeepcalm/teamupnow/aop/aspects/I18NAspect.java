@@ -4,7 +4,7 @@ import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import dev.ua.ikeepcalm.teamupnow.database.exceptions.DAOException;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

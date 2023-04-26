@@ -1,16 +1,13 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
-import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.AgeENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.SimpleCallback;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,15 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ProfileResponse implements Executable {
+public class ProfileResponse extends SimpleCallback {
 
     @Value("${img.profile}")
     String filePath;
-
-    @Autowired
-    private TelegramService telegramService;
-    @Autowired
-    private CredentialsService credentialsService;
     private LocaleTool locale;
 
     @I18N

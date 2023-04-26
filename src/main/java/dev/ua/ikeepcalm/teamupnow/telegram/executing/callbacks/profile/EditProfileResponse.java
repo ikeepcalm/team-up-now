@@ -2,12 +2,9 @@ package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.Sequenced;
-import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.SimpleCallback;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -17,12 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class EditProfileResponse implements Executable {
-
-    @Autowired
-    private TelegramService telegramService;
-    @Autowired
-    private CredentialsService credentialsService;
+public class EditProfileResponse extends SimpleCallback {
     private LocaleTool locale;
 
     @I18N

@@ -1,16 +1,13 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.executing.commands;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.system;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.EntryPoint;
-import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Progress;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.database.exceptions.DAOException;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.Command;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -20,14 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class StartCommand implements Executable {
+public class StartCommand extends Command {
 
-    @Autowired
-    private CredentialsService credentialsService;
-    @Autowired
-    private TelegramService telegramService;
-
-    @Override
     @EntryPoint
     public void execute(Message origin) {
         createObjectForNewUser(origin.getChatId(), origin.getFrom().getUserName(), origin.getFrom().getLanguageCode(), origin.getFrom().getFirstName());

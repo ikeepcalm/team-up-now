@@ -3,7 +3,7 @@ package dev.ua.ikeepcalm.teamupnow.telegram.handling.handlers;
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.Progressable;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.handling.Handleable;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.messages.AboutMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.messages.init_profile.AboutMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;

@@ -1,4 +1,4 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations;
+package dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools;
 
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
@@ -23,9 +23,9 @@ import java.io.File;
 
 @Service
 @PropertySource("classpath:thirdparty.properties")
-public class TelegramServiceExecutor extends DefaultAbsSender implements TelegramService {
+public class TelegramTool extends DefaultAbsSender implements TelegramService {
 
-    public TelegramServiceExecutor(@Value("${telegram.bot.token}") String botToken) {
+    public TelegramTool(@Value("${telegram.bot.token}") String botToken) {
         super(new DefaultBotOptions(), botToken);
     }
 

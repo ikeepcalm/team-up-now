@@ -2,17 +2,14 @@ package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.init_profile;
 
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
-import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Demographic;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.AgeENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.SimpleCallback;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -23,15 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class AgeResponse implements Executable {
+public class AgeResponse extends SimpleCallback {
 
-    @Autowired
-    private TelegramService telegramService;
-    @Autowired
-    private CredentialsService credentialsService;
     private LocaleTool locale;
 
     @I18N
+    @Override
     @Transactional
     public void manage(String receivedCallback, Message origin) {
         Credentials credentials = credentialsService.findByAccountId(origin.getChatId());

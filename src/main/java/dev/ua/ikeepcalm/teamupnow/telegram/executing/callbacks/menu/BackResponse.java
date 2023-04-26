@@ -1,11 +1,9 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.implementations.LocaleTool;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.SimpleCallback;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -16,9 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class BackResponse implements Executable {
-    @Autowired
-    private TelegramService telegramService;
+public class BackResponse extends SimpleCallback {
 
     @Value("${img.menu}")
     String filePath;
