@@ -50,7 +50,8 @@ public class CredentialsService implements iCredentials<Credentials> {
             dbCredentials.setName(credentials.getName());
             dbCredentials.setUsername(credentials.getUsername());
             dbCredentials.setUiLanguage(credentials.getUiLanguage());
-            dbCredentials.setConnectionToken(5);
+            dbCredentials.setSustainableTokens(5);
+            dbCredentials.setConnectionTokens(5);
             credentialsRepo.save(dbCredentials);
         }
         Credentials dbCredentials = findByAccountId(credentials.getAccountId());

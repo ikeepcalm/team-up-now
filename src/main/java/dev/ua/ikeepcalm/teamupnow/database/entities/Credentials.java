@@ -6,8 +6,10 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.HashSet;
 import java.util.List;
@@ -34,8 +36,11 @@ public class Credentials {
     @Column(name = "uiLanguage", nullable = false)
     private LanguageENUM uiLanguage;
 
-    @Column(name = "connectionToken", nullable = false)
-    private int connectionToken;
+    @Column(name = "avaiableTokens", nullable = false)
+    private int connectionTokens;
+
+    @Column(name = "sustainableToken", nullable = false)
+    private int sustainableTokens;
 
     @OneToMany(mappedBy = "credentials", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Game> games;
@@ -110,10 +115,6 @@ public class Credentials {
         this.progress = progress;
     }
 
-    public int getConnectionToken() {
-        return connectionToken;
-    }
-
     public String getName() {
         return name;
     }
@@ -122,9 +123,20 @@ public class Credentials {
         this.name = name;
     }
 
-    public void setConnectionToken(int connectionToken) {
+    public int getConnectionTokens() {
+        return connectionTokens;
+    }
 
-        this.connectionToken = connectionToken;
+    public void setConnectionTokens(int connectionTokens) {
+        this.connectionTokens = connectionTokens;
+    }
+
+    public int getSustainableTokens() {
+        return sustainableTokens;
+    }
+
+    public void setSustainableTokens(int sustainableTokens) {
+        this.sustainableTokens = sustainableTokens;
     }
 
     @Override
