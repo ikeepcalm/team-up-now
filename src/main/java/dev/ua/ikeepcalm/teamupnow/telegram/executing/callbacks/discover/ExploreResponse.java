@@ -7,7 +7,6 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.Match;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.AgeENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.QueryCallback;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.SimpleCallback;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,23 +56,30 @@ public class ExploreResponse extends QueryCallback {
                 editMessage(origin);
             } else if (receivedCallback.equals("explore-like")) {
                 Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
-                Match match = matches.get(currentIndex);
-                if (credentials == match.getFirstUser()) {
-                    match.setFirstUserLiked(true);
-                } else if (credentials == match.getSecondUser()) {
-                    match.setSecondUserLiked(true);
-                }
-                if (matches.size() == 1) {
-                    matchService.save(match);
-                    telegramService.sendAnswerCallbackQuery(locale.getMessage("explore-no-more-results"), callbackQueryId);
+                if (credentials.getConnectionTokens() > 0) {
+                    Match match = matches.get(currentIndex);
+                    if (credentials == match.getFirstUser()) {
+                        match.setFirstUserLiked(true);
+                    } else if (credentials == match.getSecondUser()) {
+                        match.setSecondUserLiked(true);
+                    }
+                    if (matches.size() == 1) {
+                        credentials.setConnectionTokens(credentials.getConnectionTokens() - 1);
+                        matchService.save(match);
+                        telegramService.sendAnswerCallbackQuery(locale.getMessage("explore-no-more-results"), callbackQueryId);
+                    } else {
+                        credentials.setConnectionTokens(credentials.getConnectionTokens() - 1);
+                        String message = locale.getMessage("explore-liked") + " " + credentials.getConnectionTokens() + "/" + credentials.getSustainableTokens();
+                        telegramService.sendAnswerCallbackQuery(message, callbackQueryId);
+                        matchService.save(match);
+                        matches.remove(match);
+                        editMessage(origin);
+                    }credentialsService.save(credentials);
                 } else {
-                    telegramService.sendAnswerCallbackQuery(locale.getMessage("explore-liked"), callbackQueryId);
-                    matchService.save(match);
-                    matches.remove(match);
-                    editMessage(origin);
+                    telegramService.sendAnswerCallbackQuery(locale.getMessage("explore-no-tokens"), callbackQueryId);
                 }
             }
-        } catch (IndexOutOfBoundsException exception){
+        } catch (IndexOutOfBoundsException exception) {
             telegramService.sendAnswerCallbackQuery(locale.getMessage("explore-no-results"), callbackQueryId);
         }
     }
@@ -81,7 +87,7 @@ public class ExploreResponse extends QueryCallback {
     private void editMessage(Message origin) {
         Match match = matches.get(currentIndex);
         Credentials credentials;
-        if (origin.getChatId().equals(match.getFirstUser().getAccountId())){
+        if (origin.getChatId().equals(match.getFirstUser().getAccountId())) {
             credentials = credentialsService.findByAccountId(match.getSecondUser().getAccountId());
         } else {
             credentials = credentialsService.findByAccountId(match.getFirstUser().getAccountId());
@@ -104,7 +110,8 @@ public class ExploreResponse extends QueryCallback {
                 .append(locale.getMessage("explore-name"))
                 .append(credentials.getName())
                 .append("\n");
-        {stringBuilder.append(locale.getMessage("explore-language"));
+        {
+            stringBuilder.append(locale.getMessage("explore-language"));
             if (credentials.getUiLanguage() == LanguageENUM.ENGLISH) {
                 stringBuilder.append("English ")
                         .append("\n");
@@ -126,14 +133,16 @@ public class ExploreResponse extends QueryCallback {
             }
             stringBuilder.append("\n");
         } //Games
-        {stringBuilder.append(locale.getMessage("explore-age"));
+        {
+            stringBuilder.append(locale.getMessage("explore-age"));
             if (credentials.getDemographic().getAge() == AgeENUM.YOUNG) {
                 stringBuilder.append("14-17 ");
             } else if (credentials.getDemographic().getAge() == AgeENUM.YOUND_ADULT) {
                 stringBuilder.append("18-26 ");
             } else if (credentials.getDemographic().getAge() == AgeENUM.ADULT) {
                 stringBuilder.append("27-35 ");
-            } stringBuilder.append(locale.getMessage("years-old")).append("\n");
+            }
+            stringBuilder.append(locale.getMessage("years-old")).append("\n");
         } //Age
 
         stringBuilder

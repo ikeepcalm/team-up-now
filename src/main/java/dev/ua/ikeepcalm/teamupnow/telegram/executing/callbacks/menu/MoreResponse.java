@@ -27,7 +27,32 @@ public class MoreResponse extends SimpleCallback {
         alterMessage.setFilePath(filePath);
         alterMessage.setMessageId(origin.getMessageId());
         alterMessage.setChatId(origin.getChatId());
-        alterMessage.setText(locale.getMessage("more-response"));
+        alterMessage.setParseMode("html");
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append(locale.getMessage("more-delimiter"))
+                .append("\n").append("\n")
+                .append(locale.getMessage("more-support"))
+                .append("<a href = \"https://t.me/ikeepcalm\">")
+                .append(locale.getMessage("more-open-ticket"))
+                .append("</a>")
+                .append("\n")
+                .append(locale.getMessage("more-gratuity"))
+                .append("<a href = \"https://donatello.to/teamupnow\">")
+                .append(locale.getMessage("more-support-development"))
+                .append("</a>")
+                .append("\n")
+                .append(locale.getMessage("more-news"))
+                .append("<a href = \"https://t.me/teamupnow_upd\">")
+                .append(locale.getMessage("more-all-news"))
+                .append("</a>")
+                .append("\n")
+                .append(locale.getMessage("more-update"))
+                .append("28.04.2023")
+                .append("\n")
+                .append("\n")
+                .append(locale.getMessage("more-delimiter"));
+        alterMessage.setText(stringBuilder.toString());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
