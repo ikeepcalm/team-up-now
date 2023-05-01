@@ -48,7 +48,7 @@ public class MoreResponse extends SimpleCallback {
                 .append("</a>")
                 .append("\n")
                 .append(locale.getMessage("more-update"))
-                .append("28.04.2023")
+                .append("01.05.2023")
                 .append("\n")
                 .append("\n")
                 .append(locale.getMessage("more-delimiter"));

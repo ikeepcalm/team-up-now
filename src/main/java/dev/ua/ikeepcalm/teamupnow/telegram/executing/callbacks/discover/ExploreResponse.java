@@ -125,7 +125,7 @@ public class ExploreResponse extends QueryCallback {
             int size = credentials.getGames().size();
             int i = 0;
             for (Game game : credentials.getGames()) {
-                stringBuilder.append(game.getName());
+                stringBuilder.append(game.getName().getButtonText());
                 if (i < size - 1) {
                     stringBuilder.append(", ");
                     ++i;

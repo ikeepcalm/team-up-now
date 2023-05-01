@@ -3,8 +3,6 @@ package dev.ua.ikeepcalm.teamupnow.telegram.executing;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.MatchService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.mediators.CommandMediator;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.mediators.ResponseMediator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

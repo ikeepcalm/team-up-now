@@ -34,7 +34,7 @@ public class MatchingTests {
     @Before
     public void createEntities(){
         Game minecraft = new Game(); minecraft.setName(GameENUM.MINECRAFT);
-        Game destiny = new Game(); destiny.setName(GameENUM.DESTINY);
+        Game destiny = new Game(); destiny.setName(GameENUM.DESTINY2);
         Game csgo = new Game(); csgo.setName(GameENUM.CSGO);
 
         Credentials user = new Credentials();

@@ -1,6 +1,7 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.handling.handlers;
 
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.discover.ExploreResponse;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.init_profile.GamesResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.handling.Handleable;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.mediators.ResponseMediator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,8 @@ public class CallbackHandler implements Handleable {
     private ResponseMediator responseMediator;
     @Autowired
     private ConfigurableApplicationContext context;
-    private final ConcurrentHashMap<Long, ExploreResponse> matchServiceMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, ExploreResponse> exploreResponseMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, GamesResponse> gamesResponseMap = new ConcurrentHashMap<>();
 
     @Override
     public void manage(Update update) {
@@ -27,21 +29,37 @@ public class CallbackHandler implements Handleable {
         String callbackQueryId = update.getCallbackQuery().getId();
         if (callback.startsWith("profile")) {
             if (callback.startsWith("profile-games")) {
-                responseMediator.executeGamesResponse(callback, origin);
+                if (callback.equals("profile-games-ready")){
+                    if (gamesResponseMap.get(origin.getChatId()) == null){
+                        GamesResponse gamesResponse = context.getBean(GamesResponse.class);
+                        gamesResponse.manage(callback, origin);
+                    } else {
+                        gamesResponseMap.get(origin.getChatId()).manage(callback, origin);
+                        gamesResponseMap.remove(origin.getChatId());
+                    }
+                } else {
+                    if (gamesResponseMap.get(origin.getChatId()) == null){
+                        GamesResponse gamesResponse = context.getBean(GamesResponse.class);
+                        gamesResponseMap.put(origin.getChatId(), gamesResponse);
+                        gamesResponse.manage(callback, origin);
+                    } else {
+                        gamesResponseMap.get(origin.getChatId()).manage(callback, origin);
+                    }
+                }
             } else if (callback.startsWith("profile-age")) {
                 responseMediator.executeAgeResponse(callback, origin);
             }
         } else if (callback.startsWith("explore")) {
             if (callback.equals("explore-back")) {
-                matchServiceMap.remove(origin.getChatId());
+                exploreResponseMap.remove(origin.getChatId());
                 responseMediator.executeDiscoverResponse(callback, origin);
             } else {
-                if (matchServiceMap.get(origin.getChatId()) == null) {
+                if (exploreResponseMap.get(origin.getChatId()) == null) {
                     ExploreResponse exploreResponse = context.getBean(ExploreResponse.class);
                     exploreResponse.manage(callback, origin, callbackQueryId);
-                    matchServiceMap.put(origin.getChatId(), exploreResponse);
+                    exploreResponseMap.put(origin.getChatId(), exploreResponse);
                 } else {
-                    ExploreResponse exploreResponse = matchServiceMap.get((origin.getChatId()));
+                    ExploreResponse exploreResponse = exploreResponseMap.get((origin.getChatId()));
                     exploreResponse.manage(callback, origin, callbackQueryId);
                 }
             }
