@@ -41,7 +41,6 @@ public class ExploreResponse extends QueryCallback {
             }
             matches = matchService.findAllMatchesForUser(credentialsService.findByAccountId(origin.getChatId()));
             int maxIndex = matches.size();
-            int minIndex = 0;
             if (receivedCallback.equals("explore")) {
                 editMessage(origin);
             } else if (receivedCallback.equals("explore-next")) {

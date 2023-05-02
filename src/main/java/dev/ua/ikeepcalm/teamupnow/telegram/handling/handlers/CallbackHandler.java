@@ -1,6 +1,7 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.handling.handlers;
 
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.discover.ExploreResponse;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.discover.MatchesResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.init_profile.GamesResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.handling.Handleable;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.mediators.ResponseMediator;
@@ -21,6 +22,7 @@ public class CallbackHandler implements Handleable {
     private ConfigurableApplicationContext context;
     private final ConcurrentHashMap<Long, ExploreResponse> exploreResponseMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, GamesResponse> gamesResponseMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, MatchesResponse> matchesResponseMap = new ConcurrentHashMap<>();
 
     @Override
     public void manage(Update update) {
@@ -64,8 +66,18 @@ public class CallbackHandler implements Handleable {
                 }
             }
         } else if (callback.startsWith("matches")){
-            if (callback.equals("matches")){
-                responseMediator.executeMatchesResponse(callback, origin, callbackQueryId);
+            if (callback.equals("matches-back")) {
+                matchesResponseMap.remove(origin.getChatId());
+                responseMediator.executeDiscoverResponse(callback, origin);
+            } else {
+                if (matchesResponseMap.get(origin.getChatId()) == null) {
+                    MatchesResponse matchesResponse = context.getBean(MatchesResponse.class);
+                    matchesResponse.manage(callback, origin, callbackQueryId);
+                    matchesResponseMap.put(origin.getChatId(), matchesResponse);
+                } else {
+                    MatchesResponse matchesResponse = matchesResponseMap.get((origin.getChatId()));
+                    matchesResponse.manage(callback, origin, callbackQueryId);
+                }
             }
         } else if (callback.startsWith("menu")) {
             switch (callback) {
