@@ -47,7 +47,7 @@ public class GamesCommand extends Command {
                     row = new ArrayList<>();
                     if (keyboard.size() == 3 && i != gameValues.length - 1) {
                         InlineKeyboardButton nextButton = new InlineKeyboardButton();
-                        nextButton.setText("Next >>>");
+                        nextButton.setText(locale.getMessage("explore-next"));
                         nextButton.setCallbackData("profile-games-next");
                         List<InlineKeyboardButton> paginationRow = new ArrayList<>();
                         paginationRow.add(nextButton);

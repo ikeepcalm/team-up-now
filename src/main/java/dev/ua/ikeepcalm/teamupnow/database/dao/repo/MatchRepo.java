@@ -12,9 +12,6 @@ import java.util.List;
 @Repository
 public interface MatchRepo extends CrudRepository<Match, Long> {
     Match findByFirstUserAndSecondUser(Credentials firstUser, Credentials secondUser);
-    List<Match> findMatchesByFirstUserOrderByScore(Credentials firstUser);
-    List<Match> findMatchesByFirstUser(Credentials firstUser);
-    List<Match> findMatchesBySecondUser(Credentials secondUser);
     @Query("SELECT m FROM Match m WHERE m.firstUser = :user OR m.secondUser = :user")
     List<Match> findAllMatchesByUser(@Param("user") Credentials user);
 

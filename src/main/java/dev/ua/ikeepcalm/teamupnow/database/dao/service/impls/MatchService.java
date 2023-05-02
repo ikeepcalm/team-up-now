@@ -6,13 +6,11 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Match;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.GameENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
+import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,9 +23,17 @@ public class MatchService {
 
     public void createMatchesForUser(Credentials user) {
         List<Credentials> retreivedCredentials = credentialsService.findAllExcept(user.getAccountId());
+        List<Credentials> credentialsToHandle = new ArrayList<>();
+        for (Credentials credentials : retreivedCredentials) {
+            if (credentials.getProgress().getProgressENUM() == ProgressENUM.DONE) {
+                credentialsToHandle.add(credentials);
+            }
+        }
+
+
         List<Match> matchesToSave = new ArrayList<>();
 
-        for (Credentials retrieved : retreivedCredentials) {
+        for (Credentials retrieved : credentialsToHandle) {
             if (retrieved.equals(user)) {
                 continue;
             }
@@ -52,33 +58,43 @@ public class MatchService {
     }
 
     public List<Match> findAllMatchesForUser(Credentials user) {
+        Comparator<Match> scoreComparator = new Comparator<Match>() {
+            @Override
+            public int compare(Match o2,Match o1) {
+                return Integer.compare(o1.getScore(), o2.getScore());
+            }
+        };
+
         List<Match> matches = matchRepo.findAllMatchesByUser(user);
         List<Match> matchesToReturn = new ArrayList<>();
-        for (Match match : matches){
-            if (match.getFirstUser() == user){
-                if (match.isFirstUserLiked()){
+        for (Match match : matches) {
+            if (match.getFirstUser() == user) {
+                if (match.isFirstUserLiked()) {
                     continue;
                 } else {
                     matchesToReturn.add(match);
                 }
-            } else if (match.getSecondUser() == user){
-                if (match.isSecondUserLiked()){
+            } else if (match.getSecondUser() == user) {
+                if (match.isSecondUserLiked()) {
                     continue;
                 } else {
                     matchesToReturn.add(match);
                 }
             }
-        } return matchesToReturn;
+        }
+        matchesToReturn.sort(scoreComparator);
+        return matchesToReturn;
     }
 
-    public List<Match> findConnectedMatchesForUser(Credentials user){
+    public List<Match> findConnectedMatchesForUser(Credentials user) {
         List<Match> matches = matchRepo.findAllMatchesByUser(user);
         List<Match> matchesToReturn = new ArrayList<>();
-        for (Match match : matches){
-            if (match.isSecondUserLiked() && match.isSecondUserLiked()){
+        for (Match match : matches) {
+            if (match.isSecondUserLiked() && match.isSecondUserLiked()) {
                 matchesToReturn.add(match);
             }
-        } return matchesToReturn;
+        }
+        return matchesToReturn;
     }
 
 
@@ -86,7 +102,7 @@ public class MatchService {
         return (List<Match>) matchRepo.findAll();
     }
 
-    public void save(Match match){
+    public void save(Match match) {
         matchRepo.save(match);
     }
 

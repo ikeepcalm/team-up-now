@@ -38,6 +38,11 @@ public class ProfileResponse extends SimpleCallback {
         stringBuilder
                 .append(locale.getMessage("profile-delimiter")).append("\n")
                 .append("\n")
+                .append(locale.getMessage("profile-tokens-property"))
+                .append(credentials.getConnectionTokens())
+                .append("/")
+                .append(credentials.getSustainableTokens())
+                .append("\n")
                 .append(locale.getMessage("profile-username-property"))
                 .append(credentials.getUsername())
                 .append("\n");
@@ -52,19 +57,6 @@ public class ProfileResponse extends SimpleCallback {
         }
         }//Language
         {
-            stringBuilder.append(locale.getMessage("profile-games-property"));
-            int size = credentials.getGames().size();
-            int i = 0;
-            for (Game game : credentials.getGames()) {
-                stringBuilder.append(game.getName().getButtonText());
-                if (i < size - 1) {
-                    stringBuilder.append(", ");
-                    ++i;
-                }
-            }
-            stringBuilder.append("\n");
-        } //Games
-        {
             stringBuilder.append(locale.getMessage("profile-age-property"));
             if (credentials.getDemographic().getAge() == AgeENUM.YOUNG) {
                 stringBuilder.append("14-17 ");
@@ -77,12 +69,19 @@ public class ProfileResponse extends SimpleCallback {
                 stringBuilder.append(locale.getMessage("years-old")).append("\n");
             }
         } //Age
-        stringBuilder
-                .append(locale.getMessage("profile-tokens-property"))
-                .append(credentials.getConnectionTokens())
-                .append("/")
-                .append(credentials.getSustainableTokens())
-                .append("\n");
+        {
+            stringBuilder.append(locale.getMessage("profile-games-property"));
+            int size = credentials.getGames().size();
+            int i = 0;
+            for (Game game : credentials.getGames()) {
+                stringBuilder.append(game.getName().getButtonText());
+                if (i < size - 1) {
+                    stringBuilder.append(", ");
+                    ++i;
+                }
+            }
+            stringBuilder.append("\n");
+        } //Games
         stringBuilder
                 .append(locale.getMessage("profile-description-property"))
                 .append(credentials.getDescription().getDescription())

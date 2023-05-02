@@ -93,13 +93,13 @@ public class GamesResponse extends SimpleCallback {
         List<InlineKeyboardButton> paginationRow = new ArrayList<>();
         if (page > 1) {
             InlineKeyboardButton backButton = new InlineKeyboardButton();
-            backButton.setText("Back <<<");
+            backButton.setText(locale.getMessage("explore-previous"));
             backButton.setCallbackData("profile-games-back");
             paginationRow.add(backButton);
         }
         if (end < GameENUM.values().length) {
             InlineKeyboardButton backButton = new InlineKeyboardButton();
-            backButton.setText("Next >>>");
+            backButton.setText(locale.getMessage("explore-next"));
             backButton.setCallbackData("profile-games-next");
             paginationRow.add(backButton);
         }
