@@ -16,11 +16,22 @@ public enum GameENUM {
 
     ROBLOX, GENSHIN_IMPACT,
     LEAGUE_OF_LEGENDS, DOTA2,
-    DYINGLIGHT, DYINGLIGHT2,
+    WILD_RIFT, WORLD_OF_WARCRAFT,
 
     PHASMOPHOBIA, BACKROOMS,
     GHOST_WATCHERS, DEMONOLOGIST,
-    BIGFOOT, DECEIT;
+    BIGFOOT, DECEIT,
+
+    DYINGLIGHT, DYINGLIGHT2,
+    WORLD_OF_TANKS, WORLD_OF_WARSHIPS,
+    BLITZ, ROCKET_LEAGUE,
+
+    DEAD_BY_DAYLIGH, AMONG_US,
+    GTA_ONLINE, CALL_OF_DUTY_WARZONE,
+    ELDEN_RING, PUBG,
+
+    CLASH_ROYALE, BRAWL_STARS;
+
 
 
     public String getButtonCallback(){
@@ -36,6 +47,8 @@ public enum GameENUM {
             case GENSHIN_IMPACT -> "Genshin Impact";
             case LEAGUE_OF_LEGENDS -> "League of Legends";
             case DOTA2 -> "Dota 2";
+            case WILD_RIFT -> "LoL: Wild RIft";
+            case WORLD_OF_WARCRAFT -> "World of Warcraft";
             case PHASMOPHOBIA -> "Phasmophobia";
             case DYINGLIGHT -> "Dying Light";
             case DYINGLIGHT2 -> "Dying Light 2";
@@ -59,6 +72,18 @@ public enum GameENUM {
             case DEMONOLOGIST -> "Demonologist";
             case BIGFOOT -> "Bigfoot";
             case DECEIT -> "Deceit";
+            case WORLD_OF_TANKS -> "World of Tanks";
+            case WORLD_OF_WARSHIPS -> "World of Warships";
+            case BLITZ -> "WoT Blitz";
+            case ROCKET_LEAGUE -> "Rocket League";
+            case DEAD_BY_DAYLIGH -> "Dead by Daylight";
+            case AMONG_US -> "Among Us";
+            case GTA_ONLINE -> "GTA Online";
+            case CALL_OF_DUTY_WARZONE -> "Call of Duty: Warzone";
+            case ELDEN_RING -> "Elden Ring";
+            case PUBG -> "PUBG";
+            case CLASH_ROYALE -> "Clash Royale";
+            case BRAWL_STARS -> "Brawl Stars";
         };
     }
 }
