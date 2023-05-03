@@ -83,8 +83,8 @@ public class MatchingTests {
     public void testMatchesAccountIds(){
         List<Match> matches = matchService.findAll();
         Match match1 = matches.get(0);
-        Assertions.assertThat(match1.getFirstUserId()).isEqualTo(1L);
-        Assertions.assertThat(match1.getSecondUserId()).isEqualTo(2L);
+        Assertions.assertThat(match1.getFirstUser().getAccountId()).isEqualTo(1L);
+        Assertions.assertThat(match1.getFirstUser().getAccountId()).isEqualTo(2L);
     }
 
     @Test

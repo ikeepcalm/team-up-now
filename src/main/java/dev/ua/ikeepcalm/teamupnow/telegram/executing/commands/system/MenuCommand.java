@@ -9,6 +9,7 @@ import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.Command;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -19,6 +20,9 @@ import java.util.List;
 
 @Component
 public class MenuCommand extends Command {
+
+    @Value("${img.menu}")
+    String filePath;
     private LocaleTool locale;
 
     @I18N
@@ -26,7 +30,7 @@ public class MenuCommand extends Command {
     @Progressable(ProgressENUM.DONE)
     public void execute(Message origin) {
         MultiMessage message = new MultiMessage();
-        message.setFilePath("src/main/resources/img/menu.jpg");
+        message.setFilePath(filePath);
         message.setChatId(origin.getChatId());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();

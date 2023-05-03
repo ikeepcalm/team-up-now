@@ -83,7 +83,7 @@ public class TelegramTool extends DefaultAbsSender implements TelegramService {
                 SendPhoto sendPhoto = new SendPhoto();
                 sendPhoto.setCaption(multiMessage.getText());
                 sendPhoto.setChatId(multiMessage.getChatId());
-                sendPhoto.setPhoto(new InputFile(new File(multiMessage.getFilePath())));
+                sendPhoto.setPhoto(new InputFile(multiMessage.getFilePath()));
                 sendPhoto.setReplyMarkup(multiMessage.getReplyKeyboard());
                 return execute(sendPhoto);
             } else {
