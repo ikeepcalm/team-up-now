@@ -12,14 +12,13 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.*;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
-import java.io.File;
 
 @Service
 @PropertySource("classpath:thirdparty.properties")
@@ -51,7 +50,7 @@ public class TelegramTool extends DefaultAbsSender implements TelegramService {
                 editMessageReplyMarkup.setReplyMarkup((InlineKeyboardMarkup) alterMessage.getReplyKeyboard());
                 editMessageReplyMarkup.setChatId(alterMessage.getChatId());
                 execute(editMessageReplyMarkup);
-            } else if (alterMessage.getFilePath() == null){
+            } else if (alterMessage.getFilePath() == null) {
                 EditMessageText editMessageText = new EditMessageText();
                 editMessageText.setMessageId(alterMessage.getMessageId());
                 editMessageText.setReplyMarkup((InlineKeyboardMarkup) alterMessage.getReplyKeyboard());

@@ -5,7 +5,6 @@ import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.Progressable;
 
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.Executable;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.Command;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;

@@ -6,6 +6,9 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.spi.SLF4JServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -14,11 +17,14 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @Aspect
 public class ProgressionAspect {
 
+    private static Logger LOGGER = LoggerFactory.getLogger(SLF4JServiceProvider.class);
+
     @Autowired
     private CredentialsService credentialsService;
 
     @Around("@annotation(progressable) && args(origin, ..)")
     public Object monitorProgress(ProceedingJoinPoint joinPoint, Progressable progressable, Message origin) throws Throwable {
+        LOGGER.info("["  + joinPoint.getTarget().getClass().getSimpleName() + "] - @" + origin.getFrom().getUserName());
         ProgressENUM expectedProgress = progressable.value();
         ProgressENUM currentProgress = credentialsService.findByAccountId(origin.getChatId()).getProgress().getProgressENUM();
         if (!expectedProgress.equals(currentProgress)) {

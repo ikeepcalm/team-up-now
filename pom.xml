@@ -10,7 +10,7 @@
     </parent>
     <groupId>dev.ua.ikeepcalm</groupId>
     <artifactId>TeamUpNow</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <name>TeamUpNow</name>
     <description>TeamUpNow</description>
     <properties>
@@ -62,6 +62,17 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.7</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
