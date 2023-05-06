@@ -1,4 +1,4 @@
-package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu;
+package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
@@ -6,7 +6,8 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.AgeENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.SimpleCallback;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ProfileResponse extends SimpleCallback {
+public class EditBackResponse extends SimpleCallback {
 
     @Value("${img.profile}")
     String filePath;
@@ -29,11 +30,11 @@ public class ProfileResponse extends SimpleCallback {
     @Override
     @Transactional
     public void manage(String receivedCallback, Message origin) {
+        telegramService.sendPurgeMessage(new PurgeMessage(origin.getMessageId(), origin.getChatId()));
         Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
-        AlterMessage alterMessage = new AlterMessage();
-        alterMessage.setMessageId(origin.getMessageId());
-        alterMessage.setChatId(origin.getChatId());
-        alterMessage.setFilePath(filePath);
+        MultiMessage multiMessage = new MultiMessage();
+        multiMessage.setChatId(origin.getChatId());
+        multiMessage.setFilePath(filePath);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
                 .append(locale.getMessage("profile-delimiter")).append("\n")
@@ -47,14 +48,14 @@ public class ProfileResponse extends SimpleCallback {
                 .append(credentials.getUsername())
                 .append("\n");
         {
-        stringBuilder.append(locale.getMessage("profile-language-property"));
-        if (credentials.getUiLanguage() == LanguageENUM.ENGLISH) {
-            stringBuilder.append("English")
-                    .append("\n");
-        } else if (credentials.getUiLanguage() == LanguageENUM.UKRAINIAN) {
-            stringBuilder.append("Українська")
-                    .append("\n");
-        }
+            stringBuilder.append(locale.getMessage("profile-language-property"));
+            if (credentials.getUiLanguage() == LanguageENUM.ENGLISH) {
+                stringBuilder.append("English")
+                        .append("\n");
+            } else if (credentials.getUiLanguage() == LanguageENUM.UKRAINIAN) {
+                stringBuilder.append("Українська")
+                        .append("\n");
+            }
         }//Language
         {
             stringBuilder.append(locale.getMessage("profile-age-property"));
@@ -91,7 +92,7 @@ public class ProfileResponse extends SimpleCallback {
                 .append("\n");
 
 
-        alterMessage.setText(stringBuilder.toString());
+        multiMessage.setText(stringBuilder.toString());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
@@ -105,7 +106,7 @@ public class ProfileResponse extends SimpleCallback {
         firstRow.add(back);
         keyboard.add(firstRow);
         inlineKeyboardMarkup.setKeyboard(keyboard);
-        alterMessage.setReplyKeyboard(inlineKeyboardMarkup);
-        telegramService. sendAlterMessage(alterMessage);
+        multiMessage.setReplyKeyboard(inlineKeyboardMarkup);
+        telegramService.sendMultiMessage(multiMessage);
     }
 }

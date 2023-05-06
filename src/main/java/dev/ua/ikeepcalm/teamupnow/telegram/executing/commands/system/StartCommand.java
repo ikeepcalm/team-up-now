@@ -8,6 +8,7 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.database.exceptions.DAOException;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.Command;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -19,16 +20,18 @@ import java.util.List;
 @Component
 public class StartCommand extends Command {
 
+    private LocaleTool locale;
+
     @EntryPoint
     public void execute(Message origin) {
+        if (determineLanguageCode(origin.getFrom().getLanguageCode()) == LanguageENUM.UKRAINIAN){
+            locale = new LocaleTool("i18n/messages_ua.properties");
+        } else {
+            locale = new LocaleTool("i18n/messages_en.properties");
+        }
         createObjectForNewUser(origin.getChatId(), origin.getFrom().getUserName(), origin.getFrom().getLanguageCode(), origin.getFrom().getFirstName());
         MultiMessage multiMessage = new MultiMessage();
-        multiMessage.setText("""
-                Nice to meet you here!
-
-                It's time to get acquainted so I know what kind of friends to find for you!
-
-                To start, click the button that appears below the text entry field.""");
+        multiMessage.setText(locale.getMessage("start-message"));
         multiMessage.setChatId(origin.getChatId());
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
@@ -44,20 +47,30 @@ public class StartCommand extends Command {
         try {
             credentialsService.findByAccountId(userId);
         } catch (DAOException e){
-            Progress progress = new Progress();
-            progress.setProgressENUM(ProgressENUM.GAMES);
-            Credentials credentials = new Credentials();
-            credentials.setAccountId(userId);
-            credentials.setUsername(username);
-            credentials.setName(firstName);
-            credentials.setUiLanguage(determineLanguageCode(langCode));
-            credentials.setProgress(progress);
-            credentialsService.save(credentials);
+            if (username == null){
+                MultiMessage message = new MultiMessage();
+                message.setChatId(userId);
+                message.setText(locale.getMessage("no-username"));
+                telegramService.sendMultiMessage(message);
+            } else{
+                Credentials credentials = new Credentials();
+                credentials.setAccountId(userId);
+                credentials.setUsername(username);
+                credentials.setName(firstName);
+                credentials.setUiLanguage(determineLanguageCode(langCode));
+                credentials.setConnectionTokens(5);
+                credentials.setSustainableTokens(5);
+                Progress progress = new Progress();
+                progress.setProgressENUM(ProgressENUM.GAMES);
+                progress.setCredentials(credentials);
+                credentials.setProgress(progress);
+                credentialsService.save(credentials);
+            }
         }
     }
 
     private LanguageENUM determineLanguageCode(String langCode){
-        if (langCode.equals("uk")){
+        if (langCode.equals("uk") || langCode.equals("ru")){
             return LanguageENUM.UKRAINIAN;
         } else {
             return LanguageENUM.ENGLISH;

@@ -2,8 +2,8 @@ package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu;
 
 import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.SimpleCallback;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -28,31 +28,29 @@ public class MoreResponse extends SimpleCallback {
         alterMessage.setMessageId(origin.getMessageId());
         alterMessage.setChatId(origin.getChatId());
         alterMessage.setParseMode("html");
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder
-                .append(locale.getMessage("more-delimiter"))
-                .append("\n").append("\n")
-                .append(locale.getMessage("more-support"))
-                .append("<a href = \"https://t.me/ikeepcalm\">")
-                .append(locale.getMessage("more-open-ticket"))
-                .append("</a>")
-                .append("\n")
-                .append(locale.getMessage("more-gratuity"))
-                .append("<a href = \"https://donatello.to/teamupnow\">")
-                .append(locale.getMessage("more-support-development"))
-                .append("</a>")
-                .append("\n")
-                .append(locale.getMessage("more-news"))
-                .append("<a href = \"https://t.me/teamupnow_upd\">")
-                .append(locale.getMessage("more-all-news"))
-                .append("</a>")
-                .append("\n")
-                .append(locale.getMessage("more-update"))
-                .append("04.05.2023")
-                .append("\n")
-                .append("\n")
-                .append(locale.getMessage("more-delimiter"));
-        alterMessage.setText(stringBuilder.toString());
+        String stringBuilder = locale.getMessage("more-delimiter") +
+                "\n" + "\n" +
+                locale.getMessage("more-support") +
+                "<a href = \"https://t.me/ikeepcalm\">" +
+                locale.getMessage("more-open-ticket") +
+                "</a>" +
+                "\n" +
+                locale.getMessage("more-gratuity") +
+                "<a href = \"https://donatello.to/teamupnow\">" +
+                locale.getMessage("more-support-development") +
+                "</a>" +
+                "\n" +
+                locale.getMessage("more-news") +
+                "<a href = \"https://t.me/teamupnow_upd\">" +
+                locale.getMessage("more-all-news") +
+                "</a>" +
+                "\n" +
+                locale.getMessage("more-update") +
+                "06.05.2023" +
+                "\n" +
+                "\n" +
+                locale.getMessage("more-delimiter");
+        alterMessage.setText(stringBuilder);
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstRow = new ArrayList<>();

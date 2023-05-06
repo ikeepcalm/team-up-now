@@ -21,13 +21,18 @@ public class AboutMessage extends dev.ua.ikeepcalm.teamupnow.telegram.executing.
     private LocaleTool locale;
 
     @I18N
-    @Progressable(ProgressENUM.ABOUT)
     @Transactional
+    @Progressable(ProgressENUM.ABOUT)
     public void execute(Message origin){
         Credentials credentials = credentialsService.findByAccountId(origin.getFrom().getId());
-        Description description = new Description();
-        description.setDescription(origin.getText());
-        credentials.setDescription(description);
+        if (credentials.getDescription() == null){
+            Description description = new Description();
+            description.setDescription(origin.getText());
+            description.setCredentials(credentials);
+            credentials.setDescription(description);
+        } else {
+            credentials.getDescription().setDescription(origin.getText());
+        }
         credentials.getProgress().setProgressENUM(ProgressENUM.DONE);
         credentialsService.save(credentials);
         MultiMessage multiMessage = new MultiMessage();

@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface ProgressRepo extends CrudRepository<Progress, Long> {
-    public Optional<Progress> findProgressByCredentialsId(Long credentialsId);
+    Optional<Progress> findProgressByCredentialsId(Long credentialsId);
 }

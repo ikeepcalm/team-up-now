@@ -1,9 +1,9 @@
 package dev.ua.ikeepcalm.teamupnow.database.dao.service.impls;
 
 import dev.ua.ikeepcalm.teamupnow.database.dao.repo.CredentialsRepo;
+import dev.ua.ikeepcalm.teamupnow.database.dao.repo.GameRepo;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.iCredentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
-import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
 import dev.ua.ikeepcalm.teamupnow.database.exceptions.DAOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +16,13 @@ public class CredentialsService implements iCredentials<Credentials> {
 
     @Autowired
     CredentialsRepo credentialsRepo;
+    @Autowired
+    GameRepo gameRepo;
 
     @Override
     public Credentials findByAccountId(long accountId) {
         Optional<Credentials> credentials = credentialsRepo.findCredentialsByAccountId(accountId);
-        if (credentials.isPresent()){
+        if (credentials.isPresent()) {
             return credentials.get();
         } else {
             throw new DAOException("Couldn't find Credentials object by accountID: " + accountId);
@@ -33,49 +35,27 @@ public class CredentialsService implements iCredentials<Credentials> {
     }
 
     @Override
-    public List<Credentials> findAll(){
+    public List<Credentials> findAll() {
         return (List<Credentials>) credentialsRepo.findAll();
     }
 
     @Override
-    public void saveAll(List<Credentials> list){
+    public void saveAll(List<Credentials> list) {
         credentialsRepo.saveAll(list);
     }
 
     @Override
-    public List<Credentials> findAllExcept(Long excludedId){
+    public List<Credentials> findAllExcept(Long excludedId) {
         return credentialsRepo.findAllExcept(excludedId);
     }
 
     @Override
-    public void save(Credentials credentials){
-        try {
-            findByAccountId(credentials.getAccountId());
-        } catch (DAOException e){
-            Credentials dbCredentials = new Credentials();
-            dbCredentials.setAccountId(credentials.getAccountId());
-            dbCredentials.setName(credentials.getName());
-            dbCredentials.setUsername(credentials.getUsername());
-            dbCredentials.setUiLanguage(credentials.getUiLanguage());
-            dbCredentials.setSustainableTokens(5);
-            dbCredentials.setConnectionTokens(5);
-            credentialsRepo.save(dbCredentials);
-        }
-        Credentials dbCredentials = findByAccountId(credentials.getAccountId());
-        if (credentials.getDemographic() != null) {
-            credentials.getDemographic().setCredentialsId(dbCredentials);
-            dbCredentials.setDemographic(credentials.getDemographic());
-        } if (credentials.getDescription() != null) {
-            credentials.getDescription().setCredentials(dbCredentials);
-            dbCredentials.setDescription(credentials.getDescription());
-        } if (credentials.getProgress() != null) {
-            credentials.getProgress().setCredentials(dbCredentials);
-            dbCredentials.setProgress(credentials.getProgress());
-        } if (credentials.getGames() != null) {
-            for (Game game : credentials.getGames()) {
-                game.setCredentials(dbCredentials);
-                dbCredentials.getGames().add(game);
-            }
-        } credentialsRepo.save(dbCredentials);
+    public void save(Credentials credentials) {
+        credentialsRepo.save(credentials);
+    }
+
+    @Override
+    public void deleteGamesLinkedToCredentials(Credentials credentials){
+        gameRepo.deleteGamesByCredentials(credentials);
     }
 }

@@ -1,10 +1,10 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.servicing.mediators;
 
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.system.MenuCommand;
-import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.system.StartCommand;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.profile.AboutCommand;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.profile.AgeCommand;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.profile.GamesCommand;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.system.MenuCommand;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.system.StartCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;

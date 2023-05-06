@@ -1,6 +1,5 @@
 package dev.ua.ikeepcalm.teamupnow;
 
-import dev.ua.ikeepcalm.teamupnow.database.dao.repo.MatchRepo;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.MatchService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;

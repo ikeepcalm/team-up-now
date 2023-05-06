@@ -38,6 +38,10 @@ public enum GameENUM {
         return "profile-games-" + name();
     }
 
+    public String getEditCallback(){
+        return "edit-profile-games-" + name();
+    }
+
     public String getButtonText() {
         return switch (this) {
             case MINECRAFT -> "Minecraft";

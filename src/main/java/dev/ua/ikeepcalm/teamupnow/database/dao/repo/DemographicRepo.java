@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface DemographicRepo extends CrudRepository<Demographic, Long> {
-    public Optional<Demographic> findDemographicByCredentialsId(Long credentialsId);
+    Optional<Demographic> findDemographicByCredentialsId(Long credentialsId);
 }

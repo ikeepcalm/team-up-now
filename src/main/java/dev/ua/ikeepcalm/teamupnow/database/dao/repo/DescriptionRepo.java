@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface DescriptionRepo extends CrudRepository<Description, Long>{
-    public Optional<Description> findDescriptionByCredentialsId(Long credentialsId);
+    Optional<Description> findDescriptionByCredentialsId(Long credentialsId);
 }

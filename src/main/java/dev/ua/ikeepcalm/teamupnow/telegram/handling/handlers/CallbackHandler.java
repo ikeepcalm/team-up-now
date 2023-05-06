@@ -3,6 +3,7 @@ package dev.ua.ikeepcalm.teamupnow.telegram.handling.handlers;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.discover.ExploreResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.discover.MatchesResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.init_profile.GamesResponse;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile.EditGamesResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.handling.Handleable;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.mediators.ResponseMediator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class CallbackHandler implements Handleable {
     private ConfigurableApplicationContext context;
     private final ConcurrentHashMap<Long, ExploreResponse> exploreResponseMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, GamesResponse> gamesResponseMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, EditGamesResponse> editGamesManagerMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, MatchesResponse> matchesResponseMap = new ConcurrentHashMap<>();
 
     @Override
@@ -31,8 +33,8 @@ public class CallbackHandler implements Handleable {
         String callbackQueryId = update.getCallbackQuery().getId();
         if (callback.startsWith("profile")) {
             if (callback.startsWith("profile-games")) {
-                if (callback.equals("profile-games-ready")){
-                    if (gamesResponseMap.get(origin.getChatId()) == null){
+                if (callback.equals("profile-games-ready")) {
+                    if (gamesResponseMap.get(origin.getChatId()) == null) {
                         GamesResponse gamesResponse = context.getBean(GamesResponse.class);
                         gamesResponse.manage(callback, origin);
                     } else {
@@ -40,7 +42,7 @@ public class CallbackHandler implements Handleable {
                         gamesResponseMap.remove(origin.getChatId());
                     }
                 } else {
-                    if (gamesResponseMap.get(origin.getChatId()) == null){
+                    if (gamesResponseMap.get(origin.getChatId()) == null) {
                         GamesResponse gamesResponse = context.getBean(GamesResponse.class);
                         gamesResponseMap.put(origin.getChatId(), gamesResponse);
                         gamesResponse.manage(callback, origin);
@@ -65,7 +67,7 @@ public class CallbackHandler implements Handleable {
                     exploreResponse.manage(callback, origin, callbackQueryId);
                 }
             }
-        } else if (callback.startsWith("matches")){
+        } else if (callback.startsWith("matches")) {
             if (callback.equals("matches-back")) {
                 matchesResponseMap.remove(origin.getChatId());
                 responseMediator.executeDiscoverResponse(callback, origin);
@@ -89,6 +91,33 @@ public class CallbackHandler implements Handleable {
                 case "menu-more" -> responseMediator.executeMoreResponse(callback, origin);
                 case "menu-back" -> responseMediator.executeBackResponse(callback, origin);
                 case "menu-discover" -> responseMediator.executeDiscoverResponse(callback, origin);
+            }
+        } else if (callback.startsWith("edit-profile")) {
+            if (callback.startsWith("edit-profile-games")) {
+                if (callback.equals("edit-profile-games-ready")) {
+                    if (editGamesManagerMap.get(origin.getChatId()) == null) {
+                        EditGamesResponse editGamesResponse = context.getBean(EditGamesResponse.class);
+                        editGamesResponse.manage(callback, origin);
+                    } else {
+                        editGamesManagerMap.get(origin.getChatId()).manage(callback, origin);
+                        editGamesManagerMap.remove(origin.getChatId());
+                    }
+                } else {
+                    if (editGamesManagerMap.get(origin.getChatId()) == null) {
+                        EditGamesResponse editGamesResponse = context.getBean(EditGamesResponse.class);
+                        editGamesManagerMap.put(origin.getChatId(), editGamesResponse);
+                        editGamesResponse.manage(callback, origin);
+                    } else {
+                        editGamesManagerMap.get(origin.getChatId())
+                                .manage(callback, origin);
+                    }
+                }
+            } else if (callback.startsWith("edit-profile-age")) {
+                responseMediator.executeEditAgeResponse(callback, origin);
+            } else if (callback.startsWith("edit-profile-about")) {
+                responseMediator.executeEditAboutResponse(callback, origin);
+            } else if (callback.equals("edit-profile-back")) {
+                responseMediator.executeEditBackResponse(callback, origin);
             }
         }
     }

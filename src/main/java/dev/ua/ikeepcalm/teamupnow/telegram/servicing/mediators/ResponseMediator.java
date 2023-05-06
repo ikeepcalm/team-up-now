@@ -4,6 +4,9 @@ import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.discover.MatchesR
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.init_profile.AgeResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.init_profile.GamesResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu.*;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile.EditAboutResponse;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile.EditAgeResponse;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile.EditBackResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile.EditProfileResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.settings.SettingsDeleteResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.settings.SettingsLangResponse;
@@ -22,6 +25,9 @@ public class ResponseMediator {
     private final ProfileResponse profileResponse;
     private final SettingsResponse settingsResponse;
     private final EditProfileResponse editProfileResponse;
+    private final EditAgeResponse editAgeResponse;
+    private final EditBackResponse editBackResponse;
+    private final EditAboutResponse editAboutResponse;
     private final SettingsDeleteResponse settingsDeleteResponse;
     private final SettingsLangResponse settingsLangResponse;
 
@@ -61,12 +67,24 @@ public class ResponseMediator {
         editProfileResponse.manage(receivedCallback, origin);
     }
 
+    public void executeEditBackResponse(String receivedCallback, Message origin) {
+        editBackResponse.manage(receivedCallback, origin);
+    }
+
+    public void executeEditAboutResponse(String receivedCallback, Message origin) {
+        editAboutResponse.manage(receivedCallback, origin);
+    }
+
     public void executeSettingsDeleteResponse(String receivedCallback, Message origin) {
         settingsDeleteResponse.manage(receivedCallback, origin);
     }
 
     public void executeSettingsLangResponse(String receivedCallback, Message origin) {
         settingsLangResponse.manage(receivedCallback, origin);
+    }
+
+    public void executeEditAgeResponse(String receivedCallback, Message origin) {
+        editAgeResponse.manage(receivedCallback, origin);
     }
 
     @Autowired
@@ -80,7 +98,7 @@ public class ResponseMediator {
             ProfileResponse profileResponse,
             SettingsResponse settingsResponse,
             EditProfileResponse editProfileResponse,
-            SettingsDeleteResponse settingsDeleteResponse,
+            EditAgeResponse editAgeResponse, EditBackResponse editBackResponse, EditAboutResponse editAboutResponse, SettingsDeleteResponse settingsDeleteResponse,
             SettingsLangResponse settingsLangResponse) {
         this.matchesResponse = matchesResponse;
         this.ageResponse = ageResponse;
@@ -91,6 +109,9 @@ public class ResponseMediator {
         this.profileResponse = profileResponse;
         this.settingsResponse = settingsResponse;
         this.editProfileResponse = editProfileResponse;
+        this.editAgeResponse = editAgeResponse;
+        this.editBackResponse = editBackResponse;
+        this.editAboutResponse = editAboutResponse;
         this.settingsDeleteResponse = settingsDeleteResponse;
         this.settingsLangResponse = settingsLangResponse;
     }

@@ -1,15 +1,8 @@
 package dev.ua.ikeepcalm.teamupnow.database.entities;
 
 
-import dev.ua.ikeepcalm.teamupnow.database.entities.source.GameENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.util.HashSet;
 import java.util.List;
@@ -42,7 +35,7 @@ public class Credentials {
     @Column(name = "sustainableToken", nullable = false)
     private int sustainableTokens;
 
-    @OneToMany(mappedBy = "credentials", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "credentials", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Game> games;
 
     @OneToOne(mappedBy = "credentialsId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -89,6 +82,10 @@ public class Credentials {
         if (this.games == null){
             this.games = new HashSet<>();
         } return this.games;
+    }
+
+    public void setGames(Set<Game> input){
+        games = input;
     }
 
     public Demographic getDemographic() {
@@ -142,8 +139,7 @@ public class Credentials {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Credentials)) return false;
-        Credentials that = (Credentials) o;
+        if (!(o instanceof Credentials that)) return false;
         return Objects.equals(accountId, that.accountId);
     }
 

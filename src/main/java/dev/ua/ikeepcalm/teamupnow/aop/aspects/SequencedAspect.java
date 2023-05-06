@@ -1,6 +1,5 @@
 package dev.ua.ikeepcalm.teamupnow.aop.aspects;
 
-import dev.ua.ikeepcalm.teamupnow.database.exceptions.DAOException;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
 import org.aspectj.lang.ProceedingJoinPoint;

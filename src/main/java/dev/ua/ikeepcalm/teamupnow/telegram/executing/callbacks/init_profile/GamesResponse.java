@@ -27,7 +27,7 @@ import java.util.List;
 public class GamesResponse extends SimpleCallback {
 
     private LocaleTool locale;
-    private List<String> selectedGamesCallbacks = new ArrayList<>();
+    private final List<String> selectedGamesCallbacks = new ArrayList<>();
     private int page = 1;
 
 
@@ -143,6 +143,7 @@ public class GamesResponse extends SimpleCallback {
                         if (callback.equals(gameENUM.getButtonCallback())) {
                             Game game = new Game();
                             game.setName(gameENUM);
+                            game.setCredentials(credentials);
                             credentials.getGames().add(game);
                         }
                     }

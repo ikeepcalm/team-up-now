@@ -17,4 +17,6 @@ public interface iCredentials<T> {
     List<Credentials> findAllExcept(Long excludedId);
 
     void save(Credentials credentials);
+
+    void deleteGamesLinkedToCredentials(Credentials credentials);
 }

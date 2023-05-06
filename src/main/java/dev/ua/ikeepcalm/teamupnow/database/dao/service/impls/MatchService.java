@@ -57,6 +57,11 @@ public class MatchService {
         matchRepo.saveAll(matchesToSave);
     }
 
+    public void deleteAllMatchesForUser(Credentials user){
+        matchRepo.deleteAllByFirstUser(user);
+        matchRepo.deleteAllBySecondUser(user);
+    }
+
     public List<Match> findAllMatchesForUser(Credentials user) {
         Comparator<Match> scoreComparator = new Comparator<Match>() {
             @Override

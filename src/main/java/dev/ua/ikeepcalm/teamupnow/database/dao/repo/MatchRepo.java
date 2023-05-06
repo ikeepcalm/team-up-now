@@ -14,5 +14,6 @@ public interface MatchRepo extends CrudRepository<Match, Long> {
     Match findByFirstUserAndSecondUser(Credentials firstUser, Credentials secondUser);
     @Query("SELECT m FROM Match m WHERE m.firstUser = :user OR m.secondUser = :user")
     List<Match> findAllMatchesByUser(@Param("user") Credentials user);
-
+    void deleteAllByFirstUser(Credentials user);
+    void deleteAllBySecondUser(Credentials user);
 }

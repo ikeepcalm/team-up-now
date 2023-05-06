@@ -14,7 +14,7 @@ public class Game {
     @Column(name = "name", nullable = false)
     private GameENUM name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "credentialsId")
     private Credentials credentials;
 
@@ -28,5 +28,14 @@ public class Game {
 
     public void setCredentials(Credentials credentials) {
         this.credentials = credentials;
+    }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "id=" + id +
+                ", name=" + name +
+                ", credentials=" + credentials +
+                '}';
     }
 }

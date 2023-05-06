@@ -7,9 +7,9 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.Demographic;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.AgeENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.SimpleCallback;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -29,25 +29,25 @@ public class AgeResponse extends SimpleCallback {
     @Transactional
     public void manage(String receivedCallback, Message origin) {
         Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
+        Demographic demographic = null;
         try {
             switch (receivedCallback) {
                 case "profile-age-category-young" -> {
-                    Demographic demographic = new Demographic();
+                    demographic = new Demographic();
                     demographic.setAge(AgeENUM.YOUNG);
-                    credentials.setDemographic(demographic);
                 }
                 case "profile-age-category-young-adult" -> {
-                    Demographic demographic = new Demographic();
+                    demographic = new Demographic();
                     demographic.setAge(AgeENUM.YOUND_ADULT);
-                    credentials.setDemographic(demographic);
                 }
                 case "profile-age-category-adult"-> {
-                    Demographic demographic = new Demographic();
+                    demographic = new Demographic();
                     demographic.setAge(AgeENUM.ADULT);
-                    credentials.setDemographic(demographic);
                 }
             }
         } finally {
+            demographic.setCredentialsId(credentials);
+            credentials.setDemographic(demographic);
             credentials.getProgress().setProgressENUM(ProgressENUM.ABOUT);
             credentialsService.save(credentials);
             telegramService.sendPurgeMessage(new PurgeMessage(origin.getMessageId(), origin.getChatId()));

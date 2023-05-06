@@ -17,7 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @Aspect
 public class ProgressionAspect {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(SLF4JServiceProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SLF4JServiceProvider.class);
 
     @Autowired
     private CredentialsService credentialsService;
