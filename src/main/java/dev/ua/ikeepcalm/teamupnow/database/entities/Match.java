@@ -1,8 +1,12 @@
 package dev.ua.ikeepcalm.teamupnow.database.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "matches")
 public class Match {
 
@@ -27,44 +31,5 @@ public class Match {
     @Column(name = "score", nullable = false)
     private int score;
 
-    public boolean isFirstUserLiked() {
-        return firstUserLiked;
-    }
-
-    public void setFirstUserLiked(boolean firstUserLiked) {
-        this.firstUserLiked = firstUserLiked;
-    }
-
-    public boolean isSecondUserLiked() {
-        return secondUserLiked;
-    }
-
-    public void setSecondUserLiked(boolean secondUserLiked) {
-        this.secondUserLiked = secondUserLiked;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public Credentials getFirstUser() {
-        return firstUser;
-    }
-
-    public void setFirstUser(Credentials firstUser) {
-        this.firstUser = firstUser;
-    }
-
-    public Credentials getSecondUser() {
-        return secondUser;
-    }
-
-    public void setSecondUser(Credentials secondUser) {
-        this.secondUser = secondUser;
-    }
 }
 

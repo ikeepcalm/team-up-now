@@ -1,8 +1,12 @@
 package dev.ua.ikeepcalm.teamupnow.database.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "description")
 public class Description {
     @Id
@@ -17,26 +21,7 @@ public class Description {
     private byte[] picture;
 
     @OneToOne
-    @JoinColumn(name = "credentialsId")
-    private Credentials credentialsId;
+    @JoinColumn(name = "credentials")
+    private Credentials credentials;
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public byte[] getPicture() {
-        return picture;
-    }
-
-    public void setPicture(byte[] picture) {
-        this.picture = picture;
-    }
-
-    public void setCredentials(Credentials credentials) {
-        this.credentialsId = credentials;
-    }
 }

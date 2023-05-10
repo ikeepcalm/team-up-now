@@ -2,8 +2,12 @@ package dev.ua.ikeepcalm.teamupnow.database.entities;
 
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.GameENUM;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "games")
 public class Game {
     @Id
@@ -15,20 +19,8 @@ public class Game {
     private GameENUM name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "credentialsId")
+    @JoinColumn(name = "credentials")
     private Credentials credentials;
-
-    public GameENUM getName() {
-        return name;
-    }
-
-    public void setName(GameENUM name) {
-        this.name = name;
-    }
-
-    public void setCredentials(Credentials credentials) {
-        this.credentials = credentials;
-    }
 
     @Override
     public String toString() {

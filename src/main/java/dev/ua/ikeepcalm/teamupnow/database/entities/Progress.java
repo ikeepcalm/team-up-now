@@ -2,8 +2,12 @@ package dev.ua.ikeepcalm.teamupnow.database.entities;
 
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "progress")
 public class Progress {
 
@@ -16,18 +20,6 @@ public class Progress {
     private ProgressENUM progressENUM;
 
     @OneToOne
-    @JoinColumn(name = "credentialsId")
-    private Credentials credentialsId;
-
-    public ProgressENUM getProgressENUM() {
-        return progressENUM;
-    }
-
-    public void setProgressENUM(ProgressENUM progressENUM) {
-        this.progressENUM = progressENUM;
-    }
-
-    public void setCredentials(Credentials credentials) {
-        this.credentialsId = credentials;
-    }
+    @JoinColumn(name = "credentials")
+    private Credentials credentials;
 }

@@ -46,7 +46,7 @@ public class AgeResponse extends SimpleCallback {
                 }
             }
         } finally {
-            demographic.setCredentialsId(credentials);
+            demographic.setCredentials(credentials);
             credentials.setDemographic(demographic);
             credentials.getProgress().setProgressENUM(ProgressENUM.ABOUT);
             credentialsService.save(credentials);

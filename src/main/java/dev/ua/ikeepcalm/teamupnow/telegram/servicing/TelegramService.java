@@ -12,6 +12,8 @@ public interface TelegramService{
 
     void sendAnswerCallbackQuery(String text, String callbackQueryId);
 
+    void sendForwardMessage(Message origin, long chatId);
+
     void sendAlterMessage(AlterMessage alterMessage);
 
     void sendPurgeMessage(PurgeMessage purgeMessage);

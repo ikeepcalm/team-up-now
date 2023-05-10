@@ -2,8 +2,12 @@ package dev.ua.ikeepcalm.teamupnow.database.entities;
 
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.AgeENUM;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "demographic")
 public class Demographic {
     @Id
@@ -15,18 +19,6 @@ public class Demographic {
     private AgeENUM age;
 
     @OneToOne
-    @JoinColumn(name = "credentialsId")
-    private Credentials credentialsId;
-
-    public AgeENUM getAge() {
-        return age;
-    }
-
-    public void setAge(AgeENUM age) {
-        this.age = age;
-    }
-
-    public void setCredentialsId(Credentials credentials) {
-        this.credentialsId = credentials;
-    }
+    @JoinColumn(name = "credentials")
+    private Credentials credentials;
 }

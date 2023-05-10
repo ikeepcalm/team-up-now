@@ -4,6 +4,7 @@ import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.profile.AboutComma
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.profile.AgeCommand;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.profile.GamesCommand;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.system.MenuCommand;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.system.NotifyCommand;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.system.StartCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ public class CommandMediator {
     private final GamesCommand gamesCommand;
     private final MenuCommand menuCommand;
     private final StartCommand startCommand;
+    private final NotifyCommand notifyCommand;
 
     public void executeStartCommand(Message origin){
         startCommand.execute(origin);
@@ -37,16 +39,21 @@ public class CommandMediator {
         aboutCommand.execute(origin);
     }
 
+    public void executeNotifyCommand(Message origin){
+        notifyCommand.execute(origin);
+    }
+
     @Autowired
     public CommandMediator(AboutCommand aboutCommand,
                            AgeCommand ageCommand,
                            GamesCommand gamesCommand,
                            MenuCommand menuCommand,
-                           StartCommand startCommand) {
+                           StartCommand startCommand, NotifyCommand notifyCommand) {
         this.aboutCommand = aboutCommand;
         this.ageCommand = ageCommand;
         this.gamesCommand = gamesCommand;
         this.menuCommand = menuCommand;
         this.startCommand = startCommand;
+        this.notifyCommand = notifyCommand;
     }
 }

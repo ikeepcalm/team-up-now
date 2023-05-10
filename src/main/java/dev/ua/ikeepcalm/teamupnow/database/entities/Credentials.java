@@ -3,6 +3,8 @@ package dev.ua.ikeepcalm.teamupnow.database.entities;
 
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.List;
@@ -10,6 +12,8 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "credentials")
 public class Credentials {
     @Id
@@ -38,13 +42,13 @@ public class Credentials {
     @OneToMany(mappedBy = "credentials", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Game> games;
 
-    @OneToOne(mappedBy = "credentialsId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "credentials", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Demographic demographic;
 
-    @OneToOne(mappedBy = "credentialsId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "credentials", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Description description;
 
-    @OneToOne(mappedBy = "credentialsId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "credentials", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Progress progress;
 
     @OneToMany(mappedBy = "firstUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -52,89 +56,6 @@ public class Credentials {
 
     @OneToMany(mappedBy = "secondUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Match> secondMatches;
-
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Long getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
-    }
-
-    public LanguageENUM getUiLanguage() {
-        return uiLanguage;
-    }
-
-    public void setUiLanguage(LanguageENUM uiLanguage) {
-        this.uiLanguage = uiLanguage;
-    }
-
-    public Set<Game> getGames() {
-        if (this.games == null){
-            this.games = new HashSet<>();
-        } return this.games;
-    }
-
-    public void setGames(Set<Game> input){
-        games = input;
-    }
-
-    public Demographic getDemographic() {
-        return demographic;
-    }
-
-    public void setDemographic(Demographic demographic) {
-        this.demographic = demographic;
-    }
-
-    public Description getDescription() {
-        return description;
-    }
-
-    public void setDescription(Description description) {
-        this.description = description;
-    }
-
-    public Progress getProgress() {
-        return progress;
-    }
-
-    public void setProgress(Progress progress) {
-        this.progress = progress;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getConnectionTokens() {
-        return connectionTokens;
-    }
-
-    public void setConnectionTokens(int connectionTokens) {
-        this.connectionTokens = connectionTokens;
-    }
-
-    public int getSustainableTokens() {
-        return sustainableTokens;
-    }
-
-    public void setSustainableTokens(int sustainableTokens) {
-        this.sustainableTokens = sustainableTokens;
-    }
 
     @Override
     public boolean equals(Object o) {

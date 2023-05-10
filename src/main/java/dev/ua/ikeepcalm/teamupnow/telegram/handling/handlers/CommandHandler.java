@@ -22,6 +22,7 @@ public class CommandHandler implements Handleable {
             case "/age" -> commandMediator.executeAgeCommand(origin);
             case "/about" -> commandMediator.executeAboutCommand(origin);
             case "/menu" -> commandMediator.executeMenuCommand(origin);
+            case "/notify" -> commandMediator.executeNotifyCommand(origin);
         }
     }
 

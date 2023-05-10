@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
+import org.telegram.telegrambots.meta.api.methods.ForwardMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.*;
@@ -35,6 +36,20 @@ public class TelegramTool extends DefaultAbsSender implements TelegramService {
         acq.setCallbackQueryId(callbackQueryId);
         try {
             execute(acq);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void sendForwardMessage(Message origin, long chatId){
+        ForwardMessage forwardMessage = new ForwardMessage();
+        forwardMessage.setMessageId(origin.getMessageId());
+        forwardMessage.setChatId(chatId);
+        forwardMessage.setFromChatId(origin.getChatId());
+        forwardMessage.setProtectContent(true);
+        try {
+            execute(forwardMessage);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
