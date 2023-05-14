@@ -45,8 +45,8 @@ public class SchedulerTool {
                 MultiMessage newbiesMessage = new MultiMessage();
                 newbiesMessage.setChatId(credentials.getAccountId());
                 newbiesMessage.setText(
-                        localeTool.getMessage("daily-update-statistics-first-part") +
-                        (credentialsList.size() - persistent.getTotalUsers()) +
+                        localeTool.getMessage("daily-update-statistics-first-part") + " " +
+                        (credentialsList.size() - persistent.getTotalUsers()) + " " +
                         localeTool.getMessage("daily-update-statistics-second-part")
                 ); credentials.setConnectionTokens(credentials.getSustainableTokens());
                 telegramService.sendMultiMessage(resetMessage);
@@ -54,9 +54,9 @@ public class SchedulerTool {
             } catch (Exception e) {
                 credentialsService.deleteCredentials(credentials.getAccountId());
                 credentialsList.remove(credentials);
-                LOGGER.info("Bot was blocked by user [" + credentials.getUsername() + " ~ " + credentials.getName() + "]. Deleting him from credentials list...");
+                LOGGER.info("Bot was blocked by user [" + credentials.getUsername() + " ~ " + credentials.getAccountId() + "]. Deleting him from credentials list...");
             }
-        }persistent.setTotalUsers(credentialsList.size());
+        } persistent.setTotalUsers(credentialsList.size());
         persistentService.save(persistent);
         credentialsService.saveAll(credentialsList);
     }

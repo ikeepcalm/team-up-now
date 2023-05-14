@@ -25,7 +25,6 @@ public class I18NAspect {
     public void replaceLocaleObjectWithDeterminedSource(ProceedingJoinPoint joinPoint, Message origin) throws Throwable {
         try {
             Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
-            Object[] args = joinPoint.getArgs();
             Object targetObject = joinPoint.getTarget();
             Field myField = targetObject.getClass().getDeclaredField("locale");
             myField.setAccessible(true);
@@ -40,7 +39,6 @@ public class I18NAspect {
     @Around("@annotation(dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N) && args(receivedCallback, origin)")
     public void replaceLocaleObjectWithDeterminedSource(ProceedingJoinPoint joinPoint, String receivedCallback, Message origin) throws Throwable {
         Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
-        Object[] args = joinPoint.getArgs();
         Object targetObject = joinPoint.getTarget();
         Field myField = targetObject.getClass().getDeclaredField("locale");
         myField.setAccessible(true);
@@ -54,7 +52,6 @@ public class I18NAspect {
     @Around("@annotation(dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N) && args(receivedCallback, origin, callbackQueryId)")
     public void replaceLocaleObjectWithDeterminedSource(ProceedingJoinPoint joinPoint, String receivedCallback, Message origin, String callbackQueryId) throws Throwable {
         Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
-        Object[] args = joinPoint.getArgs();
         Object targetObject = joinPoint.getTarget();
         Field myField = targetObject.getClass().getDeclaredField("locale");
         myField.setAccessible(true);

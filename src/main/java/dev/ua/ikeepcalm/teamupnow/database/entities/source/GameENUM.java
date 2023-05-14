@@ -1,36 +1,44 @@
 package dev.ua.ikeepcalm.teamupnow.database.entities.source;
 
 public enum GameENUM {
-    CSGO, VALORANT,
-    DESTINY2, FORTNITE,
-    APEX_LEGENDS, OVERWATCH2,
 
+    APEX_LEGENDS, ARK_SURVIVAL,
+    AMONG_US, BACKROOMS,
+    B4B, BIGFOOT,
 
-    MINECRAFT, TERRARIA,
-    VALHEIM, ARK_SURVIVAL,
-    RUST, WARFRAME,
+    BLACK_DESERT, BLITZ,
+    BRAWL_STARS, CALL_OF_DUTY_WARZONE,
+    CLASH_ROYALE, CSGO,
 
-    DONT_STARVE, GROUNDED,
-    SEA_OF_THIEVES, DEEP_ROCK_GALACTIC,
-    FOREST, SONS_OF_FOREST,
+    DEAD_BY_DAYLIGH, DECEIT,
+    DEEP_ROCK_GALACTIC, DEMONOLOGIST,
+    DESTINY2, DOTA2,
 
-    ROBLOX, GENSHIN_IMPACT,
-    LEAGUE_OF_LEGENDS, DOTA2,
-    WILD_RIFT, WORLD_OF_WARCRAFT,
+    DONT_STARVE, DYINGLIGHT,
+    DYINGLIGHT2, ELDEN_RING,
+    EURO_TRACK_SIMULATOR, FOREST,
 
-    PHASMOPHOBIA, BACKROOMS,
-    GHOST_WATCHERS, DEMONOLOGIST,
-    BIGFOOT, DECEIT,
+    FORTNITE, GHOST_WATCHERS,
+    GENSHIN_IMPACT, GTFO,
+    GTA_ONLINE, GREEN_HELL,
 
-    DYINGLIGHT, DYINGLIGHT2,
-    WORLD_OF_TANKS, WORLD_OF_WARSHIPS,
-    BLITZ, ROCKET_LEAGUE,
+    GROUNDED, LEAGUE_OF_LEGENDS,
+    MINECRAFT, OVERWATCH2,
+    PHASMOPHOBIA, PROJECT_ZOMBOID,
 
-    DEAD_BY_DAYLIGH, AMONG_US,
-    GTA_ONLINE, CALL_OF_DUTY_WARZONE,
-    ELDEN_RING, PUBG,
+    PUBG, RDR2,
+    RAFT, READY_OR_NOT,
+    ROBLOX, ROCKET_LEAGUE,
 
-    CLASH_ROYALE, BRAWL_STARS;
+    RUST, SEA_OF_THIEVES,
+    SHATTERLINE, SONS_OF_FOREST,
+    STARDEW_VALLEY, TERRARIA,
+
+    VALHEIM, VALORANT,
+    VOIDTRAIN, WARFRAME,
+    WILD_RIFT, WORLD_OF_TANKS,
+
+    WORLD_OF_WARCRAFT, WORLD_OF_WARSHIPS;
 
 
 
@@ -74,10 +82,12 @@ public enum GameENUM {
             case BACKROOMS -> "Backrooms";
             case GHOST_WATCHERS -> "Ghost Watchers";
             case DEMONOLOGIST -> "Demonologist";
+            case B4B -> "Back 4 Blood";
             case BIGFOOT -> "Bigfoot";
             case DECEIT -> "Deceit";
             case WORLD_OF_TANKS -> "World of Tanks";
             case WORLD_OF_WARSHIPS -> "World of Warships";
+            case BLACK_DESERT -> "Black Desert";
             case BLITZ -> "WoT Blitz";
             case ROCKET_LEAGUE -> "Rocket League";
             case DEAD_BY_DAYLIGH -> "Dead by Daylight";
@@ -88,6 +98,16 @@ public enum GameENUM {
             case PUBG -> "PUBG";
             case CLASH_ROYALE -> "Clash Royale";
             case BRAWL_STARS -> "Brawl Stars";
+            case EURO_TRACK_SIMULATOR -> "ETS 2";
+            case GTFO -> "GTFO";
+            case GREEN_HELL -> "Green Hell";
+            case PROJECT_ZOMBOID -> "Project Zomboid";
+            case RDR2 -> "Red Dead Redemption 2";
+            case RAFT -> "Raft";
+            case READY_OR_NOT -> "Ready or Not";
+            case SHATTERLINE -> "Shatterline";
+            case STARDEW_VALLEY -> "Stardew Valley";
+            case VOIDTRAIN -> "Voidtrain";
         };
     }
 }
