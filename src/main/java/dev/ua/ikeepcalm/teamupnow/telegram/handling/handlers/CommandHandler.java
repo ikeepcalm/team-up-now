@@ -21,6 +21,7 @@ public class CommandHandler implements Handleable {
     public void manage(Update update) {
         Message origin = update.getMessage();
         switch (origin.getText()) {
+            case "/age" -> commandMediator.executeAgeCommand(origin);
             case "/start" -> commandMediator.executeStartCommand(origin);
             case "/games" -> commandMediator.executeGamesCommand(origin);
             case "/about" -> commandMediator.executeAboutCommand(origin);
