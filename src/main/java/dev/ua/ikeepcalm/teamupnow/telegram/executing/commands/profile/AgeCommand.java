@@ -32,14 +32,14 @@ public class AgeCommand extends Command {
         InlineKeyboardButton youngCategory = new InlineKeyboardButton();
         youngCategory.setText("14-17");
         youngCategory.setCallbackData("profile-age-category-young");
-        InlineKeyboardButton youndAdultCategory = new InlineKeyboardButton();
-        youndAdultCategory.setText("18-26");
-        youndAdultCategory.setCallbackData("profile-age-category-young-adult");
+        InlineKeyboardButton youngAdultCategory = new InlineKeyboardButton();
+        youngAdultCategory.setText("18-26");
+        youngAdultCategory.setCallbackData("profile-age-category-young-adult");
         InlineKeyboardButton adultCategory = new InlineKeyboardButton();
         adultCategory.setText("27-35");
         adultCategory.setCallbackData("profile-age-category-adult");
         firstRow.add(youngCategory);
-        firstRow.add(youndAdultCategory);
+        firstRow.add(youngAdultCategory);
         firstRow.add(adultCategory);
         keyboard.add(firstRow);
         inlineKeyboardMarkup.setKeyboard(keyboard);

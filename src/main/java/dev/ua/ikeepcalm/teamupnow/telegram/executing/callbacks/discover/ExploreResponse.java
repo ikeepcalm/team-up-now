@@ -140,7 +140,7 @@ public class ExploreResponse extends QueryCallback {
             stringBuilder.append(locale.getMessage("explore-age"));
             if (credentials.getDemographic().getAge() == AgeENUM.YOUNG) {
                 stringBuilder.append("14-17 ");
-            } else if (credentials.getDemographic().getAge() == AgeENUM.YOUND_ADULT) {
+            } else if (credentials.getDemographic().getAge() == AgeENUM.YOUNG_ADULT) {
                 stringBuilder.append("18-26 ");
             } else if (credentials.getDemographic().getAge() == AgeENUM.ADULT) {
                 stringBuilder.append("27-35 ");

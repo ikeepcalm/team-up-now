@@ -41,7 +41,6 @@ public class GamesCommand extends Command {
                     keyboard.get(0).size() == 2 &&
                     keyboard.get(1).size() == 2 &&
                     keyboard.get(2).size() == 2){
-                    continue;
                 } else {
                     keyboard.add(row);
                     row = new ArrayList<>();

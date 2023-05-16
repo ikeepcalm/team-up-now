@@ -19,8 +19,11 @@ public class ProgressionAspect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SLF4JServiceProvider.class);
 
-    @Autowired
-    private CredentialsService credentialsService;
+    private final CredentialsService credentialsService;
+
+    public ProgressionAspect(CredentialsService credentialsService) {
+        this.credentialsService = credentialsService;
+    }
 
     @Around("@annotation(progressable) && args(origin, ..)")
     public Object monitorProgress(ProceedingJoinPoint joinPoint, Progressable progressable, Message origin) throws Throwable {

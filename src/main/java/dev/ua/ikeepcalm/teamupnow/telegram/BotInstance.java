@@ -16,8 +16,7 @@ public class BotInstance extends TelegramLongPollingBot {
     @Value("${telegram.bot.username}")
     private String botUsername;
 
-    @Autowired
-    private List<Handleable> handleableList;
+    private final List<Handleable> handleableList;
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -28,8 +27,9 @@ public class BotInstance extends TelegramLongPollingBot {
         }
     }
 
-    public BotInstance(@Value("${telegram.bot.token}") String botToken) {
+    public BotInstance(@Value("${telegram.bot.token}") String botToken, List<Handleable> handleableList) {
         super(botToken);
+        this.handleableList = handleableList;
     }
 
     @Override

@@ -15,8 +15,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRem
 @Aspect
 public class ClearKeyboardAspect {
 
-    @Autowired
-    private TelegramService telegramService;
+    private final TelegramService telegramService;
+
+    public ClearKeyboardAspect(TelegramService telegramService) {
+        this.telegramService = telegramService;
+    }
 
     @Around("@annotation(dev.ua.ikeepcalm.teamupnow.aop.annotations.ClearKeyboard) && args(origin)")
     public void clearReplyMarkupKeyboard(ProceedingJoinPoint joinPoint, Message origin) throws Throwable {

@@ -43,7 +43,7 @@ public class MatchingTests {
         user.getGames().add(minecraft);
         user.getGames().add(destiny);
         Demographic demographic = new Demographic();
-        demographic.setAge(AgeENUM.YOUND_ADULT);
+        demographic.setAge(AgeENUM.YOUNG_ADULT);
         user.setDemographic(demographic);
         credentialsService.save(user);
 
@@ -54,7 +54,7 @@ public class MatchingTests {
         user1.getGames().add(minecraft);
         user1.getGames().add(destiny);
         Demographic demographic1 = new Demographic();
-        demographic1.setAge(AgeENUM.YOUND_ADULT);
+        demographic1.setAge(AgeENUM.YOUNG_ADULT);
         user1.setDemographic(demographic1);
         credentialsService.save(user1);
 

@@ -120,7 +120,7 @@ making the Licensed Material available under these terms and conditions.
         of the Council of 11 March 1996 on the legal protection of
         databases, as amended and/or succeeded, as well as other
         essentially equivalent rights anywhere in the world.
-    -   l. You means the individual or entity exercising the Licensed
+    -   l. You mean the individual or entity exercising the Licensed
         Rights under this Public License. Your has a corresponding
         meaning.
 
@@ -136,13 +136,13 @@ making the Licensed Material available under these terms and conditions.
                 or in part, for NonCommercial purposes only; and
             -   B. produce, reproduce, and Share Adapted Material for
                 NonCommercial purposes only.
-        -   2. Exceptions and Limitations. For the avoidance of doubt,
+        1. Exceptions and Limitations. For the avoidance of doubt,
             where Exceptions and Limitations apply to Your use, this
             Public License does not apply, and You do not need to comply
             with its terms and conditions.
-        -   3. Term. The term of this Public License is specified in
+        1. Term. The term of this Public License is specified in
             Section 6(a).
-        -   4. Media and formats; technical modifications allowed. The
+        1. Media and formats; technical modifications allowed. The
             Licensor authorizes You to exercise the Licensed Rights in
             all media and formats whether now known or hereafter
             created, and to make technical modifications necessary to do
@@ -153,7 +153,7 @@ making the Licensed Material available under these terms and conditions.
             Effective Technological Measures. For purposes of this
             Public License, simply making modifications authorized by
             this Section 2(a)(4) never produces Adapted Material.
-        -   5. Downstream recipients.
+        1. Downstream recipients.
             -   A. Offer from the Licensor – Licensed Material. Every
                 recipient of the Licensed Material automatically
                 receives an offer from the Licensor to exercise the
@@ -165,7 +165,7 @@ making the Licensed Material available under these terms and conditions.
                 the Licensed Material if doing so restricts exercise of
                 the Licensed Rights by any recipient of the Licensed
                 Material.
-        -   6. No endorsement. Nothing in this Public License
+        1. No endorsement. Nothing in this Public License
             constitutes or may be construed as permission to assert or
             imply that You are, or that Your use of the Licensed
             Material is, connected with, or sponsored, endorsed, or
@@ -180,9 +180,9 @@ making the Licensed Material available under these terms and conditions.
             not to assert any such rights held by the Licensor to the
             limited extent necessary to allow You to exercise the
             Licensed Rights, but not otherwise.
-        -   2. Patent and trademark rights are not licensed under this
+        1. Patent and trademark rights are not licensed under this
             Public License.
-        -   3. To the extent possible, the Licensor waives any right to
+        1. To the extent possible, the Licensor waives any right to
             collect royalties from You for the exercise of the Licensed
             Rights, whether directly or through a collecting society
             under any voluntary or waivable statutory or compulsory
@@ -216,16 +216,16 @@ making the Licensed Material available under these terms and conditions.
             -   C. indicate the Licensed Material is licensed under this
                 Public License, and include the text of, or the URI or
                 hyperlink to, this Public License.
-        -   2. You may satisfy the conditions in Section 3(a)(1) in any
+        1. You may satisfy the conditions in Section 3(a)(1) in any
             reasonable manner based on the medium, means, and context in
             which You Share the Licensed Material. For example, it may
             be reasonable to satisfy the conditions by providing a URI
             or hyperlink to a resource that includes the required
             information.
-        -   3. If requested by the Licensor, You must remove any of the
+        1. If requested by the Licensor, You must remove any of the
             information required by Section 3(a)(1)(A) to the extent
             reasonably practicable.
-        -   4. If You Share Adapted Material You produce, the Adapter's
+        1. If You Share Adapted Material You produce, the Adapter's
             License You apply must not prevent recipients of the Adapted
             Material from complying with this Public License.
 
@@ -261,7 +261,7 @@ making the Licensed Material available under these terms and conditions.
         limitation, warranties of title, merchantability, fitness for a
         particular purpose, non-infringement, absence of latent or other
         defects, accuracy, or the presence or absence of errors, whether
-        or not known or discoverable. Where disclaimers of warranties
+        known or discoverable. Where disclaimers of warranties
         are not allowed in full or in part, this disclaimer may not
         apply to You.
     -   b. To the extent possible, in no event will the Licensor be
@@ -291,7 +291,7 @@ making the Licensed Material available under these terms and conditions.
         -   1. automatically as of the date the violation is cured,
             provided it is cured within 30 days of Your discovery of the
             violation; or
-        -   2. upon express reinstatement by the Licensor.
+        1. upon express reinstatement by the Licensor.
 
         For the avoidance of doubt, this Section 6(b) does not affect
         any right the Licensor may have to seek remedies for Your

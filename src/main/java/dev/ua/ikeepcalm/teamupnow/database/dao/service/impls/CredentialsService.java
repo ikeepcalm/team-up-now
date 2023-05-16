@@ -14,10 +14,14 @@ import java.util.Optional;
 @Service
 public class CredentialsService implements iCredentials<Credentials> {
 
+    private final CredentialsRepo credentialsRepo;
+    private final GameRepo gameRepo;
+
     @Autowired
-    CredentialsRepo credentialsRepo;
-    @Autowired
-    GameRepo gameRepo;
+    public CredentialsService(CredentialsRepo credentialsRepo, GameRepo gameRepo) {
+        this.credentialsRepo = credentialsRepo;
+        this.gameRepo = gameRepo;
+    }
 
     @Override
     public Credentials findByAccountId(long accountId) {

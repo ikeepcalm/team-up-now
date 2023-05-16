@@ -18,8 +18,11 @@ import java.lang.reflect.Field;
 @Aspect
 public class I18NAspect {
 
-    @Autowired
-    private CredentialsService credentialsService;
+    private final CredentialsService credentialsService;
+
+    public I18NAspect(CredentialsService credentialsService) {
+        this.credentialsService = credentialsService;
+    }
 
     @Around("@annotation(dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N) && args(origin)")
     public void replaceLocaleObjectWithDeterminedSource(ProceedingJoinPoint joinPoint, Message origin) throws Throwable {
@@ -36,7 +39,7 @@ public class I18NAspect {
         } catch (DAOException ignored){}
     }
 
-    @Around("@annotation(dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N) && args(receivedCallback, origin)")
+    @Around(value = "@annotation(dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N) && args(receivedCallback, origin)", argNames = "joinPoint,receivedCallback,origin")
     public void replaceLocaleObjectWithDeterminedSource(ProceedingJoinPoint joinPoint, String receivedCallback, Message origin) throws Throwable {
         Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
         Object targetObject = joinPoint.getTarget();
@@ -49,7 +52,7 @@ public class I18NAspect {
         } joinPoint.proceed();
     }
 
-    @Around("@annotation(dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N) && args(receivedCallback, origin, callbackQueryId)")
+    @Around(value = "@annotation(dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N) && args(receivedCallback, origin, callbackQueryId)", argNames = "joinPoint,receivedCallback,origin,callbackQueryId")
     public void replaceLocaleObjectWithDeterminedSource(ProceedingJoinPoint joinPoint, String receivedCallback, Message origin, String callbackQueryId) throws Throwable {
         Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
         Object targetObject = joinPoint.getTarget();

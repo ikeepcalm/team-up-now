@@ -4,7 +4,6 @@ import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.PersistentService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Persistent;
-import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import org.slf4j.Logger;
@@ -20,12 +19,16 @@ import java.util.List;
 public class SchedulerTool {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SLF4JServiceProvider.class);
+    private final PersistentService persistentService;
+    private final CredentialsService credentialsService;
+    private final TelegramService telegramService;
+
     @Autowired
-    private PersistentService persistentService;
-    @Autowired
-    private CredentialsService credentialsService;
-    @Autowired
-    private TelegramService telegramService;
+    public SchedulerTool(CredentialsService credentialsService, PersistentService persistentService, TelegramService telegramService) {
+        this.credentialsService = credentialsService;
+        this.persistentService = persistentService;
+        this.telegramService = telegramService;
+    }
 
     @Scheduled(cron = "0 0 0 * * *")
     public void executeDailyTask() {
@@ -34,11 +37,7 @@ public class SchedulerTool {
         LocaleTool localeTool;
         for (Credentials credentials : credentialsList) {
             try {
-                if (credentials.getUiLanguage() == LanguageENUM.UKRAINIAN){
-                    localeTool = new LocaleTool("i18n/messages_ua.properties");
-                } else {
-                    localeTool = new LocaleTool("i18n/messages_ua.properties");
-                }
+                localeTool = new LocaleTool("i18n/messages_ua.properties");
                 MultiMessage resetMessage = new MultiMessage();
                 resetMessage.setChatId(credentials.getAccountId());
                 resetMessage.setText(localeTool.getMessage("daily-update"));

@@ -13,10 +13,13 @@ import java.util.List;
 @Component
 public class NotifyCommand extends Command {
 
+    private final TelegramService telegramService;
+    private final CredentialsService credentialsService;
     @Autowired
-    private TelegramService telegramService;
-    @Autowired
-    private CredentialsService credentialsService;
+    public NotifyCommand(TelegramService telegramService, CredentialsService credentialsService) {
+        this.telegramService = telegramService;
+        this.credentialsService = credentialsService;
+    }
 
     @Override
     public void execute(Message origin) {

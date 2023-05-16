@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class PersistentService {
 
-    @Autowired
-    private PersistentRepo persistentRepo;
+    private final PersistentRepo persistentRepo;
+
+    public PersistentService(PersistentRepo persistentRepo) {
+        this.persistentRepo = persistentRepo;
+    }
 
     public Persistent findPersistent(){
         return persistentRepo.findById(1L).get();

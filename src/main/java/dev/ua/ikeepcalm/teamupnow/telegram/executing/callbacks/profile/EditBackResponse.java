@@ -62,7 +62,7 @@ public class EditBackResponse extends SimpleCallback {
             if (credentials.getDemographic().getAge() == AgeENUM.YOUNG) {
                 stringBuilder.append("14-17 ");
                 stringBuilder.append(locale.getMessage("years-old")).append("\n");
-            } else if (credentials.getDemographic().getAge() == AgeENUM.YOUND_ADULT) {
+            } else if (credentials.getDemographic().getAge() == AgeENUM.YOUNG_ADULT) {
                 stringBuilder.append("18-26 ");
                 stringBuilder.append(locale.getMessage("years-old")).append("\n");
             } else if (credentials.getDemographic().getAge() == AgeENUM.ADULT) {

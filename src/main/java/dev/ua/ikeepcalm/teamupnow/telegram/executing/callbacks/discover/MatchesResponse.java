@@ -37,18 +37,20 @@ public class MatchesResponse extends QueryCallback {
         matches = matchService.findConnectedMatchesForUser(credentials);
         if (matches.size() != 0) {
             int maxIndex = matches.size();
-            if (receivedCallback.equals("matches")) {
-                editMessage(origin);
-            } else if (receivedCallback.equals("matches-next")) {
-                if (currentIndex + 1 < maxIndex) {
-                    ++currentIndex;
+            switch (receivedCallback) {
+                case "matches" -> editMessage(origin);
+                case "matches-next" -> {
+                    if (currentIndex + 1 < maxIndex) {
+                        ++currentIndex;
+                    }
+                    editMessage(origin);
                 }
-                editMessage(origin);
-            } else if (receivedCallback.equals("matches-previous")) {
-                if (currentIndex - 1 >= 0) {
-                    --currentIndex;
+                case "matches-previous" -> {
+                    if (currentIndex - 1 >= 0) {
+                        --currentIndex;
+                    }
+                    editMessage(origin);
                 }
-                editMessage(origin);
             }
         } else {
             telegramService.sendAnswerCallbackQuery(locale.getMessage("explore-no-results"), callbackQueryId);

@@ -35,10 +35,14 @@ public class EditGamesResponse extends SimpleCallback {
 
     private boolean rendered = false;
 
+    private final ResponseMediator responseMediator;
+    private final MatchService matchService;
+
     @Autowired
-    private ResponseMediator responseMediator;
-    @Autowired
-    private MatchService matchService;
+    public EditGamesResponse(ResponseMediator responseMediator, MatchService matchService) {
+        this.responseMediator = responseMediator;
+        this.matchService = matchService;
+    }
 
 
     private void manageGamesButton(String receivedCallback, Message origin) {
@@ -195,7 +199,6 @@ public class EditGamesResponse extends SimpleCallback {
                             keyboard.get(0).size() == 2 &&
                             keyboard.get(1).size() == 2 &&
                             keyboard.get(2).size() == 2) {
-                        continue;
                     } else {
                         keyboard.add(row);
                         row = new ArrayList<>();

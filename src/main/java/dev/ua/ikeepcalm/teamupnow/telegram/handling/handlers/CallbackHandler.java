@@ -17,14 +17,18 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class CallbackHandler implements Handleable {
 
-    @Autowired
     private ResponseMediator responseMediator;
-    @Autowired
-    private ConfigurableApplicationContext context;
+    private final ConfigurableApplicationContext context;
     private final ConcurrentHashMap<Long, ExploreResponse> exploreResponseMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, GamesResponse> gamesResponseMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, EditGamesResponse> editGamesManagerMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, MatchesResponse> matchesResponseMap = new ConcurrentHashMap<>();
+
+    @Autowired
+    public CallbackHandler(ResponseMediator responseMediator, ConfigurableApplicationContext context) {
+        this.responseMediator = responseMediator;
+        this.context = context;
+    }
 
     @Override
     public void manage(Update update) {

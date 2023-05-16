@@ -19,15 +19,18 @@ import java.util.List;
 @Component
 public class EditAgeResponse extends SimpleCallback {
 
-    @Autowired
-    private EditProfileResponse editProfileResponse;
+    private final EditProfileResponse editProfileResponse;
     private LocaleTool locale;
+
+    public EditAgeResponse(EditProfileResponse editProfileResponse) {
+        this.editProfileResponse = editProfileResponse;
+    }
 
     private void manageChoice(String receivedCallback, Message origin){
         Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
         switch (receivedCallback){
             case "edit-profile-age-category-young" -> credentials.getDemographic().setAge(AgeENUM.YOUNG);
-            case "edit-profile-age-category-young-adult" -> credentials.getDemographic().setAge(AgeENUM.YOUND_ADULT);
+            case "edit-profile-age-category-young-adult" -> credentials.getDemographic().setAge(AgeENUM.YOUNG_ADULT);
             case "edit-profile-age-category-adult" -> credentials.getDemographic().setAge(AgeENUM.ADULT);
         } credentialsService.save(credentials);
         matchService.deleteAllMatchesForUser(credentials);

@@ -16,10 +16,14 @@ import java.util.stream.Collectors;
 @Service
 public class MatchService {
 
+    private final MatchRepo matchRepo;
+    private final CredentialsService credentialsService;
+
     @Autowired
-    private MatchRepo matchRepo;
-    @Autowired
-    private CredentialsService credentialsService;
+    public MatchService(MatchRepo matchRepo, CredentialsService credentialsService) {
+        this.matchRepo = matchRepo;
+        this.credentialsService = credentialsService;
+    }
 
     public void createMatchesForUser(Credentials user) {
         List<Credentials> retreivedCredentials = credentialsService.findAllExcept(user.getAccountId());
@@ -63,25 +67,18 @@ public class MatchService {
     }
 
     public List<Match> findAllMatchesForUser(Credentials user) {
-        Comparator<Match> scoreComparator = new Comparator<Match>() {
-            @Override
-            public int compare(Match o2,Match o1) {
-                return Integer.compare(o1.getScore(), o2.getScore());
-            }
-        };
+        Comparator<Match> scoreComparator = (o2, o1) -> Integer.compare(o1.getScore(), o2.getScore());
 
         List<Match> matches = matchRepo.findAllMatchesByUser(user);
         List<Match> matchesToReturn = new ArrayList<>();
         for (Match match : matches) {
             if (match.getFirstUser() == user) {
                 if (match.isFirstUserLiked()) {
-                    continue;
                 } else {
                     matchesToReturn.add(match);
                 }
             } else if (match.getSecondUser() == user) {
                 if (match.isSecondUserLiked()) {
-                    continue;
                 } else {
                     matchesToReturn.add(match);
                 }
@@ -114,16 +111,16 @@ public class MatchService {
     private int calculateScore(Credentials user, Credentials foundUser) {
         int score = 0;
         switch (user.getUiLanguage()) {
-            case ENGLISH:
+            case ENGLISH -> {
                 if (user.getUiLanguage() == foundUser.getUiLanguage()) {
                     score += 40;
                 }
-                break;
-            case UKRAINIAN:
+            }
+            case UKRAINIAN -> {
                 if (foundUser.getUiLanguage() == LanguageENUM.UKRAINIAN) {
                     score += 30;
                 }
-                break;
+            }
         }
 
         Set<GameENUM> gameEnums1 = user.getGames().stream().map(Game::getName).collect(Collectors.toSet());

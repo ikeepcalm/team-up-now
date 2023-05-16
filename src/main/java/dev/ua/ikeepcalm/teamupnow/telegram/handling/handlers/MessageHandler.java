@@ -12,8 +12,12 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
 public class MessageHandler implements Handleable {
 
+    private final AboutMessage aboutMessage;
+
     @Autowired
-    private AboutMessage aboutMessage;
+    public MessageHandler(AboutMessage aboutMessage) {
+        this.aboutMessage = aboutMessage;
+    }
 
     @Override
     @Progressable(ProgressENUM.ABOUT)

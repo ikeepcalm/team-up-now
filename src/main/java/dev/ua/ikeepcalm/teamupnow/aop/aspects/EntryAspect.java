@@ -17,8 +17,11 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 public class EntryAspect {
     private final Logger logger = LoggerFactory.getLogger(Slf4JLogger.class);
 
-    @Autowired
-    private CredentialsService credentialsService;
+    private final CredentialsService credentialsService;
+
+    public EntryAspect(CredentialsService credentialsService) {
+        this.credentialsService = credentialsService;
+    }
 
     @Around("@annotation(dev.ua.ikeepcalm.teamupnow.aop.annotations.EntryPoint) && args(origin)")
     public void checkEntityCreation(ProceedingJoinPoint joinPoint, Message origin) throws Throwable {

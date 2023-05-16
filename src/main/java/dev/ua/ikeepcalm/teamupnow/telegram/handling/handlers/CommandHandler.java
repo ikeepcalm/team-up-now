@@ -10,8 +10,12 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
 public class CommandHandler implements Handleable {
 
+    private final CommandMediator commandMediator;
+
     @Autowired
-    private CommandMediator commandMediator;
+    public CommandHandler(CommandMediator commandMediator) {
+        this.commandMediator = commandMediator;
+    }
 
     @Override
     public void manage(Update update) {
@@ -19,7 +23,6 @@ public class CommandHandler implements Handleable {
         switch (origin.getText()) {
             case "/start" -> commandMediator.executeStartCommand(origin);
             case "/games" -> commandMediator.executeGamesCommand(origin);
-            case "/age" -> commandMediator.executeAgeCommand(origin);
             case "/about" -> commandMediator.executeAboutCommand(origin);
             case "/menu" -> commandMediator.executeMenuCommand(origin);
             case "/notify" -> commandMediator.executeNotifyCommand(origin);

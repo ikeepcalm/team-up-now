@@ -13,10 +13,13 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @Aspect
 public class SequencedAspect {
 
-    @Autowired
-    private TelegramService telegramService;
+    private final TelegramService telegramService;
 
-    @Around("@annotation(dev.ua.ikeepcalm.teamupnow.aop.annotations.Sequenced) && args(callback, origin)")
+    public SequencedAspect(TelegramService telegramService) {
+        this.telegramService = telegramService;
+    }
+
+    @Around(value = "@annotation(dev.ua.ikeepcalm.teamupnow.aop.annotations.Sequenced) && args(callback, origin)", argNames = "joinPoint,callback,origin")
     public void checkEntityCreation(ProceedingJoinPoint joinPoint, String callback, Message origin) throws Throwable {
         try {
             PurgeMessage purgeMessage = new PurgeMessage(origin.getMessageId(), origin.getChatId());

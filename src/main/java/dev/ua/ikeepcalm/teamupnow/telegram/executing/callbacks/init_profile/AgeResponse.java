@@ -38,7 +38,7 @@ public class AgeResponse extends SimpleCallback {
                 }
                 case "profile-age-category-young-adult" -> {
                     demographic = new Demographic();
-                    demographic.setAge(AgeENUM.YOUND_ADULT);
+                    demographic.setAge(AgeENUM.YOUNG_ADULT);
                 }
                 case "profile-age-category-adult"-> {
                     demographic = new Demographic();
@@ -46,6 +46,7 @@ public class AgeResponse extends SimpleCallback {
                 }
             }
         } finally {
+            assert demographic != null;
             demographic.setCredentials(credentials);
             credentials.setDemographic(demographic);
             credentials.getProgress().setProgressENUM(ProgressENUM.ABOUT);

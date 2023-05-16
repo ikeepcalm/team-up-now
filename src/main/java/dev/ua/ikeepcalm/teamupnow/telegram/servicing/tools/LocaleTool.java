@@ -13,6 +13,7 @@ public class LocaleTool {
         properties = new Properties();
         try {
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propertiesFileName);
+            assert inputStream != null;
             InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
             properties.load(reader);
         } catch (IOException e) {

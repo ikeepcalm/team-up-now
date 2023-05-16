@@ -17,7 +17,7 @@ public class Description {
     private String description;
 
     @Lob
-    @Column(name = "picture", nullable = true)
+    @Column(name = "picture")
     private byte[] picture;
 
     @OneToOne
