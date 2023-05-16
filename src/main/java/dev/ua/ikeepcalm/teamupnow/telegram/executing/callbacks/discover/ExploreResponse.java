@@ -8,6 +8,7 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.source.AgeENUM;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.QueryCallback;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
+import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -41,41 +42,57 @@ public class ExploreResponse extends QueryCallback {
             }
             matches = matchService.findAllMatchesForUser(credentialsService.findByAccountId(origin.getChatId()));
             int maxIndex = matches.size();
-            if (receivedCallback.equals("explore")) {
-                editMessage(origin);
-            } else if (receivedCallback.equals("explore-next")) {
-                if (currentIndex + 1 < maxIndex) {
-                    ++currentIndex;
-                }
-                editMessage(origin);
-            } else if (receivedCallback.equals("explore-previous")) {
-                if (currentIndex - 1 >= 0) {
-                    --currentIndex;
-                }
-                editMessage(origin);
-            } else if (receivedCallback.equals("explore-like")) {
-                Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
-                if (credentials.getConnectionTokens() > 0) {
-                    Match match = matches.get(currentIndex);
-                    if (credentials == match.getFirstUser()) {
-                        match.setFirstUserLiked(true);
-                    } else if (credentials == match.getSecondUser()) {
-                        match.setSecondUserLiked(true);
+            switch (receivedCallback) {
+                case "explore" -> editMessage(origin);
+                case "explore-next" -> {
+                    if (currentIndex + 1 < maxIndex) {
+                        ++currentIndex;
                     }
-                    if (matches.size() == 1) {
-                        credentials.setConnectionTokens(credentials.getConnectionTokens() - 1);
-                        matchService.save(match);
-                        telegramService.sendAnswerCallbackQuery(locale.getMessage("explore-no-more-results"), callbackQueryId);
+                    editMessage(origin);
+                }
+                case "explore-previous" -> {
+                    if (currentIndex - 1 >= 0) {
+                        --currentIndex;
+                    }
+                    editMessage(origin);
+                }
+                case "explore-like" -> {
+                    Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
+                    if (credentials.getConnectionTokens() > 0) {
+                        Match match = matches.get(currentIndex);
+                        if (credentials == match.getFirstUser()) {
+                            match.setFirstUserLiked(true);
+                            if (match.isSecondUserLiked()){
+                                MultiMessage message = new MultiMessage();
+                                message.setText(locale.getMessage("explore-notification"));
+                                message.setChatId(match.getSecondUser().getAccountId());
+                                telegramService.sendMultiMessage(message);
+                            }
+                        } else if (credentials == match.getSecondUser()) {
+                            match.setSecondUserLiked(true);
+                            if (match.isFirstUserLiked()){
+                                MultiMessage message = new MultiMessage();
+                                message.setText(locale.getMessage("explore-notification"));
+                                message.setChatId(match.getFirstUser().getAccountId());
+                                telegramService.sendMultiMessage(message);
+                            }
+                        }
+                        if (matches.size() == 1) {
+                            credentials.setConnectionTokens(credentials.getConnectionTokens() - 1);
+                            matchService.save(match);
+                            telegramService.sendAnswerCallbackQuery(locale.getMessage("explore-no-more-results"), callbackQueryId);
+                        } else {
+                            credentials.setConnectionTokens(credentials.getConnectionTokens() - 1);
+                            String message = locale.getMessage("explore-liked") + " " + credentials.getConnectionTokens() + "/" + credentials.getSustainableTokens();
+                            telegramService.sendAnswerCallbackQuery(message, callbackQueryId);
+                            matchService.save(match);
+                            matches.remove(match);
+                            editMessage(origin);
+                        }
+                        credentialsService.save(credentials);
                     } else {
-                        credentials.setConnectionTokens(credentials.getConnectionTokens() - 1);
-                        String message = locale.getMessage("explore-liked") + " " + credentials.getConnectionTokens() + "/" + credentials.getSustainableTokens();
-                        telegramService.sendAnswerCallbackQuery(message, callbackQueryId);
-                        matchService.save(match);
-                        matches.remove(match);
-                        editMessage(origin);
-                    }credentialsService.save(credentials);
-                } else {
-                    telegramService.sendAnswerCallbackQuery(locale.getMessage("explore-no-tokens"), callbackQueryId);
+                        telegramService.sendAnswerCallbackQuery(locale.getMessage("explore-no-tokens"), callbackQueryId);
+                    }
                 }
             }
         } catch (IndexOutOfBoundsException exception) {

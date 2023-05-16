@@ -95,7 +95,7 @@ public class MatchService {
         List<Match> matches = matchRepo.findAllMatchesByUser(user);
         List<Match> matchesToReturn = new ArrayList<>();
         for (Match match : matches) {
-            if (match.isSecondUserLiked() && match.isSecondUserLiked()) {
+            if (match.isSecondUserLiked() && match.isFirstUserLiked()) {
                 matchesToReturn.add(match);
             }
         }
