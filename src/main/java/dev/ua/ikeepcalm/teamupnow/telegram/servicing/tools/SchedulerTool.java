@@ -4,6 +4,7 @@ import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.PersistentService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Persistent;
+import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Component
@@ -35,27 +37,38 @@ public class SchedulerTool {
         List<Credentials> credentialsList = credentialsService.findAll();
         Persistent persistent = persistentService.findPersistent();
         LocaleTool localeTool;
-        for (Credentials credentials : credentialsList) {
+
+        Iterator<Credentials> iterator = credentialsList.iterator();
+        while (iterator.hasNext()) {
+            Credentials credentials = iterator.next();
             try {
-                localeTool = new LocaleTool("i18n/messages_ua.properties");
+                if (credentials.getUiLanguage() == LanguageENUM.UKRAINIAN){
+                    localeTool = new LocaleTool("i18n/messages_ua.properties");
+                } else {
+                    localeTool = new  LocaleTool("i18n/messages_en.properties");
+                }
                 MultiMessage resetMessage = new MultiMessage();
                 resetMessage.setChatId(credentials.getAccountId());
                 resetMessage.setText(localeTool.getMessage("daily-update"));
+
                 MultiMessage newbiesMessage = new MultiMessage();
                 newbiesMessage.setChatId(credentials.getAccountId());
-                newbiesMessage.setText(
-                        localeTool.getMessage("daily-update-statistics-first-part") + " " +
+                newbiesMessage.setText(localeTool.getMessage("daily-update-statistics-first-part") + " " +
                         (credentialsList.size() - persistent.getTotalUsers()) + " " +
-                        localeTool.getMessage("daily-update-statistics-second-part")
-                ); credentials.setConnectionTokens(credentials.getSustainableTokens());
+                        localeTool.getMessage("daily-update-statistics-second-part"));
+
+                credentials.setConnectionTokens(credentials.getSustainableTokens());
+
                 telegramService.sendMultiMessage(resetMessage);
                 telegramService.sendMultiMessage(newbiesMessage);
             } catch (Exception e) {
+                iterator.remove();
                 credentialsService.deleteCredentials(credentials.getAccountId());
-                credentialsList.remove(credentials);
                 LOGGER.info("Bot was blocked by user [" + credentials.getUsername() + " ~ " + credentials.getAccountId() + "]. Deleting him from credentials list...");
             }
-        } persistent.setTotalUsers(credentialsList.size());
+        }
+
+        persistent.setTotalUsers(credentialsList.size());
         persistentService.save(persistent);
         credentialsService.saveAll(credentialsList);
     }

@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class CallbackHandler implements Handleable {
 
-    private ResponseMediator responseMediator;
+    private final ResponseMediator responseMediator;
     private final ConfigurableApplicationContext context;
     private final ConcurrentHashMap<Long, ExploreResponse> exploreResponseMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, GamesResponse> gamesResponseMap = new ConcurrentHashMap<>();
