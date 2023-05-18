@@ -2,7 +2,6 @@ package dev.ua.ikeepcalm.teamupnow.database.dao.service.impls;
 
 import dev.ua.ikeepcalm.teamupnow.database.dao.repo.PersistentRepo;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Persistent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,28 +1,27 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile;
 
-import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.SimpleCallback;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+
+import java.util.ResourceBundle;
 
 @Component
 public class EditAboutResponse extends SimpleCallback {
-    private LocaleTool locale;
-    @I18N
     @Override
-    public void manage(String receivedCallback, Message origin) {
-        telegramService.sendPurgeMessage(new PurgeMessage(origin.getMessageId(), origin.getChatId()));
-        Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
+    public void manage(String receivedCallback, CallbackQuery origin) {
+        ResourceBundle locale = getBundle(origin);
+        telegramService.sendPurgeMessage(new PurgeMessage(origin.getMessage().getMessageId(), origin.getMessage().getChatId()));
+        Credentials credentials = credentialsService.findByAccountId(origin.getMessage().getChatId());
         credentials.getProgress().setProgressENUM(ProgressENUM.ABOUT);
         credentialsService.save(credentials);
         MultiMessage message = new MultiMessage();
-        message.setText(locale.getMessage("profile-description"));
-        message.setChatId(origin.getChatId());
+        message.setText(locale.getString("profile-description"));
+        message.setChatId(origin.getMessage().getChatId());
         telegramService.sendMultiMessage(message);
     }
 }

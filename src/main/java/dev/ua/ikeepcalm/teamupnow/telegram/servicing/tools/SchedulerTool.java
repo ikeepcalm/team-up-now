@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Component
 public class SchedulerTool {
@@ -36,26 +37,26 @@ public class SchedulerTool {
     public void executeDailyTask() {
         List<Credentials> credentialsList = credentialsService.findAll();
         Persistent persistent = persistentService.findPersistent();
-        LocaleTool localeTool;
+        ResourceBundle locale;
 
         Iterator<Credentials> iterator = credentialsList.iterator();
         while (iterator.hasNext()) {
             Credentials credentials = iterator.next();
             try {
                 if (credentials.getUiLanguage() == LanguageENUM.UKRAINIAN){
-                    localeTool = new LocaleTool("i18n/messages_ua.properties");
+                    locale = ResourceBundle.getBundle("i18n.messages_uk_UK");
                 } else {
-                    localeTool = new  LocaleTool("i18n/messages_en.properties");
+                    locale = ResourceBundle.getBundle("i18n.messages_en_GB");
                 }
                 MultiMessage resetMessage = new MultiMessage();
                 resetMessage.setChatId(credentials.getAccountId());
-                resetMessage.setText(localeTool.getMessage("daily-update"));
+                resetMessage.setText(locale.getString("daily-update"));
 
                 MultiMessage newbiesMessage = new MultiMessage();
                 newbiesMessage.setChatId(credentials.getAccountId());
-                newbiesMessage.setText(localeTool.getMessage("daily-update-statistics-first-part") + " " +
+                newbiesMessage.setText(locale.getString("daily-update-statistics-first-part") + " " +
                         (credentialsList.size() - persistent.getTotalUsers()) + " " +
-                        localeTool.getMessage("daily-update-statistics-second-part"));
+                        locale.getString("daily-update-statistics-second-part"));
 
                 credentials.setConnectionTokens(credentials.getSustainableTokens());
 

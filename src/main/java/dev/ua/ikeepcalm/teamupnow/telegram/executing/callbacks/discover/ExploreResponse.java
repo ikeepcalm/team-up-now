@@ -1,6 +1,5 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.discover;
 
-import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Match;
@@ -9,17 +8,18 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.QueryCallback;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Component
 @Scope(value = "prototype")
@@ -29,42 +29,42 @@ public class ExploreResponse extends QueryCallback {
     private List<Match> matches;
     private int currentIndex;
     private boolean hasBeenUpdated = false;
-    private LocaleTool locale;
+    private ResourceBundle locale;
 
-    @I18N
     @Override
     @Transactional
-    public void manage(String receivedCallback, Message origin, String callbackQueryId) {
+    public void manage(String receivedCallback, CallbackQuery origin, String callbackQueryId) {
+        locale = getBundle(origin);
         try {
             if (!hasBeenUpdated) {
-                matchService.createMatchesForUser(credentialsService.findByAccountId(origin.getChatId()));
+                matchService.createMatchesForUser(credentialsService.findByAccountId(origin.getMessage().getChatId()));
                 hasBeenUpdated = true;
             }
-            matches = matchService.findAllMatchesForUser(credentialsService.findByAccountId(origin.getChatId()));
+            matches = matchService.findAllMatchesForUser(credentialsService.findByAccountId(origin.getMessage().getChatId()));
             int maxIndex = matches.size();
             switch (receivedCallback) {
-                case "explore" -> editMessage(origin);
+                case "explore" -> editMessage(origin.getMessage());
                 case "explore-next" -> {
                     if (currentIndex + 1 < maxIndex) {
                         ++currentIndex;
                     }
-                    editMessage(origin);
+                    editMessage(origin.getMessage());
                 }
                 case "explore-previous" -> {
                     if (currentIndex - 1 >= 0) {
                         --currentIndex;
                     }
-                    editMessage(origin);
+                    editMessage(origin.getMessage());
                 }
                 case "explore-like" -> {
-                    Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
+                    Credentials credentials = credentialsService.findByAccountId(origin.getMessage().getChatId());
                     if (credentials.getConnectionTokens() > 0) {
                         Match match = matches.get(currentIndex);
                         if (credentials == match.getFirstUser()) {
                             match.setFirstUserLiked(true);
                             if (match.isSecondUserLiked()){
                                 MultiMessage message = new MultiMessage();
-                                message.setText(locale.getMessage("explore-notification"));
+                                message.setText(locale.getString("explore-notification"));
                                 message.setChatId(match.getSecondUser().getAccountId());
                                 telegramService.sendMultiMessage(message);
                             }
@@ -72,7 +72,7 @@ public class ExploreResponse extends QueryCallback {
                             match.setSecondUserLiked(true);
                             if (match.isFirstUserLiked()){
                                 MultiMessage message = new MultiMessage();
-                                message.setText(locale.getMessage("explore-notification"));
+                                message.setText(locale.getString("explore-notification"));
                                 message.setChatId(match.getFirstUser().getAccountId());
                                 telegramService.sendMultiMessage(message);
                             }
@@ -80,23 +80,23 @@ public class ExploreResponse extends QueryCallback {
                         if (matches.size() == 1) {
                             credentials.setConnectionTokens(credentials.getConnectionTokens() - 1);
                             matchService.save(match);
-                            telegramService.sendAnswerCallbackQuery(locale.getMessage("explore-no-more-results"), callbackQueryId);
+                            telegramService.sendAnswerCallbackQuery(locale.getString("explore-no-more-results"), callbackQueryId);
                         } else {
                             credentials.setConnectionTokens(credentials.getConnectionTokens() - 1);
-                            String message = locale.getMessage("explore-liked") + " " + credentials.getConnectionTokens() + "/" + credentials.getSustainableTokens();
+                            String message = locale.getString("explore-liked") + " " + credentials.getConnectionTokens() + "/" + credentials.getSustainableTokens();
                             telegramService.sendAnswerCallbackQuery(message, callbackQueryId);
                             matchService.save(match);
                             matches.remove(match);
-                            editMessage(origin);
+                            editMessage(origin.getMessage());
                         }
                         credentialsService.save(credentials);
                     } else {
-                        telegramService.sendAnswerCallbackQuery(locale.getMessage("explore-no-tokens"), callbackQueryId);
+                        telegramService.sendAnswerCallbackQuery(locale.getString("explore-no-tokens"), callbackQueryId);
                     }
                 }
             }
         } catch (IndexOutOfBoundsException exception) {
-            telegramService.sendAnswerCallbackQuery(locale.getMessage("explore-no-results"), callbackQueryId);
+            telegramService.sendAnswerCallbackQuery(locale.getString("explore-no-results"), callbackQueryId);
         }
     }
 
@@ -110,24 +110,24 @@ public class ExploreResponse extends QueryCallback {
         }
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
-                .append(locale.getMessage("explore-delimiter"))
+                .append(locale.getString("explore-delimiter"))
                 .append("\n")
-                .append(locale.getMessage("explore-score"))
+                .append(locale.getString("explore-score"))
                 .append("\n")
-                .append(locale.getMessage("explore-arrow"))
+                .append(locale.getString("explore-arrow"))
                 .append("\n")
-                .append(locale.getMessage("explore-score-percentage"))
+                .append(locale.getString("explore-score-percentage"))
                 .append(match.getScore()).append("%")
                 .append("\n")
-                .append(locale.getMessage("explore-delimiter"))
+                .append(locale.getString("explore-delimiter"))
                 .append("\n").append("\n");
 
         stringBuilder
-                .append(locale.getMessage("explore-name"))
+                .append(locale.getString("explore-name"))
                 .append(credentials.getName())
                 .append("\n");
         {
-            stringBuilder.append(locale.getMessage("explore-language"));
+            stringBuilder.append(locale.getString("explore-language"));
             if (credentials.getUiLanguage() == LanguageENUM.ENGLISH) {
                 stringBuilder.append("English ")
                         .append("\n");
@@ -137,7 +137,7 @@ public class ExploreResponse extends QueryCallback {
             }
         } //Language
         {
-            stringBuilder.append(locale.getMessage("explore-age"));
+            stringBuilder.append(locale.getString("explore-age"));
             if (credentials.getDemographic().getAge() == AgeENUM.YOUNG) {
                 stringBuilder.append("14-17 ");
             } else if (credentials.getDemographic().getAge() == AgeENUM.YOUNG_ADULT) {
@@ -145,10 +145,10 @@ public class ExploreResponse extends QueryCallback {
             } else if (credentials.getDemographic().getAge() == AgeENUM.ADULT) {
                 stringBuilder.append("27-35 ");
             }
-            stringBuilder.append(locale.getMessage("years-old")).append("\n");
+            stringBuilder.append(locale.getString("years-old")).append("\n");
         } //Age
         {
-            stringBuilder.append(locale.getMessage("explore-games"));
+            stringBuilder.append(locale.getString("explore-games"));
             int size = credentials.getGames().size();
             int i = 0;
             for (Game game : credentials.getGames()) {
@@ -161,11 +161,11 @@ public class ExploreResponse extends QueryCallback {
             stringBuilder.append("\n");
         } //Games
         stringBuilder
-                .append(locale.getMessage("explore-description"))
+                .append(locale.getString("explore-description"))
                 .append(credentials.getDescription().getDescription())
                 .append("\n")
                 .append("\n")
-                .append(locale.getMessage("explore-delimiter"));
+                .append(locale.getString("explore-delimiter"));
 
         AlterMessage alterMessage = new AlterMessage();
         alterMessage.setMessageId(origin.getMessageId());
@@ -178,16 +178,16 @@ public class ExploreResponse extends QueryCallback {
         List<InlineKeyboardButton> secondRow = new ArrayList<>();
         List<InlineKeyboardButton> thirdRow = new ArrayList<>();
         InlineKeyboardButton previous = new InlineKeyboardButton();
-        previous.setText(locale.getMessage("explore-previous"));
+        previous.setText(locale.getString("explore-previous"));
         previous.setCallbackData("explore-previous");
         InlineKeyboardButton next = new InlineKeyboardButton();
-        next.setText(locale.getMessage("explore-next"));
+        next.setText(locale.getString("explore-next"));
         next.setCallbackData("explore-next");
         InlineKeyboardButton like = new InlineKeyboardButton();
-        like.setText(locale.getMessage("explore-like"));
+        like.setText(locale.getString("explore-like"));
         like.setCallbackData("explore-like");
         InlineKeyboardButton back = new InlineKeyboardButton();
-        back.setText(locale.getMessage("menu-back"));
+        back.setText(locale.getString("menu-back"));
         back.setCallbackData("explore-back");
         firstRow.add(previous);
         firstRow.add(next);

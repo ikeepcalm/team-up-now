@@ -1,6 +1,5 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.init_profile;
 
-import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.GameENUM;
@@ -9,10 +8,10 @@ import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.SimpleCallback;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -21,12 +20,13 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Component
 @Scope(value = "prototype")
 public class GamesResponse extends SimpleCallback {
 
-    private LocaleTool locale;
+    private ResourceBundle locale;
     private final List<String> selectedGamesCallbacks = new ArrayList<>();
     private int page = 1;
 
@@ -93,13 +93,13 @@ public class GamesResponse extends SimpleCallback {
         List<InlineKeyboardButton> paginationRow = new ArrayList<>();
         if (page > 1) {
             InlineKeyboardButton backButton = new InlineKeyboardButton();
-            backButton.setText(locale.getMessage("explore-previous"));
+            backButton.setText(locale.getString("explore-previous"));
             backButton.setCallbackData("profile-games-back");
             paginationRow.add(backButton);
         }
         if (end < GameENUM.values().length) {
             InlineKeyboardButton backButton = new InlineKeyboardButton();
-            backButton.setText(locale.getMessage("explore-next"));
+            backButton.setText(locale.getString("explore-next"));
             backButton.setCallbackData("profile-games-next");
             paginationRow.add(backButton);
         }
@@ -107,7 +107,7 @@ public class GamesResponse extends SimpleCallback {
 
         List<InlineKeyboardButton> readyRow = new ArrayList<>();
         InlineKeyboardButton ready = new InlineKeyboardButton();
-        ready.setText(locale.getMessage("profile-ready"));
+        ready.setText(locale.getString("profile-ready"));
         ready.setCallbackData("profile-games-ready");
         readyRow.add(ready);
         rows.add(readyRow);
@@ -118,15 +118,15 @@ public class GamesResponse extends SimpleCallback {
     }
 
 
-    @I18N
     @Override
     @Transactional
-    public void manage(String receivedCallback, Message origin) {
+    public void manage(String receivedCallback, CallbackQuery origin) {
+        locale = getBundle(origin);
         if (receivedCallback.equals("profile-games-ready")) {
             if (selectedGamesCallbacks.isEmpty()) {
                 MultiMessage multiMessage = new MultiMessage();
-                multiMessage.setChatId(origin.getChatId());
-                multiMessage.setText(locale.getMessage("games-error-response"));
+                multiMessage.setChatId(origin.getMessage().getChatId());
+                multiMessage.setText(locale.getString("games-error-response"));
                 ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
                 List<KeyboardRow> keyboardRows = new ArrayList<>();
                 KeyboardRow row = new KeyboardRow();
@@ -134,10 +134,10 @@ public class GamesResponse extends SimpleCallback {
                 keyboardRows.add(row);
                 replyKeyboardMarkup.setKeyboard(keyboardRows);
                 multiMessage.setReplyKeyboard(replyKeyboardMarkup);
-                telegramService.sendPurgeMessage(new PurgeMessage(origin.getMessageId(), origin.getChatId()));
+                telegramService.sendPurgeMessage(new PurgeMessage(origin.getMessage().getMessageId(), origin.getMessage().getChatId()));
                 telegramService.sendMultiMessage(multiMessage);
             } else {
-                Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
+                Credentials credentials = credentialsService.findByAccountId(origin.getMessage().getChatId());
                 for (String callback : selectedGamesCallbacks) {
                     for (GameENUM gameENUM : GameENUM.values()) {
                         if (callback.equals(gameENUM.getButtonCallback())) {
@@ -151,22 +151,24 @@ public class GamesResponse extends SimpleCallback {
                 credentials.getProgress().setProgressENUM(ProgressENUM.AGE);
                 credentialsService.save(credentials);
                 MultiMessage multiMessage = new MultiMessage();
-                multiMessage.setText(locale.getMessage("games-success-response"));
-                multiMessage.setChatId(origin.getChatId());
+                multiMessage.setText(locale.getString("games-success-response"));
+                multiMessage.setChatId(origin.getMessage().getChatId());
                 ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
                 List<KeyboardRow> keyboardRows = new ArrayList<>();
                 KeyboardRow row = new KeyboardRow();
                 row.add("/age");
                 keyboardRows.add(row);
                 replyKeyboardMarkup.setKeyboard(keyboardRows);
+                replyKeyboardMarkup.setResizeKeyboard(true);
+                replyKeyboardMarkup.setOneTimeKeyboard(true);
                 multiMessage.setReplyKeyboard(replyKeyboardMarkup);
-                telegramService.sendPurgeMessage(new PurgeMessage(origin.getMessageId(), origin.getChatId()));
+                telegramService.sendPurgeMessage(new PurgeMessage(origin.getMessage().getMessageId(), origin.getMessage().getChatId()));
                 telegramService.sendMultiMessage(multiMessage);
             }
         } else if (receivedCallback.equals("profile-games-next") || receivedCallback.equals("profile-games-back")) {
-            managePaginationButton(receivedCallback, origin);
+            managePaginationButton(receivedCallback, origin.getMessage());
         } else if (receivedCallback.startsWith("profile-games")){
-            manageGamesButton(receivedCallback, origin);
+            manageGamesButton(receivedCallback, origin.getMessage());
         }
     }
 }

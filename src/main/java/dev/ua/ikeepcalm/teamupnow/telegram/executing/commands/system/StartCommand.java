@@ -8,7 +8,6 @@ import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.database.exceptions.DAOException;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.commands.Command;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -16,22 +15,19 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Component
 public class StartCommand extends Command {
 
-    private LocaleTool locale;
+    private ResourceBundle locale;
 
     @EntryPoint
     public void execute(Message origin) {
-        if (determineLanguageCode(origin.getFrom().getLanguageCode()) == LanguageENUM.UKRAINIAN){
-            locale = new LocaleTool("i18n/messages_ua.properties");
-        } else {
-            locale = new LocaleTool("i18n/messages_en.properties");
-        }
+        locale = getBundle(origin);
         createObjectForNewUser(origin.getChatId(), origin.getFrom().getUserName(), origin.getFrom().getLanguageCode(), origin.getFrom().getFirstName());
         MultiMessage multiMessage = new MultiMessage();
-        multiMessage.setText(locale.getMessage("start-message"));
+        multiMessage.setText(locale.getString("start-message"));
         multiMessage.setChatId(origin.getChatId());
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
@@ -39,6 +35,8 @@ public class StartCommand extends Command {
         row.add("/games");
         keyboardRows.add(row);
         replyKeyboardMarkup.setKeyboard(keyboardRows);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
         multiMessage.setReplyKeyboard(replyKeyboardMarkup);
         telegramService.sendMultiMessage(multiMessage);
     }
@@ -50,7 +48,7 @@ public class StartCommand extends Command {
             if (username == null){
                 MultiMessage message = new MultiMessage();
                 message.setChatId(userId);
-                message.setText(locale.getMessage("no-username"));
+                message.setText(locale.getString("no-username"));
                 telegramService.sendMultiMessage(message);
             } else{
                 Credentials credentials = new Credentials();

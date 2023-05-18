@@ -1,6 +1,5 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile;
 
-import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.MatchService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Game;
@@ -9,18 +8,19 @@ import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.SimpleCallback;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.mediators.ResponseMediator;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Component
 @Scope(value = "prototype")
@@ -29,10 +29,9 @@ public class EditGamesResponse extends SimpleCallback {
     @Value("${img.profile}")
     String filePath;
 
-    private LocaleTool locale;
+    private ResourceBundle locale;
     private final List<String> selectedGamesCallbacks = new ArrayList<>();
     private int page = 1;
-
     private boolean rendered = false;
 
     private final ResponseMediator responseMediator;
@@ -107,13 +106,13 @@ public class EditGamesResponse extends SimpleCallback {
         List<InlineKeyboardButton> paginationRow = new ArrayList<>();
         if (page > 1) {
             InlineKeyboardButton backButton = new InlineKeyboardButton();
-            backButton.setText(locale.getMessage("explore-previous"));
+            backButton.setText(locale.getString("explore-previous"));
             backButton.setCallbackData("edit-profile-games-back");
             paginationRow.add(backButton);
         }
         if (end < GameENUM.values().length) {
             InlineKeyboardButton backButton = new InlineKeyboardButton();
-            backButton.setText(locale.getMessage("explore-next"));
+            backButton.setText(locale.getString("explore-next"));
             backButton.setCallbackData("edit-profile-games-next");
             paginationRow.add(backButton);
         }
@@ -121,7 +120,7 @@ public class EditGamesResponse extends SimpleCallback {
 
         List<InlineKeyboardButton> readyRow = new ArrayList<>();
         InlineKeyboardButton ready = new InlineKeyboardButton();
-        ready.setText(locale.getMessage("profile-ready"));
+        ready.setText(locale.getString("profile-ready"));
         ready.setCallbackData("edit-profile-games-ready");
         readyRow.add(ready);
         rows.add(readyRow);
@@ -132,20 +131,20 @@ public class EditGamesResponse extends SimpleCallback {
     }
 
 
-    @I18N
     @Override
     @Transactional
-    public void manage(String receivedCallback, Message origin) {
+    public void manage(String receivedCallback, CallbackQuery origin) {
+        locale = getBundle(origin);
         if (rendered) {
             if (receivedCallback.equals("edit-profile-games-ready")) {
                 if (selectedGamesCallbacks.isEmpty()) {
                     MultiMessage multiMessage = new MultiMessage();
-                    multiMessage.setChatId(origin.getChatId());
-                    multiMessage.setText(locale.getMessage("games-error-response"));
+                    multiMessage.setChatId(origin.getMessage().getChatId());
+                    multiMessage.setText(locale.getString("games-error-response"));
                     telegramService.sendMultiMessage(multiMessage);
                     responseMediator.executeEditProfileResponse(receivedCallback, origin);
                 } else {
-                    Credentials credentialsToSave = credentialsService.findByAccountId(origin.getChatId());
+                    Credentials credentialsToSave = credentialsService.findByAccountId(origin.getMessage().getChatId());
                     credentialsToSave.getGames().clear();
                     credentialsService.save(credentialsToSave);
                     for (String callback : selectedGamesCallbacks) {
@@ -161,26 +160,26 @@ public class EditGamesResponse extends SimpleCallback {
                     credentialsService.save(credentialsToSave);
                     matchService.deleteAllMatchesForUser(credentialsToSave);
                     MultiMessage multiMessage = new MultiMessage();
-                    multiMessage.setText(locale.getMessage("edit-games-success-response"));
-                    multiMessage.setChatId(origin.getChatId());
+                    multiMessage.setText(locale.getString("edit-games-success-response"));
+                    multiMessage.setChatId(origin.getMessage().getChatId());
                     telegramService.sendMultiMessage(multiMessage);
                     responseMediator.executeEditProfileResponse(receivedCallback, origin);
                     }
             } else if (receivedCallback.equals("edit-profile-games-next") || receivedCallback.equals("edit-profile-games-back")) {
-                managePaginationButton(receivedCallback, origin);
+                managePaginationButton(receivedCallback, origin.getMessage());
             } else if (receivedCallback.startsWith("edit-profile-games")) {
-                manageGamesButton(receivedCallback, origin);
+                manageGamesButton(receivedCallback, origin.getMessage());
             }
         } else {
             rendered = true;
-            Credentials credentials = credentialsService.findByAccountId(origin.getChatId());
+            Credentials credentials = credentialsService.findByAccountId(origin.getMessage().getChatId());
             for (Game game : credentials.getGames()) {
                 selectedGamesCallbacks.add(game.getName().getEditCallback());
             }
             AlterMessage alterMessage = new AlterMessage();
-            alterMessage.setText(locale.getMessage("profile-games"));
-            alterMessage.setMessageId(origin.getMessageId());
-            alterMessage.setChatId(origin.getChatId());
+            alterMessage.setText(locale.getString("profile-games"));
+            alterMessage.setMessageId(origin.getMessage().getMessageId());
+            alterMessage.setChatId(origin.getMessage().getChatId());
             InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
             GameENUM[] gameValues = GameENUM.values();
             List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
@@ -204,7 +203,7 @@ public class EditGamesResponse extends SimpleCallback {
                         row = new ArrayList<>();
                         if (keyboard.size() == 3 && i != gameValues.length - 1) {
                             InlineKeyboardButton nextButton = new InlineKeyboardButton();
-                            nextButton.setText(locale.getMessage("explore-next"));
+                            nextButton.setText(locale.getString("explore-next"));
                             nextButton.setCallbackData("edit-profile-games-next");
                             List<InlineKeyboardButton> paginationRow = new ArrayList<>();
                             paginationRow.add(nextButton);
@@ -216,7 +215,7 @@ public class EditGamesResponse extends SimpleCallback {
 
             List<InlineKeyboardButton> readyRow = new ArrayList<>();
             InlineKeyboardButton ready = new InlineKeyboardButton();
-            ready.setText(locale.getMessage("profile-ready"));
+            ready.setText(locale.getString("profile-ready"));
             ready.setCallbackData("edit-profile-games-ready");
             readyRow.add(ready);
             keyboard.add(readyRow);

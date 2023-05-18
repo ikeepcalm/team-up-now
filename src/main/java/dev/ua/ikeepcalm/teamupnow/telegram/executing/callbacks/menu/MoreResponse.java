@@ -1,61 +1,59 @@
 package dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.menu;
 
-import dev.ua.ikeepcalm.teamupnow.aop.annotations.I18N;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.SimpleCallback;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
-import dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools.LocaleTool;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Component
 public class MoreResponse extends SimpleCallback {
 
     @Value("${img.info}")
     String filePath;
-    private LocaleTool locale;
 
-    @I18N
     @Override
-    public void manage(String receivedCallback, Message origin) {
+    public void manage(String receivedCallback, CallbackQuery origin) {
+        ResourceBundle locale = getBundle(origin);
         AlterMessage alterMessage = new AlterMessage();
         alterMessage.setFilePath(filePath);
-        alterMessage.setMessageId(origin.getMessageId());
-        alterMessage.setChatId(origin.getChatId());
+        alterMessage.setMessageId(origin.getMessage().getMessageId());
+        alterMessage.setChatId(origin.getMessage().getChatId());
         alterMessage.setParseMode("html");
-        String stringBuilder = locale.getMessage("more-delimiter") +
+        String stringBuilder = locale.getString("more-delimiter") +
                 "\n" + "\n" +
-                locale.getMessage("more-support") +
+                locale.getString("more-support") +
                 "<a href = \"https://t.me/ikeepcalm\">" +
-                locale.getMessage("more-open-ticket") +
+                locale.getString("more-open-ticket") +
                 "</a>" +
                 "\n" +
-                locale.getMessage("more-gratuity") +
+                locale.getString("more-gratuity") +
                 "<a href = \"https://donatello.to/teamupnow\">" +
-                locale.getMessage("more-support-development") +
+                locale.getString("more-support-development") +
                 "</a>" +
                 "\n" +
-                locale.getMessage("more-news") +
+                locale.getString("more-news") +
                 "<a href = \"https://t.me/teamupnow_upd\">" +
-                locale.getMessage("more-all-news") +
+                locale.getString("more-all-news") +
                 "</a>" +
                 "\n" +
-                locale.getMessage("more-update") +
-                "16.05.2023" +
+                locale.getString("more-update") +
+                "18.05.2023" +
                 "\n" +
                 "\n" +
-                locale.getMessage("more-delimiter");
+                locale.getString("more-delimiter");
         alterMessage.setText(stringBuilder);
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
         InlineKeyboardButton back = new InlineKeyboardButton();
-        back.setText(locale.getMessage("menu-back"));
+        back.setText(locale.getString("menu-back"));
         back.setCallbackData("menu-back");
         firstRow.add(back);
         keyboard.add(firstRow);

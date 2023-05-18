@@ -91,7 +91,7 @@ public class TelegramTool extends DefaultAbsSender implements TelegramService {
     }
 
     @Override
-    public Message sendMultiMessage(MultiMessage multiMessage) {
+    public void sendMultiMessage(MultiMessage multiMessage) {
         try {
             if (multiMessage.getFilePath() != null) {
                 SendPhoto sendPhoto = new SendPhoto();
@@ -99,13 +99,13 @@ public class TelegramTool extends DefaultAbsSender implements TelegramService {
                 sendPhoto.setChatId(multiMessage.getChatId());
                 sendPhoto.setPhoto(new InputFile(multiMessage.getFilePath()));
                 sendPhoto.setReplyMarkup(multiMessage.getReplyKeyboard());
-                return execute(sendPhoto);
+                execute(sendPhoto);
             } else {
                 SendMessage sendMessage = new SendMessage();
                 sendMessage.setText(multiMessage.getText());
                 sendMessage.setChatId(multiMessage.getChatId());
                 sendMessage.setReplyMarkup(multiMessage.getReplyKeyboard());
-                return execute(sendMessage);
+                execute(sendMessage);
             }
         } catch (TelegramApiException e) {
             throw new RuntimeException("Failed to execute callback: " + multiMessage, e);

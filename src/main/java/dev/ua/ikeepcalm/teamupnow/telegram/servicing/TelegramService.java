@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 public interface TelegramService{
 
-    Message sendMultiMessage(MultiMessage multiMessage);
+    void sendMultiMessage(MultiMessage multiMessage);
 
     void sendAnswerCallbackQuery(String text, String callbackQueryId);
 
