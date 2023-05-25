@@ -5,6 +5,7 @@ import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.PersistentService;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Persistent;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
+import dev.ua.ikeepcalm.teamupnow.database.entities.source.ProgressENUM;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import org.slf4j.Logger;
@@ -25,15 +26,38 @@ public class SchedulerTool {
     private final PersistentService persistentService;
     private final CredentialsService credentialsService;
     private final TelegramService telegramService;
+    private final BonusTool bonusTool;
 
     @Autowired
-    public SchedulerTool(CredentialsService credentialsService, PersistentService persistentService, TelegramService telegramService) {
+    public SchedulerTool(CredentialsService credentialsService, PersistentService persistentService, TelegramService telegramService, BonusTool bonusTool) {
         this.credentialsService = credentialsService;
         this.persistentService = persistentService;
         this.telegramService = telegramService;
+        this.bonusTool = bonusTool;
     }
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 0 0 1/3 * ?")
+    public void executeNotificationForDelayed(){
+        ResourceBundle locale;
+        List<Credentials> credentialsList = credentialsService.findAll();
+        for (Credentials credentials : credentialsList) {
+            if (credentials.getProgress().getProgressENUM() != ProgressENUM.DONE) {
+                if (credentials.getUiLanguage() == LanguageENUM.UKRAINIAN) {
+                    locale = ResourceBundle.getBundle("i18n.messages_uk_UK");
+                } else {
+                    locale = ResourceBundle.getBundle("i18n.messages_en_GB");
+                }
+                MultiMessage multiMessage = new MultiMessage();
+                multiMessage.setText(locale.getString("inactive-user-notification") + "\n" + bonusTool.generateBonusCode());
+                multiMessage.setChatId(credentials.getAccountId());
+                telegramService.sendMultiMessage(multiMessage);
+            }
+        }
+    }
+
+
+
+    @Scheduled(cron = "0 0 21 * * *")
     public void executeDailyTask() {
         List<Credentials> credentialsList = credentialsService.findAll();
         Persistent persistent = persistentService.findPersistent();

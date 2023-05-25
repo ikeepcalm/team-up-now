@@ -6,6 +6,7 @@ import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile.EditAbout
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile.EditAgeResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile.EditBackResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.profile.EditProfileResponse;
+import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.settings.BonusResponse;
 import dev.ua.ikeepcalm.teamupnow.telegram.executing.callbacks.settings.SettingsDeleteResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ public class ResponseMediator {
     private final MoreResponse moreResponse;
     private final ProfileResponse profileResponse;
     private final SettingsResponse settingsResponse;
+    private final BonusResponse bonusResponse;
     private final EditProfileResponse editProfileResponse;
     private final EditAgeResponse editAgeResponse;
     private final EditBackResponse editBackResponse;
@@ -27,6 +29,10 @@ public class ResponseMediator {
 
     public void executeAgeResponse(String receivedCallback, CallbackQuery origin) {
         ageResponse.manage(receivedCallback, origin);
+    }
+
+    public void executeBonusResponse(String receivedCallback, CallbackQuery origin) {
+        bonusResponse.manage(receivedCallback, origin);
     }
 
     public void executeBackResponse(String receivedCallback, CallbackQuery origin) {
@@ -77,7 +83,7 @@ public class ResponseMediator {
             MoreResponse moreResponse,
             ProfileResponse profileResponse,
             SettingsResponse settingsResponse,
-            EditProfileResponse editProfileResponse,
+            BonusResponse bonusResponse, EditProfileResponse editProfileResponse,
             EditAgeResponse editAgeResponse, EditBackResponse editBackResponse, EditAboutResponse editAboutResponse, SettingsDeleteResponse settingsDeleteResponse) {
         this.ageResponse = ageResponse;
         this.backResponse = backResponse;
@@ -85,6 +91,7 @@ public class ResponseMediator {
         this.moreResponse = moreResponse;
         this.profileResponse = profileResponse;
         this.settingsResponse = settingsResponse;
+        this.bonusResponse = bonusResponse;
         this.editProfileResponse = editProfileResponse;
         this.editAgeResponse = editAgeResponse;
         this.editBackResponse = editBackResponse;

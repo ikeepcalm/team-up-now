@@ -104,6 +104,6 @@ public class ProfileResponse extends SimpleCallback {
         keyboard.add(firstRow);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         alterMessage.setReplyKeyboard(inlineKeyboardMarkup);
-        telegramService. sendAlterMessage(alterMessage);
+        telegramService.sendAlterMessage(alterMessage);
     }
 }

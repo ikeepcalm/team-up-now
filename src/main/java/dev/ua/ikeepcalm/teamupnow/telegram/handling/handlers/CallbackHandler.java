@@ -91,6 +91,7 @@ public class CallbackHandler implements Handleable {
                 case "menu-profile-edit" -> responseMediator.executeEditProfileResponse(callback, origin);
                 case "menu-settings" -> responseMediator.executeSettingsResponse(callback, origin);
                 case "menu-settings-delete-account" -> responseMediator.executeSettingsDeleteResponse(callback, origin);
+                case "menu-settings-bonus" -> responseMediator.executeBonusResponse(callback, origin);
                 case "menu-more" -> responseMediator.executeMoreResponse(callback, origin);
                 case "menu-back" -> responseMediator.executeBackResponse(callback, origin);
                 case "menu-discover" -> responseMediator.executeDiscoverResponse(callback, origin);

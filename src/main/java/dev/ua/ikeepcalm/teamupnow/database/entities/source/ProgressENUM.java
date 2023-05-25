@@ -7,5 +7,6 @@ public enum ProgressENUM {
     AGE,
     ABOUT,
     ABOUT_EDIT,
-    DONE
+    DONE,
+    BONUS
 }

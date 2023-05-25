@@ -32,10 +32,15 @@ public class SettingsResponse extends SimpleCallback {
         InlineKeyboardButton deletion = new InlineKeyboardButton();
         deletion.setText(locale.getString("delete-account"));
         deletion.setCallbackData("menu-settings-delete-account");
+        InlineKeyboardButton promo = new InlineKeyboardButton();
+        promo.setText(locale.getString("bonus"));
+        promo.setCallbackData("menu-settings-bonus");
+
         InlineKeyboardButton back = new InlineKeyboardButton();
         back.setText(locale.getString("menu-back"));
         back.setCallbackData("menu-back");
         firstRow.add(deletion);
+        firstRow.add(promo);
         secondRow.add(back);
         keyboard.add(firstRow);
         keyboard.add(secondRow);

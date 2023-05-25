@@ -10,7 +10,7 @@
     </parent>
     <groupId>dev.ua.ikeepcalm</groupId>
     <artifactId>TeamUpNow</artifactId>
-    <version>1.1.2-SNAPSHOT</version>
+    <version>1.1.3-SNAPSHOT</version>
     <name>TeamUpNow</name>
     <description>TeamUpNow</description>
     <properties>
