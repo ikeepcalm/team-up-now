@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @Component
 @Aspect
 public class EntryAspect {
-    private final Logger logger = LoggerFactory.getLogger(Slf4JLogger.class);
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final CredentialsService credentialsService;
 

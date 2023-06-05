@@ -34,7 +34,10 @@ public class MatchesResponse extends QueryCallback {
     public void manage(String receivedCallback, CallbackQuery origin, String callbackQueryId) {
         locale = getBundle(origin);
         Credentials credentials = credentialsService.findByAccountId(origin.getMessage().getChatId());
-        matches = matchService.findConnectedMatchesForUser(credentials);
+        if (!credentials.getUsername().equals(origin.getMessage().getFrom().getUserName())){
+            credentials.setUsername(origin.getFrom().getUserName());
+            credentialsService.save(credentials);
+        } matches = matchService.findConnectedMatchesForUser(credentials);
         if (matches.size() != 0) {
             int maxIndex = matches.size();
             switch (receivedCallback) {

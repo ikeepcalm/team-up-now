@@ -35,12 +35,16 @@ public class ExploreResponse extends QueryCallback {
     @Transactional
     public void manage(String receivedCallback, CallbackQuery origin, String callbackQueryId) {
         locale = getBundle(origin);
-        try {
+        Credentials credentials = credentialsService.findByAccountId(origin.getMessage().getChatId());
+        if (!credentials.getUsername().equals(origin.getMessage().getFrom().getUserName())){
+            credentials.setUsername(origin.getFrom().getUserName());
+            credentialsService.save(credentials);
+        } try {
             if (!hasBeenUpdated) {
-                matchService.createMatchesForUser(credentialsService.findByAccountId(origin.getMessage().getChatId()));
+                matchService.createMatchesForUser(credentials);
                 hasBeenUpdated = true;
             }
-            matches = matchService.findAllMatchesForUser(credentialsService.findByAccountId(origin.getMessage().getChatId()));
+            matches = matchService.findAllMatchesForUser(credentials);
             int maxIndex = matches.size();
             switch (receivedCallback) {
                 case "explore" -> editMessage(origin.getMessage());
@@ -57,12 +61,11 @@ public class ExploreResponse extends QueryCallback {
                     editMessage(origin.getMessage());
                 }
                 case "explore-like" -> {
-                    Credentials credentials = credentialsService.findByAccountId(origin.getMessage().getChatId());
                     if (credentials.getConnectionTokens() > 0) {
                         Match match = matches.get(currentIndex);
                         if (credentials == match.getFirstUser()) {
                             match.setFirstUserLiked(true);
-                            if (match.isSecondUserLiked()){
+                            if (match.isSecondUserLiked()) {
                                 MultiMessage message = new MultiMessage();
                                 message.setText(locale.getString("explore-notification"));
                                 message.setChatId(match.getSecondUser().getAccountId());
@@ -70,7 +73,7 @@ public class ExploreResponse extends QueryCallback {
                             }
                         } else if (credentials == match.getSecondUser()) {
                             match.setSecondUserLiked(true);
-                            if (match.isFirstUserLiked()){
+                            if (match.isFirstUserLiked()) {
                                 MultiMessage message = new MultiMessage();
                                 message.setText(locale.getString("explore-notification"));
                                 message.setChatId(match.getFirstUser().getAccountId());

@@ -4,6 +4,7 @@ import dev.ua.ikeepcalm.teamupnow.telegram.servicing.TelegramService;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.AlterMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.MultiMessage;
 import dev.ua.ikeepcalm.teamupnow.telegram.servicing.proxies.PurgeMessage;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class TelegramTool extends DefaultAbsSender implements TelegramService {
         try {
             execute(acq);
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+            LoggerFactory.getLogger(getClass()).warn("Couldn't send AnswerCallbackQuery: " + acq.toString());
         }
     }
 
@@ -51,7 +52,7 @@ public class TelegramTool extends DefaultAbsSender implements TelegramService {
         try {
             execute(forwardMessage);
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+            LoggerFactory.getLogger(getClass()).warn("Couldn't forward message: " + forwardMessage.toString());
         }
     }
 
@@ -86,7 +87,7 @@ public class TelegramTool extends DefaultAbsSender implements TelegramService {
                 execute(editMessageCaption);
             }
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+            LoggerFactory.getLogger(getClass()).warn("Couldn't send AlterMessage message:" + alterMessage.toString());
         }
     }
 
@@ -108,7 +109,7 @@ public class TelegramTool extends DefaultAbsSender implements TelegramService {
                 execute(sendMessage);
             }
         } catch (TelegramApiException e) {
-            throw new RuntimeException("Failed to execute callback: " + multiMessage, e);
+            LoggerFactory.getLogger(getClass()).warn("Failed to send MultiMessage:" + multiMessage.toString());
         }
     }
 
@@ -120,7 +121,7 @@ public class TelegramTool extends DefaultAbsSender implements TelegramService {
         try {
             execute(deleteMessage);
         } catch (TelegramApiException e) {
-            throw new RuntimeException("Failed to delete callback: " + deleteMessage, e);
+            LoggerFactory.getLogger(getClass()).warn("Couldn't delete message:" + purgeMessage.toString());
         }
     }
 }

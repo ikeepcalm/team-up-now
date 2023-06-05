@@ -2,6 +2,7 @@ package dev.ua.ikeepcalm.teamupnow.telegram.servicing.tools;
 
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.CredentialsService;
 import dev.ua.ikeepcalm.teamupnow.database.dao.service.impls.PersistentService;
+import dev.ua.ikeepcalm.teamupnow.database.entities.Bonus;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Credentials;
 import dev.ua.ikeepcalm.teamupnow.database.entities.Persistent;
 import dev.ua.ikeepcalm.teamupnow.database.entities.source.LanguageENUM;
@@ -22,7 +23,7 @@ import java.util.ResourceBundle;
 @Component
 public class SchedulerTool {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SLF4JServiceProvider.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
     private final PersistentService persistentService;
     private final CredentialsService credentialsService;
     private final TelegramService telegramService;
@@ -89,7 +90,7 @@ public class SchedulerTool {
             } catch (Exception e) {
                 iterator.remove();
                 credentialsService.deleteCredentials(credentials.getAccountId());
-                LOGGER.info("Bot was blocked by user [" + credentials.getUsername() + " ~ " + credentials.getAccountId() + "]. Deleting him from credentials list...");
+                LOGGER.info("User to purge <" + credentials.getUsername() + ", " + credentials.getAccountId() + ">. Done!");
             }
         }
 

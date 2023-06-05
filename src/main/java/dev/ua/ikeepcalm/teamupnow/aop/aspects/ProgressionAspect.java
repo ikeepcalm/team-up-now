@@ -16,7 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @Aspect
 public class ProgressionAspect {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SLF4JServiceProvider.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     private final CredentialsService credentialsService;
 
@@ -26,7 +26,7 @@ public class ProgressionAspect {
 
     @Around("@annotation(progressable) && args(origin, ..)")
     public Object monitorProgress(ProceedingJoinPoint joinPoint, Progressable progressable, Message origin) throws Throwable {
-        LOGGER.info("["  + joinPoint.getTarget().getClass().getSimpleName() + "] - @" + origin.getFrom().getUserName());
+        LOGGER.info("Current step: ["  + joinPoint.getTarget().getClass().getSimpleName() + "] | User: <@" + origin.getFrom().getUserName() + ", " + origin.getFrom().getId()+ ">");
         ProgressENUM expectedProgress = progressable.value();
         ProgressENUM currentProgress = credentialsService.findByAccountId(origin.getChatId()).getProgress().getProgressENUM();
         if (!expectedProgress.equals(currentProgress)) {
