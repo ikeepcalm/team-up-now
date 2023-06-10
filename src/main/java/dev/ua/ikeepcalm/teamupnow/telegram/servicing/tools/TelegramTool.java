@@ -109,7 +109,7 @@ public class TelegramTool extends DefaultAbsSender implements TelegramService {
                 execute(sendMessage);
             }
         } catch (TelegramApiException e) {
-            LoggerFactory.getLogger(getClass()).warn("Failed to send MultiMessage:" + multiMessage.toString());
+            LoggerFactory.getLogger(getClass()).warn("Failed to send MultiMessage: " + multiMessage.getText() + " / " + multiMessage.getChatId());
         }
     }
 

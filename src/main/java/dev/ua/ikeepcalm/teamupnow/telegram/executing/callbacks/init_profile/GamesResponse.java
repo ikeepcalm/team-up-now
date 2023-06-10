@@ -19,8 +19,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 @Component
 @Scope(value = "prototype")
@@ -29,7 +31,6 @@ public class GamesResponse extends SimpleCallback {
     private ResourceBundle locale;
     private final List<String> selectedGamesCallbacks = new ArrayList<>();
     private int page = 1;
-
 
     private void manageGamesButton(String receivedCallback, Message origin) {
         InlineKeyboardMarkup keyboardMarkup = origin.getReplyMarkup();
@@ -134,6 +135,7 @@ public class GamesResponse extends SimpleCallback {
                 keyboardRows.add(row);
                 replyKeyboardMarkup.setKeyboard(keyboardRows);
                 multiMessage.setReplyKeyboard(replyKeyboardMarkup);
+                logger.info("(?) User [@" + origin.getFrom().getUserName() + "] tried to continue without single game selected");
                 telegramService.sendPurgeMessage(new PurgeMessage(origin.getMessage().getMessageId(), origin.getMessage().getChatId()));
                 telegramService.sendMultiMessage(multiMessage);
             } else {
@@ -162,6 +164,10 @@ public class GamesResponse extends SimpleCallback {
                 replyKeyboardMarkup.setResizeKeyboard(true);
                 replyKeyboardMarkup.setOneTimeKeyboard(true);
                 multiMessage.setReplyKeyboard(replyKeyboardMarkup);
+                String chosenGames = credentials.getGames().stream()
+                        .map(game -> game.getName().name())
+                        .collect(Collectors.joining(", "));
+                logger.info("(\uD83C\uDFAE) User [@" + origin.getFrom().getUserName() + "] selected such games: " + chosenGames);
                 telegramService.sendPurgeMessage(new PurgeMessage(origin.getMessage().getMessageId(), origin.getMessage().getChatId()));
                 telegramService.sendMultiMessage(multiMessage);
             }

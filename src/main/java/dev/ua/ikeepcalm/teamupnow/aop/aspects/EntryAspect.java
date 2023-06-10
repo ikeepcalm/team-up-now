@@ -14,7 +14,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @Component
 @Aspect
 public class EntryAspect {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final CredentialsService credentialsService;
 
@@ -24,7 +23,6 @@ public class EntryAspect {
 
     @Around("@annotation(dev.ua.ikeepcalm.teamupnow.aop.annotations.EntryPoint) && args(origin)")
     public void checkEntityCreation(ProceedingJoinPoint joinPoint, Message origin) throws Throwable {
-        logger.debug("["  + joinPoint.getTarget().getClass().getName() + "] - @" + origin.getFrom().getUserName());
         try {
             credentialsService.findByAccountId(origin.getFrom().getId());
         } catch (DAOException e){

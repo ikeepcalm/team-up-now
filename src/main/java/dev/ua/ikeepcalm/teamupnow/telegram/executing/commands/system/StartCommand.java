@@ -26,6 +26,7 @@ public class StartCommand extends Command {
             MultiMessage message = new MultiMessage();
             message.setChatId(origin.getChatId());
             message.setText(locale.getString("no-username"));
+            logger.info("(?) New user [@" + origin.getFrom().getUserName() + "] did not have set username");
             telegramService.sendMultiMessage(message);
         } else {
             createObjectForNewUser(origin.getChatId(), origin.getFrom().getUserName(), origin.getFrom().getLanguageCode(), origin.getFrom().getFirstName());
@@ -41,6 +42,7 @@ public class StartCommand extends Command {
             replyKeyboardMarkup.setResizeKeyboard(true);
             replyKeyboardMarkup.setOneTimeKeyboard(true);
             multiMessage.setReplyKeyboard(replyKeyboardMarkup);
+            logger.info("(+) New user [@" + origin.getFrom().getUserName() + "]");
             telegramService.sendMultiMessage(multiMessage);
         }
     }

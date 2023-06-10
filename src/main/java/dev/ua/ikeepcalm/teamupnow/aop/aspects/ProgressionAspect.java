@@ -26,7 +26,6 @@ public class ProgressionAspect {
 
     @Around("@annotation(progressable) && args(origin, ..)")
     public Object monitorProgress(ProceedingJoinPoint joinPoint, Progressable progressable, Message origin) throws Throwable {
-        LOGGER.info("Current step: ["  + joinPoint.getTarget().getClass().getSimpleName() + "] | User: <@" + origin.getFrom().getUserName() + ", " + origin.getFrom().getId()+ ">");
         ProgressENUM expectedProgress = progressable.value();
         ProgressENUM currentProgress = credentialsService.findByAccountId(origin.getChatId()).getProgress().getProgressENUM();
         if (!expectedProgress.equals(currentProgress)) {

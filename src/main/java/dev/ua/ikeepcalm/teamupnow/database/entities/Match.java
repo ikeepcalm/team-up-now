@@ -31,5 +31,8 @@ public class Match {
     @Column(name = "score", nullable = false)
     private int score;
 
+    @Column(name = "hidden", nullable = false, columnDefinition = "boolean default false")
+    private boolean hidden;
+
 }
 

@@ -34,7 +34,6 @@ public class MatchService {
             }
         }
 
-
         List<Match> matchesToSave = new ArrayList<>();
 
         for (Credentials retrieved : credentialsToHandle) {
@@ -51,6 +50,7 @@ public class MatchService {
                 match.setSecondUser(retrieved);
                 match.setFirstUserLiked(false);
                 match.setSecondUserLiked(false);
+                match.setHidden(false);
             } else {
                 continue;
             }
@@ -72,15 +72,15 @@ public class MatchService {
         List<Match> matches = matchRepo.findAllMatchesByUser(user);
         List<Match> matchesToReturn = new ArrayList<>();
         for (Match match : matches) {
-            if (match.getFirstUser() == user) {
-                if (match.isFirstUserLiked()) {
-                } else {
-                    matchesToReturn.add(match);
-                }
-            } else if (match.getSecondUser() == user) {
-                if (match.isSecondUserLiked()) {
-                } else {
-                    matchesToReturn.add(match);
+            if (!match.isHidden()){
+                if (match.getFirstUser() == user) {
+                    if (!match.isFirstUserLiked()) {
+                        matchesToReturn.add(match);
+                    }
+                } else if (match.getSecondUser() == user) {
+                    if (!match.isSecondUserLiked()) {
+                        matchesToReturn.add(match);
+                    }
                 }
             }
         }

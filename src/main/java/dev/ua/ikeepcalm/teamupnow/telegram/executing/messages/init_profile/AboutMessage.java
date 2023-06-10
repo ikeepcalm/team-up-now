@@ -44,6 +44,8 @@ public class AboutMessage extends dev.ua.ikeepcalm.teamupnow.telegram.executing.
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(true);
         multiMessage.setReplyKeyboard(replyKeyboardMarkup);
+        logger.info("(✔) User [@" + origin.getFrom().getUserName()+"] finished completing profile!");
+        matchService.createMatchesForUser(credentials);
         telegramService.sendMultiMessage(multiMessage);
     }
 }

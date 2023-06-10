@@ -96,6 +96,18 @@ public class ExploreResponse extends QueryCallback {
                     } else {
                         telegramService.sendAnswerCallbackQuery(locale.getString("explore-no-tokens"), callbackQueryId);
                     }
+                } case "explore-hide" ->{
+                    Match match = matches.get(currentIndex);
+                    match.setHidden(true);
+                    matchService.save(match);
+                    matches.remove(match);
+                    if (matches.size() == 1) {
+                        credentials.setConnectionTokens(credentials.getConnectionTokens() - 1);
+                        matchService.save(match);
+                        telegramService.sendAnswerCallbackQuery(locale.getString("explore-no-more-results"), callbackQueryId);
+                    } else {
+                        editMessage(origin.getMessage());
+                    }
                 }
             }
         } catch (IndexOutOfBoundsException exception) {
@@ -180,6 +192,7 @@ public class ExploreResponse extends QueryCallback {
         List<InlineKeyboardButton> firstRow = new ArrayList<>();
         List<InlineKeyboardButton> secondRow = new ArrayList<>();
         List<InlineKeyboardButton> thirdRow = new ArrayList<>();
+        List<InlineKeyboardButton> fourthRow = new ArrayList<>();
         InlineKeyboardButton previous = new InlineKeyboardButton();
         previous.setText(locale.getString("explore-previous"));
         previous.setCallbackData("explore-previous");
@@ -189,16 +202,21 @@ public class ExploreResponse extends QueryCallback {
         InlineKeyboardButton like = new InlineKeyboardButton();
         like.setText(locale.getString("explore-like"));
         like.setCallbackData("explore-like");
+        InlineKeyboardButton hide = new InlineKeyboardButton();
+        hide.setText(locale.getString("explore-hide"));
+        hide.setCallbackData("explore-hide");
         InlineKeyboardButton back = new InlineKeyboardButton();
         back.setText(locale.getString("menu-back"));
         back.setCallbackData("explore-back");
         firstRow.add(previous);
         firstRow.add(next);
         secondRow.add(like);
-        thirdRow.add(back);
+        thirdRow.add(hide);
+        fourthRow.add(back);
         keyboard.add(firstRow);
         keyboard.add(secondRow);
         keyboard.add(thirdRow);
+        keyboard.add(fourthRow);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         alterMessage.setReplyKeyboard(inlineKeyboardMarkup);
         telegramService.sendAlterMessage(alterMessage);

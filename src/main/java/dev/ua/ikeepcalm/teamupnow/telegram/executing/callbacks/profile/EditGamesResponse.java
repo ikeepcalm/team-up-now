@@ -19,6 +19,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -162,6 +163,7 @@ public class EditGamesResponse extends SimpleCallback {
                     MultiMessage multiMessage = new MultiMessage();
                     multiMessage.setText(locale.getString("edit-games-success-response"));
                     multiMessage.setChatId(origin.getMessage().getChatId());
+                    logger.info("(\uD83C\uDFAE) User [@" + origin.getFrom().getUserName() + "] edited his games: " + Arrays.toString(credentialsToSave.getGames().toArray()));
                     telegramService.sendMultiMessage(multiMessage);
                     responseMediator.executeEditProfileResponse(receivedCallback, origin);
                     }
