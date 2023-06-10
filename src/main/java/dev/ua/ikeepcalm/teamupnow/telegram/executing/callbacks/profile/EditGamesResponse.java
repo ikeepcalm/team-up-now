@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 @Component
 @Scope(value = "prototype")
@@ -163,7 +164,10 @@ public class EditGamesResponse extends SimpleCallback {
                     MultiMessage multiMessage = new MultiMessage();
                     multiMessage.setText(locale.getString("edit-games-success-response"));
                     multiMessage.setChatId(origin.getMessage().getChatId());
-                    logger.info("(\uD83C\uDFAE) User [@" + origin.getFrom().getUserName() + "] edited his games: " + Arrays.toString(credentialsToSave.getGames().toArray()));
+                    String chosenGames = credentialsToSave.getGames().stream()
+                            .map(game -> game.getName().name())
+                            .collect(Collectors.joining(", "));
+                    logger.info("(\uD83C\uDFAE) User [@" + origin.getFrom().getUserName() + "] edited his games: " + chosenGames);
                     telegramService.sendMultiMessage(multiMessage);
                     responseMediator.executeEditProfileResponse(receivedCallback, origin);
                     }
